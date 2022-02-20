@@ -85,9 +85,40 @@ const deletePost = async (req, res, next) => {
   }
 };
 
+const toggleLike = async (req, res, next) => {
+  try {
+    const { postId } = req.body;
+    const post = await Post.findById(postId);
+    if (!post) {
+      throw { post: "Post not found", status: 404 };
+    }
+    const profile = await Profile.findById(req.auth.userId);
+    if (!profile) {
+      throw { profile: "Profile not found", status: 404 };
+    }
+    if (post.likes.includes(req.auth.userId)) {
+      await post.updateOne({
+        $pull: {
+          likes: req.auth.userId,
+        },
+      });
+    } else {
+      await post.updateOne({
+        $push: {
+          likes: req.auth.userId,
+        },
+      });
+    }
+    res.status(204).send({ success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getPosts,
   createPost,
   editPost,
   deletePost,
+  toggleLike,
 };
