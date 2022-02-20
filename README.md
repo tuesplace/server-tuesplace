@@ -1,4 +1,4 @@
-# Prospect Server
+# tuesplace Server
 
 ## Инсталиране на нужното
 
@@ -29,11 +29,11 @@ node -v
 npm -v
 ```
 
-Трябва да ви върне 8.0.0
+Трябва да върне 8.0.0
 
 ## Подкарване на сървъра
 
-Създавате файл наиме .env и копирате в него съдържанието на един файл, който ще съм пратил в it-channel
+Създаваш файл наиме .env и копираш в него съдържанието на един файл, кой трябва да ти пратя
 
 След това
 
@@ -42,18 +42,24 @@ npm install
 npm run devStart
 ```
 
-Вече би трябвало да ви се е пуснал nodemon-a и да виждате "Server running on port 8888"
+Вече би трябвало да се е пуснал nodemon-a и да виждаш "Server running on port 8888"
 
 ## Описание на Route-ове -> техните нужни данни и каква информация връщат (в response при success = true)
 
+(( post )) = (( authorId, body, likes, createdAt ))
 METHOD URL -> headers | body | default respone
 
 1. Auth
-   POST /sign-up -> | fullName, email, password, passwordConfirm in body | accessToken, refreshToken, userId
-   POST /sign-in -> email, password in body | | accessToken, refreshToken, userId
-   POST /validate-token -> authorization header | userId |
-   POST /generate-access-token -> | refreshToken in body | accessToken, refreshToken
+   POST /api/auth/sign-up -> | fullName, email, password, passwordConfirm in body | accessToken, refreshToken, userId
+   POST /api/auth/sign-in -> email, password in body | | accessToken, refreshToken, userId
+   POST /api/auth/generate-access-token -> | refreshToken in body | accessToken, refreshToken
 
 2. Profile
-   POST /edit-profile -> authorization header | fullName, email, profilePic, password, interests, workPlace, cv, role in body | fullName, email, profilePic, password, interests, workPlace, cv, role, emailVerified
-   DELETE /delete-profile -> authorization header & 'young' refresh token | | deletedProfile
+   POST /api/profile/edit-profile -> authorization header | fullName, email, password | fullName, email, emailVerified
+   DELETE /api/profile/delete-profile -> authorization header & 'young' refresh token | | deletedProfile
+
+3. Post
+   GET /api/post/get-posts -> | | all posts (( post ))  
+   POST /api/post/create-post -> authorization header | body | post (( post ))  
+   PATCH /api/post/edit-post -> authorization header | postId, body | post (( post ))
+   DELETE /api/post/delete-post -> authorization header | postId |

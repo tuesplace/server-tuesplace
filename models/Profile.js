@@ -13,25 +13,11 @@ const profileSchema = new Schema({
     type: String,
     required: true,
   },
-  profilePic: {
-    type: String,
-    default: "",
-  },
-  interests: Array,
-  workPlace: String,
-  cv: Object,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  role: {
-    type: String,
-    default: "",
-  },
   emailVerified: {
     type: Boolean,
     default: false,
   },
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = model("Profile", profileSchema);

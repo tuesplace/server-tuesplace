@@ -8,13 +8,12 @@ module.exports = async (req, res, next) => {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw { token: "No token provided", status: 400 };
     }
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.split("Bearer ")[1].trim();
 
     req.auth = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    const refreshTokenFamily = await RefreshTokenFamily.findById(
-      req.auth.refreshTokenFamilyId
-    );
+    const refreshTokenFamily = await RefreshTokenFamily.findById(req.auth.refreshTokenFamilyId);
+
     if (
       !refreshTokenFamily ||
       refreshTokenFamily.redundantTokens.includes(req.auth.refreshTokenId)
@@ -36,7 +35,6 @@ module.exports = async (req, res, next) => {
       });
       return;
     }
-
     next(err);
   }
 };

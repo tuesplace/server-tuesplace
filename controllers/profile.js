@@ -1,28 +1,15 @@
-const { validateUserProps } = require("../util/userValidators");
+const { validateUser } = require("../util/validators");
 const Profile = require("../models/Profile");
 const bcrypt = require("bcryptjs");
 
 const editProfile = async (req, res, next) => {
   try {
-    const {
-      fullName,
-      email,
-      profilePic,
-      password,
-      interests,
-      workPlace,
-      cv,
-      role,
-    } = req.body;
-    const { errors, valid } = validateUserProps(
+    const { fullName, email, password } = req.body;
+    const { errors, valid } = validateUser(
       {
         fullName,
         email,
-        profilePic,
-        interests,
-        workPlace,
-        cv,
-        role,
+        password,
       },
       false
     );
@@ -51,11 +38,6 @@ const editProfile = async (req, res, next) => {
     }
 
     profile.fullName = fullName || profile.fullName;
-    profile.profilePic = profilePic || profile.profilePic;
-    profile.interests = interests || profile.interests;
-    profile.workPlace = workPlace || profile.workPlace;
-    profile.cv = cv || profile.cv;
-    profile.role = role || profile.role;
 
     await profile.save();
 

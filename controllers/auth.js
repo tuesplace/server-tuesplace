@@ -2,15 +2,11 @@ const bcrypt = require("bcryptjs");
 require("dotenv/config");
 
 const jwt = require("jsonwebtoken");
+
 const Profile = require("../models/Profile");
-const {
-  validateSignUpProps,
-  validateSignInProps,
-} = require("../util/authValidators");
-const {
-  createNewTokenPair,
-  rotateTokenPair,
-} = require("../util/createTokenPair");
+
+const { validateSignUp, validateSignIn } = require("../util/validators");
+const { createNewTokenPair, rotateTokenPair } = require("../util/createTokenPair");
 
 const RefreshTokenFamily = require("../models/RefreshTokenFamily");
 
@@ -18,12 +14,7 @@ const signUp = async (req, res, next) => {
   try {
     const { fullName, email, password, passwordConfirm } = req.body;
 
-    const { valid, errors } = validateSignUpProps(
-      fullName,
-      email,
-      password,
-      passwordConfirm
-    );
+    const { valid, errors } = validateSignUp(fullName, email, password, passwordConfirm);
     if (!valid) {
       throw { ...errors, status: 400 };
     }
@@ -40,7 +31,6 @@ const signUp = async (req, res, next) => {
       email,
       password: hashedPassword,
       emailVerified: false,
-      createdAt: Date.now(),
     });
 
     const result = await newUser.save();
@@ -63,7 +53,7 @@ const signUp = async (req, res, next) => {
 const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const { errors, valid } = validateSignInProps(email, password);
+    const { errors, valid } = validateSignIn(email, password);
     if (!valid) {
       throw { ...errors, status: 400 };
     }
@@ -94,12 +84,21 @@ const generateAccessToken = async (req, res, next) => {
       req.body.refreshToken,
       process.env.REFRESH_TOKEN_SECRET
     );
+
+    const userProfile = await User.findById(userId);
+    if (!userProfile) {
+      throw { user: "User not found", status: 404 };
+    }
+
     const { accessToken, refreshToken } = await rotateTokenPair(
       refreshTokenId,
       refreshTokenFamilyId,
       userId
     );
-    res.send({ success: true, response: { accessToken, refreshToken } });
+    res.send({
+      success: true,
+      response: { accessToken, refreshToken, id: userId },
+    });
   } catch (err) {
     if (err.name === "TokenExpiredError") {
       const { refreshTokenFamilyId } = jwt.decode(req.body.refreshToken);
@@ -112,6 +111,5 @@ const generateAccessToken = async (req, res, next) => {
 module.exports = {
   signIn,
   signUp,
-  validateToken,
   generateAccessToken,
 };

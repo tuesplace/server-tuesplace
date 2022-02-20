@@ -1,20 +1,19 @@
 const { model, Schema } = require("mongoose");
 
 const postSchema = new Schema({
-  author: {
+  authorId: {
     type: String,
     required: true,
   },
   body: {
     type: String,
-    required: true,
+    default: "",
   },
-  filters: Array,
   likes: {
     type: Number,
     default: 0,
   },
-  comments: Object,
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = model("Post", postSchema);

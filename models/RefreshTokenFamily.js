@@ -4,12 +4,13 @@ const refreshTokenFamilySchema = new Schema({
   redundantTokens: Array,
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
   lastRefresh: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
+  userId: String,
 });
 
 module.exports = model("RefreshTokenFamily", refreshTokenFamilySchema);

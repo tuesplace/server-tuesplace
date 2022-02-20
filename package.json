@@ -1,7 +1,7 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "Server for Prospect",
+  "name": "server-tuesplace",
+  "version": "0.0.1",
+  "description": "Server for tuesplace",
   "main": "index.js",
   "engines": {
     "node": "14.18.0",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IT-Prospect/server-prospect.git"
+    "url": "git+https://github.com/tuesplace/server-tuesplace.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/IT-Prospect/server-prospect/issues"
+    "url": "https://github.com/tuesplace/server-tuesplace/issues"
   },
-  "homepage": "https://github.com/IT-Prospect/server-prospect#readme",
+  "homepage": "https://github.com/tuesplace/server-tuesplace#readme",
   "dependencies": {
     "async-middleware": "^1.2.1",
     "bcryptjs": "^2.4.3",

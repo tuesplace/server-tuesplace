@@ -1,4 +1,4 @@
-const Profile = require("../models/Profile");
+/*const Profile = require("../models/Profile");
 
 const migrateAllProfiles = async () => {
   const profiles = await Profile.find({});
@@ -6,10 +6,10 @@ const migrateAllProfiles = async () => {
     await profile.updateOne({
       fullName: profile.fullName || "",
       profilePic: profile.profilePic || "",
-      interests: profile.interests || [],
       workPlace: profile.workPlace || "",
       cv: profile.cv || {},
       role: profile.role || "",
     });
   });
 };
+*/

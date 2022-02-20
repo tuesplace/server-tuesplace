@@ -4,6 +4,7 @@ require("dotenv/config");
 const RefreshTokenFamily = require("../models/RefreshTokenFamily");
 
 const createNewTokenPair = async (userId) => {
+  await RefreshTokenFamily.findOneAndDelete({ userId });
   const refreshTokenFamilyId = mongoose.Types.ObjectId();
   const refreshTokenId = mongoose.Types.ObjectId();
   const refreshToken = jwt.sign(
@@ -18,6 +19,7 @@ const createNewTokenPair = async (userId) => {
 
   await RefreshTokenFamily.create({
     _id: refreshTokenFamilyId,
+    userId,
   });
 
   const accessToken = jwt.sign(
@@ -36,14 +38,8 @@ const createNewTokenPair = async (userId) => {
   };
 };
 
-const rotateTokenPair = async (
-  refreshTokenId,
-  refreshTokenFamilyId,
-  userId
-) => {
-  const refreshTokenFamily = await RefreshTokenFamily.findById(
-    refreshTokenFamilyId
-  );
+const rotateTokenPair = async (refreshTokenId, refreshTokenFamilyId, userId) => {
+  const refreshTokenFamily = await RefreshTokenFamily.findById(refreshTokenFamilyId);
   if (!refreshTokenFamily) {
     throw { tokenPair: "Refresh Token does not exist", status: 401 };
   }
@@ -67,9 +63,9 @@ const rotateTokenPair = async (
 
   const accessToken = jwt.sign(
     {
-      userId,
-      refreshTokenId: newRefreshTokenId,
       refreshTokenFamilyId,
+      refreshTokenId: newRefreshTokenId,
+      userId,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "20s" }
