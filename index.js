@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { authRouter, profileRouter, postRouter } = require("./routes");
+const { authRouter, profileRouter, postRouter, groupRouter } = require("./routes");
 const cors = require("cors");
 const { errorHandler } = require("./middleware");
 require("dotenv/config");
@@ -16,7 +16,8 @@ app.use(
 app.use(express.json());
 app.use("/api/profile", profileRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/post", postRouter);
+app.use("/api/group-posts", postRouter);
+app.use("/api/group", groupRouter);
 app.use(errorHandler);
 
 mongoose

@@ -4,10 +4,6 @@ const { editProfile, deleteProfile } = require("../controllers/profile");
 const { verifyToken, verifyYoungToken } = require("../middleware");
 
 router.post("/edit-profile", verifyToken, editProfile);
-router.delete(
-  "/delete-profile",
-  [verifyToken, verifyYoungToken],
-  deleteProfile
-);
+router.delete("/delete-profile", [verifyToken, verifyYoungToken], deleteProfile);
 
 module.exports = router;

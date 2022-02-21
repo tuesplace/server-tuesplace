@@ -1,16 +1,25 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema, Types } = require("mongoose");
 
-const postSchema = new Schema({
-  authorId: {
-    type: String,
-    required: true,
+const postSchema = new Schema(
+  {
+    authorId: {
+      type: String,
+      required: true,
+    },
+    groupId: {
+      type: String,
+      required: true,
+    },
+    body: {
+      type: String,
+      default: "",
+    },
+    likes: Array,
   },
-  body: {
-    type: String,
-    default: "",
-  },
-  likes: Array,
-  createdAt: { type: Date, default: Date.now },
-});
+  { timestamps: true }
+);
 
-module.exports = model("Post", postSchema);
+const GroupPosts = (groupId) =>
+  model(`postsOfGroup${groupId}`, postSchema, `postsOfGroup${groupId}`);
+
+module.exports = { Post: model("Post", postSchema), GroupPosts };

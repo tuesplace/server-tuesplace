@@ -47,19 +47,26 @@ npm run devStart
 ## Описание на Route-ове -> техните нужни данни и каква информация връщат (в response при success = true)
 
 (( post )) = (( authorId, body, likes, createdAt ))
-METHOD URL -> headers | body | default respone
+Какво прави METHOD URL -> headers | body | default respone <- Какво прави
 
 1. Auth
-   POST /api/auth/sign-up -> | fullName, email, password, passwordConfirm in body | accessToken, refreshToken, userId
-   POST /api/auth/sign-in -> email, password in body | | accessToken, refreshToken, userId
-   POST /api/auth/generate-access-token -> | refreshToken in body | accessToken, refreshToken
+   POST /api/auth/sign-up -> | fullName, email, password, passwordConfirm in body | accessToken, refreshToken, userId <- Sign-Up
+   POST /api/auth/sign-in -> email, password in body | | accessToken, refreshToken, userId <- Sign-In
+   POST /api/auth/generate-access-token -> | refreshToken in body | accessToken, refreshToken <- Generate-Access-Token
 
 2. Profile
-   POST /api/profile/edit-profile -> authorization header | fullName, email, password | fullName, email, emailVerified
-   DELETE /api/profile/delete-profile -> authorization header & 'young' refresh token | | deletedProfile
+   POST /api/profile/edit-profile -> authorization header | fullName, email, password | fullName, email, emailVerified <- Edit-Profile
+   DELETE /api/profile/delete-profile -> authorization header & 'young' refresh token | | deletedProfile <- Delete-Profile
 
 3. Post
-   GET /api/post/get-posts -> | | all posts (( post ))  
-   POST /api/post/create-post -> authorization header | body | post (( post ))  
-   PATCH /api/post/edit-post -> authorization header | postId, body | post (( post ))
-   DELETE /api/post/delete-post -> authorization header | postId |
+   GET /api/group-posts/:groupId/post -> authorization header | page, limit as query params (optional) | all posts (( post )) <- Get-All-Posts-From-Group
+   POST /api/group-posts/:groupId/post -> authorization header | body | (( post )) <- Create-Post-In-Group
+   PUT /api/group-posts/:groupId/post/:postId -> authorization header | <- Edit-Post
+   PATCH /api/group-posts/edit-post -> authorization header | postId, body | (( post )) <- Like-Post
+   DELETE /api/group-posts/delete-post -> authorization header | postId | <- Delete-Post
+
+4. Group
+   GET /:groupId" -> authorization header | | ((group)) <- Get-Group
+   POST / -> authorization header | groupName, teachers, allowedClasses | ((group)) <- Create-Group
+   PUT /:groupId -> authorization header | groupName, teachers, allowedClasses | ((group)) <- Edit-Group
+   DELETE /:groupId -> authorization header | | | <- Delete-Group

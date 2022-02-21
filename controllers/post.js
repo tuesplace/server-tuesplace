@@ -1,11 +1,31 @@
 const Profile = require("../models/Profile");
-const Post = require("../models/Post");
+const { GroupPosts } = require("../models/Post");
+const Group = require("../models/Group");
 const { validatePost } = require("../util/validators");
 
 const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find({});
-    res.send({ success: true, response: { posts } });
+    const { groupId } = req.params;
+    let { page, limit } = req.query;
+    if (!page) {
+      page = 0;
+    }
+    if (!limit) {
+      limit = 10;
+    }
+    page = parseInt(page);
+    limit = parseInt(limit);
+    if (page > 0) page -= 1;
+    const group = await Group.findById(groupId);
+    if (!group) {
+      throw { group: "Group not found", status: 404 };
+    }
+    const groupPosts = await GroupPosts(groupId)
+      .find({})
+      .sort({ createdAt: -1 })
+      .skip(page * limit)
+      .limit(limit);
+    res.send({ success: true, response: { groupPosts } });
   } catch (err) {
     next(err);
   }
@@ -13,18 +33,15 @@ const getPosts = async (req, res, next) => {
 
 const createPost = async (req, res, next) => {
   try {
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile does not exist" };
-    }
-
+    const { groupId } = req.params;
     const { body } = req.body;
     const { errors, valid } = validatePost({ body });
     if (!valid) {
       throw { ...errors, status: 400 };
     }
 
-    const post = await Post.create({
+    const post = await GroupPosts(`${groupId}`).create({
+      groupId,
       authorId: req.auth.userId,
       body,
     });
@@ -36,19 +53,9 @@ const createPost = async (req, res, next) => {
 
 const editPost = async (req, res, next) => {
   try {
-    const { body, postId } = req.body;
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile does not exist", status: 404 };
-    }
-
-    const post = await Post.findById(postId);
-    if (!post) {
-      throw { post: "Post not found", status: 404 };
-    }
-    if (post.authorId !== profile.id) {
-      throw { author: "Only the author can edit this post", status: 401 };
-    }
+    const { postId, groupId } = req.params;
+    const { body } = req.body;
+    const post = await GroupPosts(`${groupId}`).findById(postId);
 
     const { errors, valid } = validatePost({ body });
     if (!valid) {
@@ -65,19 +72,8 @@ const editPost = async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
   try {
-    const { postId } = req.body;
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile does not exist", status: 404 };
-    }
-    const post = await Post.findById(postId);
-    if (!post) {
-      throw { post: "Post not found", status: 404 };
-    }
-    if (post.authorId !== profile.id) {
-      throw { author: "Only the author can edit this post", status: 401 };
-    }
-
+    const { postId, groupId } = req.params;
+    const post = await GroupPosts(`${groupId}`).findById(postId);
     await post.deleteOne();
     res.status(204).send({ success: true });
   } catch (err) {
@@ -87,14 +83,11 @@ const deletePost = async (req, res, next) => {
 
 const toggleLike = async (req, res, next) => {
   try {
-    const { postId } = req.body;
-    const post = await Post.findById(postId);
-    if (!post) {
-      throw { post: "Post not found", status: 404 };
-    }
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile not found", status: 404 };
+    const { postId, groupId } = req.params;
+    const post = await GroupPosts(`${groupId}`).findById(postId);
+    const group = await Group.findById(groupId);
+    if (!post || !group) {
+      throw { groupPost: "Group or post do not exist", status: 404 };
     }
     if (post.likes.includes(req.auth.userId)) {
       await post.updateOne({

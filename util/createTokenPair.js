@@ -29,7 +29,7 @@ const createNewTokenPair = async (userId) => {
       refreshTokenId,
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "20s" }
+    { expiresIn: "40m" }
   );
 
   return {
@@ -68,7 +68,7 @@ const rotateTokenPair = async (refreshTokenId, refreshTokenFamilyId, userId) => 
       userId,
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "20s" }
+    { expiresIn: "40m" }
   );
 
   await refreshTokenFamily.save();
