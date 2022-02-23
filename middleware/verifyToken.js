@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const Profile = require("../models/Profile");
 const RefreshTokenFamily = require("../models/RefreshTokenFamily");
 
 module.exports = async (req, res, next) => {
@@ -23,6 +24,13 @@ module.exports = async (req, res, next) => {
         status: 400,
       };
     }
+
+    const profile = await Profile.findById(req.auth.userId);
+    if (!profile) {
+      throw { profile: "Profile not found", status: 404 };
+    }
+    console.log(profile.id);
+    req.profile = profile;
 
     next();
   } catch (err) {

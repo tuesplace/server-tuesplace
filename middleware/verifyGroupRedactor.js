@@ -6,9 +6,6 @@ module.exports = async (req, _, next) => {
   try {
     const { groupId } = req.params;
     const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile Not found", status: 404 };
-    }
     if (profile.role !== roles.teacher && profile !== roles.admin) {
       throw { profile: "You are not a teacher", status: 401 };
     }

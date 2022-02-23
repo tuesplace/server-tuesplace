@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken, verifyInGroup, verifyMadePost } = require("../middleware");
-const { createPost, getPosts, editPost, deletePost, toggleLike } = require("../controllers/post");
+const { verifyPostExists, verifyMadePost } = require("../middleware");
+const { createPost, getPosts, editPost, deletePost, reactToPost } = require("../controllers/post");
 
-router.get("/:groupId/post", [verifyToken, verifyInGroup], getPosts);
-router.post("/:groupId/post", [verifyToken, verifyInGroup], createPost);
-router.put("/:groupId/post/:postId", [verifyToken, verifyInGroup, verifyMadePost], editPost);
-router.delete("/:groupId/post/:postId", [verifyToken, verifyInGroup, verifyMadePost], deletePost);
-router.patch("/:groupId/post/:postId", [verifyToken, verifyInGroup], toggleLike);
+router.get("", getPosts);
+router.post("", createPost);
+router.put("/:postId", [verifyPostExists, verifyMadePost], editPost);
+router.delete("/:postId", [verifyPostExists, verifyMadePost], deletePost);
+router.patch("/:postId", [verifyPostExists], reactToPost);
 
 module.exports = router;

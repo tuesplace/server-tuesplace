@@ -1,7 +1,7 @@
-const Profile = require("../models/Profile");
 const { GroupPosts } = require("../models/Post");
 const Group = require("../models/Group");
 const { validatePost } = require("../util/validators");
+const reactToPost = require("../util/reactToPostComment");
 
 const getPosts = async (req, res, next) => {
   try {
@@ -16,10 +16,6 @@ const getPosts = async (req, res, next) => {
     page = parseInt(page);
     limit = parseInt(limit);
     if (page > 0) page -= 1;
-    const group = await Group.findById(groupId);
-    if (!group) {
-      throw { group: "Group not found", status: 404 };
-    }
     const groupPosts = await GroupPosts(groupId)
       .find({})
       .sort({ createdAt: -1 })
@@ -81,27 +77,14 @@ const deletePost = async (req, res, next) => {
   }
 };
 
-const toggleLike = async (req, res, next) => {
+const reactToPost = async (req, res, next) => {
   try {
     const { postId, groupId } = req.params;
+    const { emoji } = req.body;
     const post = await GroupPosts(`${groupId}`).findById(postId);
-    const group = await Group.findById(groupId);
-    if (!post || !group) {
-      throw { groupPost: "Group or post do not exist", status: 404 };
-    }
-    if (post.likes.includes(req.auth.userId)) {
-      await post.updateOne({
-        $pull: {
-          likes: req.auth.userId,
-        },
-      });
-    } else {
-      await post.updateOne({
-        $push: {
-          likes: req.auth.userId,
-        },
-      });
-    }
+
+    await reactToPost(post, req.auth.userId, emoji);
+
     res.status(204).send({ success: true });
   } catch (err) {
     next(err);
@@ -113,5 +96,5 @@ module.exports = {
   createPost,
   editPost,
   deletePost,
-  toggleLike,
+  reactToPost,
 };

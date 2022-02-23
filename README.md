@@ -58,15 +58,23 @@ npm run devStart
    POST /api/profile/edit-profile -> authorization header | fullName, email, password | fullName, email, emailVerified <- Edit-Profile
    DELETE /api/profile/delete-profile -> authorization header & 'young' refresh token | | deletedProfile <- Delete-Profile
 
-3. Post
-   GET /api/group-posts/:groupId/post -> authorization header | page, limit as query params (optional) | all posts (( post )) <- Get-All-Posts-From-Group
-   POST /api/group-posts/:groupId/post -> authorization header | body | (( post )) <- Create-Post-In-Group
-   PUT /api/group-posts/:groupId/post/:postId -> authorization header | <- Edit-Post
-   PATCH /api/group-posts/edit-post -> authorization header | postId, body | (( post )) <- Like-Post
-   DELETE /api/group-posts/delete-post -> authorization header | postId | <- Delete-Post
+3. Group
+   GET /api/group/:groupId -> authorization header | | ((group)) <- Get-Group
+   POST /api/group/ -> authorization header | groupName, teachers, allowedClasses | ((group)) <- Create-Group
+   PUT /api/group/:groupId -> authorization header | groupName, teachers, allowedClasses | ((group)) <- Edit-Group
+   DELETE /api/group/:groupId -> authorization header | | | <- Delete-Group
 
-4. Group
-   GET /:groupId" -> authorization header | | ((group)) <- Get-Group
-   POST / -> authorization header | groupName, teachers, allowedClasses | ((group)) <- Create-Group
-   PUT /:groupId -> authorization header | groupName, teachers, allowedClasses | ((group)) <- Edit-Group
-   DELETE /:groupId -> authorization header | | | <- Delete-Group
+4. Post
+   GET /api/group/:groupId/post -> authorization header | page, limit as query params (optional) | all posts (( post )) <- Get-All-Posts-From-Group
+   POST /api/group/:groupId/post -> authorization header | body | (( post )) <- Create-Post-In-Group
+   PUT /api/group/:groupId/post/:postId -> authorization header | body | ((post)) <- Edit-Post
+   PATCH /api/group/:groupId/post/:postId -> authorization header | postId, body | (( post )) <- Like-Post
+   DELETE /api/group/:groupId/post/:postId -> authorization header | postId | <- Delete-Post
+
+5. Comment
+
+   GET /api/group/:groupId/post/:postId/comment -> authorization header | page, limit as query params (optional) | all comments ((comment)) <-> Get-All-Comments
+   POST /api/group/:groupId/post/:postId/comment -> authorization header | body | (( post )) <- Create-Comment-In-Post
+   PUT /api/group/:groupId/post/:postId/comment/:commentId -> authorization header | body | ((post)) <- Edit-Comment
+   DELETE /api/group/:groupId/post/:postId/comment/:commentId -> authorization header | body | (( post )) <- Like-Comment
+   PATCH /api/group/:groupId/post/:postId/comment/:commentId -> authorization header | postId | <- Delete-Post

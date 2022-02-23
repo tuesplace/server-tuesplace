@@ -1,8 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { authRouter, profileRouter, postRouter, groupRouter } = require("./routes");
+const { authRouter, profileRouter, postRouter, groupRouter, commentRouter } = require("./routes");
 const cors = require("cors");
-const { errorHandler } = require("./middleware");
+const {
+  errorHandler,
+  verifyToken,
+  verifyGroupExists,
+  verifyInGroup,
+  verifyPostExists,
+} = require("./middleware");
 require("dotenv/config");
 
 const app = express();
@@ -13,11 +19,20 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use("/api/profile", profileRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/group-posts", postRouter);
 app.use("/api/group", groupRouter);
+app.use("/api/group/:groupId/post", verifyToken, verifyGroupExists, verifyInGroup, postRouter);
+app.use(
+  "/api/group/:groupId/post/:postId/comment",
+  verifyToken,
+  verifyGroupExists,
+  verifyInGroup,
+  verifyPostExists,
+  commentRouter
+);
 app.use(errorHandler);
 
 mongoose

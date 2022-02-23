@@ -6,15 +6,11 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-    groupId: {
-      type: String,
-      required: true,
-    },
     body: {
       type: String,
       default: "",
     },
-    likes: Array,
+    reactions: Array,
   },
   { timestamps: true }
 );
@@ -22,4 +18,7 @@ const postSchema = new Schema(
 const GroupPosts = (groupId) =>
   model(`postsOfGroup${groupId}`, postSchema, `postsOfGroup${groupId}`);
 
-module.exports = { Post: model("Post", postSchema), GroupPosts };
+const PostComments = (postId) =>
+  model(`commentsOfPost${postId}`, commentSchema, `commentsOfPost${postId}`);
+
+module.exports = { GroupPosts, PostComments };
