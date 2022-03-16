@@ -29,7 +29,6 @@ module.exports = async (req, res, next) => {
     if (!profile) {
       throw { profile: "Profile not found", status: 404 };
     }
-    console.log(profile.id);
     req.profile = profile;
 
     next();
