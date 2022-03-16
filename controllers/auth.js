@@ -37,13 +37,10 @@ const signUp = async (req, res, next) => {
 
     const { accessToken, refreshToken } = await createNewTokenPair(result.id);
 
-    res.send({
-      success: true,
-      response: {
-        accessToken,
-        refreshToken,
-        userId: result.id,
-      },
+    res.sendRes({
+      accessToken,
+      refreshToken,
+      userId: result.id,
     });
   } catch (err) {
     next(err);
@@ -69,10 +66,7 @@ const signIn = async (req, res, next) => {
 
     const { accessToken, refreshToken } = await createNewTokenPair(profile.id);
 
-    res.send({
-      success: true,
-      response: { accessToken, refreshToken, userId: profile.id },
-    });
+    res.sendRes({ accessToken, refreshToken, userId: profile.id });
   } catch (err) {
     next(err);
   }
@@ -95,10 +89,7 @@ const generateAccessToken = async (req, res, next) => {
       refreshTokenFamilyId,
       userId
     );
-    res.send({
-      success: true,
-      response: { accessToken, refreshToken, id: userId },
-    });
+    res.sendRes({ accessToken, refreshToken, id: userId });
   } catch (err) {
     if (err.name === "TokenExpiredError") {
       const { refreshTokenFamilyId } = jwt.decode(req.body.refreshToken);

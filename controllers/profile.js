@@ -41,7 +41,7 @@ const editProfile = async (req, res, next) => {
 
     await profile.save();
 
-    res.send({ success: false, response: { ...profile._doc } });
+    res.sendRes({ ...profile._doc });
   } catch (err) {
     next(err);
   }
@@ -56,7 +56,7 @@ const deleteProfile = async (req, res, next) => {
 
     await profile.deleteOne();
 
-    res.send({ success: true, response: { deletedProfile: true } });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }

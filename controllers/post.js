@@ -1,7 +1,7 @@
 const { GroupPosts } = require("../models/Post");
 const Group = require("../models/Group");
 const { validatePost } = require("../util/validators");
-const reactToPost = require("../util/reactToPostComment");
+const reactToPostComment = require("../util/reactToPostComment");
 
 const getPosts = async (req, res, next) => {
   try {
@@ -21,7 +21,7 @@ const getPosts = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip(page * limit)
       .limit(limit);
-    res.send({ success: true, response: { groupPosts } });
+    res.sendRes(groupPosts);
   } catch (err) {
     next(err);
   }
@@ -41,7 +41,7 @@ const createPost = async (req, res, next) => {
       authorId: req.auth.userId,
       body,
     });
-    res.send({ success: true, response: { post: { ...post._doc } } });
+    res.sendRes({ ...post._doc });
   } catch (err) {
     next(err);
   }
@@ -60,7 +60,7 @@ const editPost = async (req, res, next) => {
 
     post.body = body || "";
     await post.save();
-    res.send({ success: true, response: { post: { ...post._doc } } });
+    res.sendRes({ ...post._doc });
   } catch (err) {
     next(err);
   }
@@ -71,7 +71,7 @@ const deletePost = async (req, res, next) => {
     const { postId, groupId } = req.params;
     const post = await GroupPosts(`${groupId}`).findById(postId);
     await post.deleteOne();
-    res.status(204).send({ success: true });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }
@@ -83,9 +83,9 @@ const reactToPost = async (req, res, next) => {
     const { emoji } = req.body;
     const post = await GroupPosts(`${groupId}`).findById(postId);
 
-    await reactToPost(post, req.auth.userId, emoji);
+    await reactToPostComment(post, req.auth.userId, emoji);
 
-    res.status(204).send({ success: true });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }

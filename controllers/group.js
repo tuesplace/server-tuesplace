@@ -7,7 +7,7 @@ const getGroup = async (req, res, next) => {
   try {
     const { groupId } = req.params;
     const group = await Group.findById(groupId);
-    res.send({ success: true, response: { ...group._doc } });
+    res.sendRes({ ...group._doc });
   } catch (err) {
     next(err);
   }
@@ -32,7 +32,7 @@ const createGroup = async (req, res, next) => {
       teachers,
       allowedClasses,
     });
-    res.send({ success: true, response: { group } });
+    res.sendRes(group);
   } catch (err) {
     next(err);
   }
@@ -55,7 +55,7 @@ const editGroup = async (req, res, next) => {
     group.teachers = teachers || group.teachers;
     group.allowedClasses = allowedClasses || group.allowedClasses;
     await group.save();
-    res.send({ success: true, response: { group: { ...group._doc } } });
+    res.sendRes({ ...group._doc });
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { authRouter, profileRouter, postRouter, groupRouter, commentRouter } = require("./routes");
+const {
+  authRouter,
+  profileRouter,
+  postRouter,
+  groupRouter,
+  commentRouter,
+  markRouter,
+} = require("./routes");
 const cors = require("cors");
 const {
   errorHandler,
@@ -8,6 +15,10 @@ const {
   verifyGroupExists,
   verifyInGroup,
   verifyPostExists,
+  resSender,
+  verifyGroupRedactor,
+  verifyStudentExists,
+  verifyStudentInGroup,
 } = require("./middleware");
 require("dotenv/config");
 
@@ -21,6 +32,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(resSender);
 app.use("/api/profile", profileRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/group", groupRouter);
@@ -32,6 +44,16 @@ app.use(
   verifyInGroup,
   verifyPostExists,
   commentRouter
+);
+app.use(
+  "/api/group/:groupId/student/:studentId/mark",
+  verifyToken,
+  verifyGroupExists,
+  verifyInGroup,
+  verifyGroupRedactor,
+  verifyStudentExists,
+  verifyStudentInGroup,
+  markRouter
 );
 app.use(errorHandler);
 

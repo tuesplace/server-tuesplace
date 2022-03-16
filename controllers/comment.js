@@ -1,6 +1,6 @@
 const { PostComments } = require("../models/Post");
 const { validatePost } = require("../util/validators");
-const reactToComment = require("../util/reactToPostComment");
+const reactToPostComment = require("../util/reactToPostComment");
 
 const getComments = async (req, res, next) => {
   try {
@@ -20,7 +20,7 @@ const getComments = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip(page * limit)
       .limit(limit);
-    res.send({ success: true, response: { postComments } });
+    res.sendRes(postComments);
   } catch (err) {
     next(err);
   }
@@ -39,7 +39,7 @@ const createComment = async (req, res, next) => {
       authorId: req.auth.userId,
       body,
     });
-    res.send({ success: true, response: { comment: { ...comment._doc } } });
+    res.sendRes({ ...comment._doc });
   } catch (err) {
     next(err);
   }
@@ -58,7 +58,7 @@ const editComment = async (req, res, next) => {
 
     comment.body = body || "";
     await comment.save();
-    res.send({ success: true, response: { comment: { ...comment._doc } } });
+    res.sendRes({ ...comment._doc });
   } catch (err) {
     next(err);
   }
@@ -69,7 +69,7 @@ const deleteComment = async (req, res, next) => {
     const { postId, commentId } = req.params;
     const comment = await PostComments(postId).findById(commentId);
     await comment.deleteOne();
-    res.status(204).send({ success: true });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }
@@ -81,9 +81,9 @@ const reactToComment = async (req, res, next) => {
     const { emoji } = req.body;
     const comment = await PostComments(`${postId}`).findById(commentId);
 
-    await reactToComment(comment, req.auth.userId, emoji);
+    await reactToPostComment(comment, req.auth.userId, emoji);
 
-    res.status(204).send({ success: true });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }
