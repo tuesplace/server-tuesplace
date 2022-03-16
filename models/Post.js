@@ -15,10 +15,9 @@ const postSchema = new Schema(
   { timestamps: true }
 );
 
-const GroupPosts = (groupId) =>
-  model(`postsOfGroup${groupId}`, postSchema, `postsOfGroup${groupId}`);
+const GroupPosts = (groupId) => model(`group${groupId}posts`, postSchema, `group${groupId}posts`);
 
 const PostComments = (postId) =>
-  model(`commentsOfPost${postId}`, commentSchema, `commentsOfPost${postId}`);
+  model(`post${postId}comments`, commentSchema, `post${postId}comments`);
 
 module.exports = { GroupPosts, PostComments };
