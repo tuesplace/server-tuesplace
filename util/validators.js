@@ -116,6 +116,19 @@ const validateGroup = ({ groupName, teachers, allowedClasses }, isStrict) => {
   };
 };
 
+const validateMark = (mark) => {
+  const errors = {};
+
+  if (!_.isNumber(mark) || mark < 2 || mark > 6) {
+    errors.mark = "Invalid mark type";
+  }
+
+  return {
+    errors,
+    valid: !Object.keys(errors).length,
+  };
+};
+
 module.exports = {
   validateUser,
   validatePassword,
@@ -123,4 +136,5 @@ module.exports = {
   validateSignIn,
   validatePost,
   validateGroup,
+  validateMark,
 };

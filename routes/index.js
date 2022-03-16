@@ -3,6 +3,7 @@ const profileRouter = require("./profile");
 const postRouter = require("./post");
 const groupRouter = require("./group");
 const commentRouter = require("./comment");
+const markRouter = require("./mark");
 
 module.exports = {
   authRouter,
@@ -10,4 +11,5 @@ module.exports = {
   postRouter,
   groupRouter,
   commentRouter,
+  markRouter,
 };
