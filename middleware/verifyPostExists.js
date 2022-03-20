@@ -1,4 +1,3 @@
-const Group = require("../models/Group");
 const { GroupPosts } = require("../models/Post");
 
 module.exports = async (req, _, next) => {

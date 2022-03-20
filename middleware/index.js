@@ -9,6 +9,7 @@ const verifyCommentExists = require("./verifyCommentExists");
 const verifyMadeComment = require("./verifyMadeComment");
 const verifyStudentExists = require("./verifyStudentExists");
 const verifyStudentInGroup = require("./verifyStudentInGroup");
+const verifyMarkExists = require("./verifyMarkExists");
 const errorHandler = require("./errorHandler");
 const resSender = require("./resSender");
 
@@ -24,6 +25,7 @@ module.exports = {
   verifyMadeComment,
   verifyStudentExists,
   verifyStudentInGroup,
+  verifyMarkExists,
   errorHandler,
   resSender,
 };

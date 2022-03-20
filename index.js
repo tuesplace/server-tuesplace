@@ -46,13 +46,11 @@ app.use(
   commentRouter
 );
 app.use(
-  "/api/group/:groupId/student/:studentId/mark",
+  "/api/group/:groupId/mark",
   verifyToken,
   verifyGroupExists,
   verifyInGroup,
   verifyGroupRedactor,
-  verifyStudentExists,
-  verifyStudentInGroup,
   markRouter
 );
 app.use(errorHandler);

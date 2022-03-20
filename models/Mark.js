@@ -10,15 +10,14 @@ const markSchema = new Schema(
       type: String,
       required: true,
     },
+    studentId: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-const StudentMarks = (groupId, studentId) =>
-  model(
-    `group${groupId}student${studentId}marks`,
-    markSchema,
-    `group${groupId}student${studentId}marks`
-  );
+const StudentMarks = (groupId) => model(`group${groupId}marks`, markSchema, `group${groupId}marks`);
 
 module.exports = { StudentMarks };
