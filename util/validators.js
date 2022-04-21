@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const options = require("./options");
+const { EmailInvalid, PasswordInvalid } = require("../errors");
 
 const validatePost = ({ body }) => {
   const errors = {};
@@ -37,20 +38,17 @@ const validateSignUp = (fullName, email, password, passwordConfirm) => {
 };
 
 const validateSignIn = (email, password) => {
-  const errors = {};
+  const errors = [];
 
   if (!_.isString(email)) {
-    errors.email = "email must be a valid string";
+    errors.push(EmailInvalid);
   }
-  if (!_.isString(password)) {
-    errors.password = "Password must be a valid string and must not be empty";
-  }
-  if (password === "") {
-    errors.password = "Паролата не може да бъде празна";
+  if (!_.isString(password) || !password.length) {
+    errors.push(PasswordInvalid);
   }
   return {
     errors,
-    valid: Object.keys(errors).length < 1,
+    valid: !errors.length,
   };
 };
 

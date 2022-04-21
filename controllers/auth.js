@@ -9,6 +9,8 @@ const { validateSignUp, validateSignIn } = require("../util/validators");
 const { createNewTokenPair, rotateTokenPair } = require("../util/createTokenPair");
 
 const RefreshTokenFamily = require("../models/RefreshTokenFamily");
+const RESTError = require("../errors/RESTError");
+const { WrongPassword, ResourceNotFound } = require("../errors");
 
 const signUp = async (req, res, next) => {
   try {
@@ -50,18 +52,20 @@ const signUp = async (req, res, next) => {
 const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    
     const { errors, valid } = validateSignIn(email, password);
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
+
 
     const profile = await Profile.findOne({ email });
     if (!profile) {
-      throw { general: "Не съществува такъв акаунт", status: 404 };
+      throw new RESTError(ResourceNotFound("user"), 404); 
     }
 
     if (!(await bcrypt.compare(password, profile.password))) {
-      throw { password: "Грешна парола", status: 401 };
+      throw new RESTError(WrongPassword, 401);
     }
 
     const { accessToken, refreshToken } = await createNewTokenPair(profile.id);
@@ -81,7 +85,7 @@ const generateAccessToken = async (req, res, next) => {
 
     const userProfile = await User.findById(userId);
     if (!userProfile) {
-      throw { user: "User not found", status: 404 };
+      throw new RESTError(ResourceNotFound("user"), 404);
     }
 
     const { accessToken, refreshToken } = await rotateTokenPair(

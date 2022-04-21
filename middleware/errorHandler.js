@@ -1,10 +1,22 @@
-const lodash = require("lodash");
+const sendAdminEmail = require("../util/sendAdminEmail");
+
+const transformError = (err) => {
+  return {
+    success: false,
+    name: err.name,
+    code: err.code,
+    errors: err.errors || {
+      type: err.name,
+      message: err.message,
+    },
+    controller: err.name == "RESTError" ? err.message : undefined
+  };
+};
 
 module.exports = (err, _, res, __) => {
-  res.status(err.name ? 400 : err.status || 500).send({
-    success: false,
-    errors: err.name
-      ? { [err.name]: err.message, stack: err.stack }
-      : { ...lodash.omit({ ...err }, "status") },
-  });
+  if (!err.code) {
+    sendAdminEmail(err);
+  }
+
+  res.status(err.code || 500).send(transformError(err));
 };
