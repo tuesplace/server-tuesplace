@@ -1,0 +1,82 @@
+paths: 
+  /auth/sign-in:
+    post:
+      tags:
+        - Auth
+      name: Sign In
+      summary: Signs-In a user
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+                format: password
+          required:
+            - username
+            - password
+      responses:
+        200:
+          description: On Successful Sign In
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthObject"
+
+        400:
+          $ref: "#/components/responses/Validation"
+
+        401:
+          description: Password is Incorrect
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordInvalid"
+
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+
+        500:
+          $ref: "#/components/responses/ServerError"
+
+  /auth/generate-token-pair:
+  post:
+    tags:
+      - Auth
+    name: Generate Token Pair
+    summary: Generates an Auth Token Pair
+    produces:
+      - application/json
+    consumes:
+      - application/json
+    parameters:
+      - name: body
+        in: body
+        schema:
+          type: object
+          properties:
+            refreshToken:
+              type: string
+              example: eyJajajajaaawda
+          required:
+            - refreshToken
+    responses:
+      200:
+        description: On Successful Token Generation
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthObject"
+      404:
+        $ref: "#/components/responses/ResourceNotFound"
+
+      500:
+        $ref: "#/components/responses/ServerError"
