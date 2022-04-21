@@ -1,5 +1,9 @@
 const express = require("express");
+require("dotenv/config");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const swaggerUI = require('swagger-ui-express');
+
 const {
   authRouter,
   profileRouter,
@@ -8,7 +12,6 @@ const {
   commentRouter,
   markRouter,
 } = require("./routes");
-const cors = require("cors");
 const {
   errorHandler,
   verifyToken,
@@ -17,10 +20,8 @@ const {
   verifyPostExists,
   resSender,
   verifyGroupRedactor,
-  verifyStudentExists,
-  verifyStudentInGroup,
 } = require("./middleware");
-require("dotenv/config");
+const swaggerDoc = require("./swaggerDoc");
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use(
   verifyGroupRedactor,
   markRouter
 );
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc, {customSiteTitle: "tuesplace API Docs"}));
 app.use(errorHandler);
 
 mongoose
