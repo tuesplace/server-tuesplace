@@ -12,14 +12,15 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-module.exports = async (receiverEmail, subject, html) => {
+module.exports = async (receiverEmail, subject, html, attachments) => {
   try {
     await transporter.sendMail({
-      from: `Noreply @ Prospect <no-reply@prospect.education>`,
+      from: `noreply @ tuesplace <no-reply@tuesplace.com>`,
       to: receiverEmail,
       subject,
       text,
       html,
+      attachments
     });
   } catch (err) {
     console.error(err);
