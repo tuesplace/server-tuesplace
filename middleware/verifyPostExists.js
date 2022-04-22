@@ -1,3 +1,4 @@
+const { RESTError, PostNotFound } = require("../errors");
 const { GroupPosts } = require("../models/Post");
 
 module.exports = async (req, _, next) => {
@@ -5,7 +6,7 @@ module.exports = async (req, _, next) => {
     const { postId, groupId } = req.params;
     const post = await GroupPosts(`${groupId}`).findById(postId);
     if (!post) {
-      throw { post: "Post not found", status: 404 };
+      throw new RESTError(PostNotFound, 404);
     }
     req.post = post;
 

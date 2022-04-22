@@ -1,6 +1,7 @@
 const { PostComments } = require("../models/Post");
-const { validatePost } = require("../util/validators");
+const { validateComment } = require("../util/validators");
 const reactToPostComment = require("../util/reactToPostComment");
+const { RESTError } = require("../errors");
 
 const getComments = async (req, res, next) => {
   try {
@@ -15,12 +16,12 @@ const getComments = async (req, res, next) => {
     page = parseInt(page);
     limit = parseInt(limit);
     if (page > 0) page -= 1;
-    const postComments = await PostComments(postId)
+    const comments = await PostComments(postId)
       .find({})
       .sort({ createdAt: -1 })
       .skip(page * limit)
       .limit(limit);
-    res.sendRes(postComments);
+    res.sendRes({ comments });
   } catch (err) {
     next(err);
   }
@@ -30,9 +31,9 @@ const createComment = async (req, res, next) => {
   try {
     const { postId } = req.params;
     const { body } = req.body;
-    const { errors, valid } = validatePost({ body });
+    const { errors, valid } = validateComment({ body });
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
 
     const comment = await PostComments(postId).create({
@@ -51,12 +52,11 @@ const editComment = async (req, res, next) => {
     const { body } = req.body;
     const comment = await PostComments(postId).findById(commentId);
 
-    const { errors, valid } = validatePost({ body });
+    const { errors, valid } = validateComment({ body });
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
 
-    comment.body = body || "";
     await comment.save();
     res.sendRes({ ...comment._doc });
   } catch (err) {

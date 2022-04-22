@@ -1,13 +1,15 @@
 const jwt = require("jsonwebtoken");
+const { RedundantAccessToken, ProfileNotFound, TokenNotProvided } = require("../errors");
+const RESTError = require("../errors/RESTError");
 const Profile = require("../models/Profile");
 const RefreshTokenFamily = require("../models/RefreshTokenFamily");
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, _, next) => {
   const authHeader = req.headers.authorization;
 
   try {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw { token: "No token provided", status: 400 };
+      throw new RESTError(TokenNotProvided, 400);
     }
     const token = authHeader.split("Bearer ")[1].trim();
 
@@ -19,29 +21,17 @@ module.exports = async (req, res, next) => {
       !refreshTokenFamily ||
       refreshTokenFamily.redundantTokens.includes(req.auth.refreshTokenId)
     ) {
-      throw {
-        tokenPair: "Access token points to invalid refresh token",
-        status: 400,
-      };
+      throw new RESTError(RedundantAccessToken, 404);
     }
 
     const profile = await Profile.findById(req.auth.userId);
     if (!profile) {
-      throw { profile: "Profile not found", status: 404 };
+      throw new RESTError(ProfileNotFound, 404);
     }
     req.profile = profile;
 
     next();
   } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      res.status(401).send({
-        sucess: false,
-        errors: {
-          token: "Автентификационния тоукън e изтекъл. Презаредете страницата.",
-        },
-      });
-      return;
-    }
     next(err);
   }
 };

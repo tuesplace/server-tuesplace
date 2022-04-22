@@ -8,7 +8,7 @@ module.exports = async (req, _, next) => {
       !group.teachers.includes(req.auth.userId) &&
       profile.role !== roles.admin
     ) {
-      throw { group: "You cannot post in this group", status: 401 };
+      throw new RESTError(GroupPermission, 401);
     }
 
     next();

@@ -1,3 +1,5 @@
+const { GroupNotFound } = require("../errors");
+const RESTError = require("../errors/RESTError");
 const Group = require("../models/Group");
 
 module.exports = async (req, _, next) => {
@@ -5,7 +7,7 @@ module.exports = async (req, _, next) => {
     const { groupId } = req.params;
     const group = await Group.findById(groupId);
     if (!group) {
-      throw { group: "group does not exist" };
+      throw new RESTError(GroupNotFound, 404);
     }
     req.group = group;
 

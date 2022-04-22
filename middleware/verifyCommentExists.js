@@ -1,3 +1,4 @@
+const { RESTError, CommentNotFound } = require("../errors");
 const { PostComments } = require("../models/Post");
 
 module.exports = async (req, _, next) => {
@@ -5,7 +6,7 @@ module.exports = async (req, _, next) => {
     const { postId, commentId } = req.params;
     const comment = await PostComments(`${postId}`).findById(commentId);
     if (!comment) {
-      throw { comment: "Comment not found", status: 404 };
+      throw new RESTError(CommentNotFound, 404);
     }
     req.comment = comment;
 

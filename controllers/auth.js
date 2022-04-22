@@ -10,7 +10,7 @@ const { createNewTokenPair, rotateTokenPair } = require("../util/createTokenPair
 
 const RefreshTokenFamily = require("../models/RefreshTokenFamily");
 const RESTError = require("../errors/RESTError");
-const { WrongPassword, ResourceNotFound } = require("../errors");
+const { WrongPassword, ProfileNotFound, EmailTaken } = require("../errors");
 
 const signUp = async (req, res, next) => {
   try {
@@ -24,7 +24,7 @@ const signUp = async (req, res, next) => {
     const emailTaken = await Profile.findOne({ email });
 
     if (emailTaken) {
-      throw { email: "Имейлът се използва от друг профил", status: 400 };
+      throw new RESTError(EmailTaken, 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -61,7 +61,7 @@ const signIn = async (req, res, next) => {
 
     const profile = await Profile.findOne({ email });
     if (!profile) {
-      throw new RESTError(ResourceNotFound("user"), 404); 
+      throw new RESTError(ProfileNotFound, 404); 
     }
 
     if (!(await bcrypt.compare(password, profile.password))) {
@@ -83,9 +83,9 @@ const generateAccessToken = async (req, res, next) => {
       process.env.REFRESH_TOKEN_SECRET
     );
 
-    const userProfile = await User.findById(userId);
-    if (!userProfile) {
-      throw new RESTError(ResourceNotFound("user"), 404);
+    const profile = await Profile.findById(userId);
+    if (!profile) {
+      throw new RESTError(ProfileNotFound, 404);
     }
 
     const { accessToken, refreshToken } = await rotateTokenPair(
