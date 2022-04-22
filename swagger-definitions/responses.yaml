@@ -1,0 +1,62 @@
+components:
+  responses:
+    ServerError:
+      description: Server Returned Error Unexpectedly
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/Error"
+    Validation:
+      description: Validation of request body failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/RESTError"
+    ResourceNotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/ResourceNotFound"
+    Auth:
+      description: Auth Object Returned from Auth
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/Auth"
+    ResourceNotProvided:
+      description: Resource not provided
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/ResourceNotProvided"
+    GroupPermission:
+      description: Request Initiator cannot CRUD in Group
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/GroupPermission"
+    PostComments:
+      description: All/Paginated Comments of a Post
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/PostComments"
+    ResourceBodyInvalid:
+      description: Body of resource (Post, Comment) is not a string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/ResourceBodyInvalid"
+    ResourceBodySurpassMaxLength:
+      description: Body of resource (Post, Comment) exceeds maximum length
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/ResourceBodySurpassMaxLength"
+    NotResourceAuthor:
+      description: Request Initiator is not the author of this {{resource}}
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/NotResourceAuthor"

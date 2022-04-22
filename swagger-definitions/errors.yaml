@@ -1,0 +1,223 @@
+components:
+  errors:
+    ErrorsItem:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+      required:
+        - type
+        - message
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Error
+        success:
+          type: boolean
+          example: false
+        errors:
+          type: array
+          items:
+            $ref: "#/components/errors/ErrorsItem"
+      required:
+        - name
+        - success
+        - status
+        - errors
+    RESTError:
+      allOf:
+        - $ref: "#/components/errors/Error"
+        - type: object
+          properties:
+            name:
+              type: string
+              example: RESTError
+            code:
+              type: integer
+          required:
+            - code
+            - controller
+    EmailInvalid:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 400
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: EmailInvalid
+                  message:
+                    type: string
+                    example: "Email must be a valid string"
+    ResourceNotProvided:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 400
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: ResourceNotProvided
+                  message:
+                    type: string
+                    example: Resource of type {{type}} not provided
+    ResourceBodyInvalid:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 400
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: ResourceBodyInvalid
+                  message:
+                    type: string
+                    example: Body of resource (Post, Comment) is not a string
+    ResourceBodySurpassMaxLength:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 400
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: ResourceBodySurpassMaxLength
+                  message:
+                    type: string
+                    example: Body of resource (Post, Comment) exceeds maximum length
+    NotResourceAuthor:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 403
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: NotResourceAuthor
+                  message:
+                    type: string
+                    example: Request Initiator is not the author of this {{resource}}
+    RedundantAccessToken:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 404
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: RedundantAccessToken
+                  message:
+                    type: string
+                    example: Access token points to invalid refresh token
+    PasswordInvalid:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 401
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: PasswordInvalid
+                  message:
+                    type: string
+                    example: "Password must be a valid string"
+    ResourceNotFound:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 404
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: ResourceNotFound
+                  message:
+                    type: string
+                    example: Resource of type {{type}} not found
+    WrongPassword:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 401
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: WrongPassword
+                  message:
+                    type: string
+                    example: "Password is incorrect"
+    GroupPermission:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 401
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: GroupPermission
+                  message:
+                    type: string
+                    example: "You cannot post in this group"

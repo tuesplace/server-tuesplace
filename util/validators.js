@@ -1,18 +1,37 @@
 const _ = require("lodash");
 const options = require("./options");
-const { EmailInvalid, PasswordInvalid } = require("../errors");
+const {
+  EmailInvalid,
+  PasswordInvalid,
+  PostBodyInvalid,
+  PostBodySurpassMaxLength,
+} = require("../errors");
 
 const validatePost = ({ body }) => {
-  const errors = {};
-  if (!_.isString(body)) {
-    errors.body = "Body must be a valid string";
-  } else if (body.length > 750) {
-    errors.body = "Тялото на поста е твърде дълго";
+  const errors = [];
+  if (!_.isString(body) || !body.length) {
+    errors.push(PostBodyInvalid);
+  } else if (body.length > 1000) {
+    errors.push(PostBodySurpassMaxLength);
   }
 
   return {
     errors,
-    valid: Object.keys(errors).length < 1,
+    valid: !errors.length,
+  };
+};
+
+const validateComment = ({ body }) => {
+  const errors = [];
+  if (!_.isString(body) || !body.length) {
+    errors.push(CommentBodyInvalid);
+  } else if (body.length > 1000) {
+    errors.push(CommentBodySurpassMaxLength);
+  }
+
+  return {
+    errors,
+    valid: !errors.length,
   };
 };
 
@@ -129,6 +148,7 @@ const validateMark = (mark) => {
 
 module.exports = {
   validateUser,
+  validateComment,
   validatePassword,
   validateSignUp,
   validateSignIn,

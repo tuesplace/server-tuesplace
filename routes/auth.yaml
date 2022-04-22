@@ -1,4 +1,4 @@
-paths: 
+paths:
   /auth/sign-in:
     post:
       tags:
@@ -20,16 +20,14 @@ paths:
               password:
                 type: string
                 format: password
+            required:
+              - email
+              - password
           required:
-            - username
-            - password
+            - body
       responses:
         200:
-          description: On Successful Sign In
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthObject"
+          $ref: "#/components/responses/Auth"
 
         400:
           $ref: "#/components/responses/Validation"
@@ -39,7 +37,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PasswordInvalid"
+                $ref: "#/components/errors/PasswordInvalid"
 
         404:
           $ref: "#/components/responses/ResourceNotFound"
@@ -48,35 +46,31 @@ paths:
           $ref: "#/components/responses/ServerError"
 
   /auth/generate-token-pair:
-  post:
-    tags:
-      - Auth
-    name: Generate Token Pair
-    summary: Generates an Auth Token Pair
-    produces:
-      - application/json
-    consumes:
-      - application/json
-    parameters:
-      - name: body
-        in: body
-        schema:
-          type: object
-          properties:
-            refreshToken:
-              type: string
-              example: eyJajajajaaawda
-          required:
-            - refreshToken
-    responses:
-      200:
-        description: On Successful Token Generation
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthObject"
-      404:
-        $ref: "#/components/responses/ResourceNotFound"
+    post:
+      tags:
+        - Auth
+      name: Generate Token Pair
+      summary: Generates an Auth Token Pair
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              refreshToken:
+                type: string
+                example: eyJajajajaaawda
+            required:
+              - refreshToken
+      responses:
+        200:
+          $ref: "#/components/responses/Auth"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
 
-      500:
-        $ref: "#/components/responses/ServerError"
+        500:
+          $ref: "#/components/responses/ServerError"

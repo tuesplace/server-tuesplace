@@ -1,0 +1,98 @@
+components:
+  objects:
+    AuthObject:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT Access Token
+          example: eyYawdwadaadadawdaxsadawdawdasd
+        refreshToken:
+          type: string
+          description: JWT Refresh Token
+          example: eyYawdwadaadadawdaxsadawdawdasd
+        userId:
+          type: string
+          description: User Id
+          example: 6180fc001jn129c91291j
+    Auth:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  description: JWT Access Token
+                  example: eyYawdwadaadadawdaxsadawdawdasd
+                refreshToken:
+                  type: string
+                  description: JWT Refresh Token
+                  example: eyYawdwadaadadawdaxsadawdawdasd
+                userId:
+                  type: string
+                  description: User Id
+                  example: 6180fc001jn129c91291j
+    SuccessfulResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        response:
+          type: object
+      required:
+        - success
+        - response
+    Comment:
+      type: object
+      properties:
+        authorId:
+          type: string
+        reaction:
+          type: string
+      required:
+        - authorId
+        - reaction
+    CommentResponse:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              $ref: "#/components/objects/Comment"
+    PostComments:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              type: object
+              properties:
+                comments:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      authorId:
+                        type: string
+                      body:
+                        type: string
+                      reactions:
+                        type: array
+                        items:
+                          $ref: "#/components/object/Comment"
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                    required:
+                      - authorId
+                      - body
+                      - reactions
+                      - createdAt
+                      - updatedAt

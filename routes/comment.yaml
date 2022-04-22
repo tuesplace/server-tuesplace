@@ -1,0 +1,243 @@
+paths:
+  /group/{groupId}/post/{postId}/comment:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      name: Get Comments
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get All Comments of a Post
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        200:
+          $ref: "#/components/responses/PostComments"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      name: Create Comment
+      summary: Create a Comment of a Post
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              body:
+                type: string
+                example: What a nice post!
+            required:
+              - body
+      responses:
+        200:
+          description: Created Comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/objects/CommentResponse"
+        400:
+          description: Comment Validation Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/errors/ResourceBodyInvalid"
+                  - $ref: "#/components/errors/ResourceBodySurpassMaxLength"
+                discriminator: errors
+
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /group/{groupId}/post/{postId}/comment/{commentId}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      name: Edit Comment
+      summary: Changes a Comment`s Body
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        200:
+          description: Edited Comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/objects/CommentResponse"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
+        400:
+          description: Comment Validation Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/errors/ResourceBodyInvalid"
+                  - $ref: "#/components/errors/ResourceBodySurpassMaxLength"
+                discriminator: errors
+
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      name: React to Comment
+      summary: Adds a Reaction to a Comment`s Reactions Property
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              emoji:
+                type: string
+                example: 🙂
+                format: emoji
+            required:
+              - emoji
+      responses:
+        204:
+          description: Reacted/Unreacted to Comment
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      name: Delete Comment
+      summary: Delete
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        204:
+          description: Deleted Comment
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
