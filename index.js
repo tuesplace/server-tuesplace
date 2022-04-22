@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv/config");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const swaggerUI = require('swagger-ui-express');
+const swaggerUI = require("swagger-ui-express");
 
 const {
   authRouter,
@@ -54,8 +54,17 @@ app.use(
   verifyGroupRedactor,
   markRouter
 );
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc, {customSiteTitle: "tuesplace API Docs"}));
+app.use(
+  "/api-docs",
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerDoc, {
+    customSiteTitle: "tuesplace API Docs",
+    customfavIcon: "/favicon.ico",
+  })
+);
 app.use(errorHandler);
+
+app.use(express.static("./assets"));
 
 mongoose
   .connect(process.env.MONGO_DB_CONNECTION_STRING, {

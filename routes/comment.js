@@ -12,7 +12,7 @@ const {
 router.get("", getComments);
 router.post("", createComment);
 router.put("/:commentId", [verifyCommentExists, verifyMadeComment], editComment);
-router.delete("/:commentId", [verifyCommentExists, verifyMadeComment], deleteComment);
 router.patch("/:commentId", [verifyCommentExists], reactToComment);
+router.delete("/:commentId", [verifyCommentExists, verifyMadeComment], deleteComment);
 
 module.exports = router;
