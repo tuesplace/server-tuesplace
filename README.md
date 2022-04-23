@@ -5,12 +5,12 @@
 Инсталиране на nvm (Node Version Manager) за Windows`https://dev.to/skaytech/how-to-install-node-version-manager-nvm-for-windows-10-4nbi`
 
 ```bash
-nvm install 14.18.0
-nvm use 14.18.0
+nvm install 18.0.0
+nvm use 18.0.0
 ```
 
 ```bash
-npm install npm@8.0.0 -g
+npm install npm@8.6.0 -g
 ```
 
 Всеки editor става, но препоръчвам Visual Studio Code
@@ -23,13 +23,13 @@ npm install npm@8.0.0 -g
 node -v
 ```
 
-Трябва да върне 14.18.0
+Трябва да върне 18.0.0
 
 ```bash
 npm -v
 ```
 
-Трябва да върне 8.0.0
+Трябва да върне 8.6.0
 
 ## Подкарване на сървъра
 
@@ -39,7 +39,7 @@ npm -v
 
 ```bash
 npm install
-npm run devStart
+npm run start:dev
 ```
 
 Вече би трябвало да се е пуснал nodemon-a и да виждаш "Server running on port 8888"
