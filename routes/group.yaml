@@ -1,0 +1,84 @@
+paths:
+  /group/{groupId}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Group
+      name: Get Group
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get Group Information
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        200:
+          $ref: "#/components/responses/Group"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Group
+      name: Create Group
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Create a Group
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              groupName:
+                type: string
+                example: 9В - Руски
+              teachers:
+                type: array
+                items:
+                  type: string
+                  format: ObjectId
+              allowedClasses:
+                type: array
+                items:
+                  type: string
+                  format: class
+            required:
+              - groupName
+              - teachers
+              - allowedClasses
+      responses:
+        200:
+          $ref: "#/components/responses/Group"
+        400:
+          description: Group Validation Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/errors/ResourcePropInvalid"
+                  - $ref: "#/components/errors/ResourceNotProvided"
+                discriminator: errors
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"

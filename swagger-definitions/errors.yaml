@@ -77,7 +77,7 @@ components:
                   message:
                     type: string
                     example: Resource of type {{type}} not provided
-    ResourceBodyInvalid:
+    ResourcePropInvalid:
       allOf:
         - $ref: "#/components/errors/RESTError"
         - type: object
@@ -91,11 +91,11 @@ components:
                 properties:
                   type:
                     type: string
-                    example: ResourceBodyInvalid
+                    example: ResourcePropInvalid
                   message:
                     type: string
-                    example: Body of resource (Post, Comment) is not a string
-    ResourceBodySurpassMaxLength:
+                    example: "{{prop}} of resource {{resource}} is not a valid {{type}}"
+    ResourcePropSurpassMaxLength:
       allOf:
         - $ref: "#/components/errors/RESTError"
         - type: object
@@ -109,10 +109,10 @@ components:
                 properties:
                   type:
                     type: string
-                    example: ResourceBodySurpassMaxLength
+                    example: ResourcePropSurpassMaxLength
                   message:
                     type: string
-                    example: Body of resource (Post, Comment) exceeds maximum length
+                    example: "{{prop}} of resource {{resource}} exceeds maximum length"
     NotResourceAuthor:
       allOf:
         - $ref: "#/components/errors/RESTError"
@@ -131,6 +131,24 @@ components:
                   message:
                     type: string
                     example: Request Initiator is not the author of this {{resource}}
+    NotRole:
+      allOf:
+        - $ref: "#/components/errors/RESTError"
+        - type: object
+          properties:
+            code:
+              example: 403
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: NotRole
+                  message:
+                    type: string
+                    example: Request Initiator must have role {{role}}
     RedundantAccessToken:
       allOf:
         - $ref: "#/components/errors/RESTError"

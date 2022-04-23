@@ -21,7 +21,7 @@ const getComments = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip(page * limit)
       .limit(limit);
-    res.sendRes({ comments });
+    res.sendRes(comments);
   } catch (err) {
     next(err);
   }

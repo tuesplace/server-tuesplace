@@ -3,6 +3,8 @@ const verifyYoungToken = require("./verifyYoungToken");
 const verifyGroupExists = require("./verifyGroupExists");
 const verifyInGroup = require("./verifyInGroup");
 const verifyGroupRedactor = require("./verifyGroupRedactor");
+const verifyAdmin = require("./verifyAdmin");
+const verifyTeacher = require("./verifyTeacher");
 const verifyMadePost = require("./verifyMadePost");
 const verifyPostExists = require("./verifyPostExists");
 const verifyCommentExists = require("./verifyCommentExists");
@@ -19,6 +21,8 @@ module.exports = {
   verifyGroupExists,
   verifyInGroup,
   verifyGroupRedactor,
+  verifyAdmin,
+  verifyTeacher,
   verifyMadePost,
   verifyPostExists,
   verifyCommentExists,

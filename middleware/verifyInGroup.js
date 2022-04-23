@@ -4,9 +4,9 @@ module.exports = async (req, _, next) => {
   try {
     const { profile, group } = req;
     if (
-      !group.allowedClasses.includes(profile.class) &&
-      !group.teachers.includes(req.auth.userId) &&
-      profile.role !== roles.admin
+      (profile.role === roles.teacher && !group.teachers.includes(req.auth.userId)) ||
+      (profile.role === roles.admin && !group.admins.includes(req.auth.userId)) ||
+      !group.allowedClasses.includes(profile.class)
     ) {
       throw new RESTError(GroupPermission, 401);
     }

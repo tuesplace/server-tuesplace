@@ -12,6 +12,7 @@ const groupSchema = new Schema(
     },
     allowedClasses: Array,
     teachers: Array,
+    admins: Array,
   },
   { timestamps: true }
 );

@@ -1,3 +1,4 @@
+const { RESTError } = require("../errors");
 const Group = require("../models/Group");
 const Profile = require("../models/Profile");
 const roles = require("../util/roles");
@@ -5,8 +6,7 @@ const { validateGroup } = require("../util/validators");
 
 const getGroup = async (req, res, next) => {
   try {
-    const { groupId } = req.params;
-    const group = await Group.findById(groupId);
+    const { group } = req;
     res.sendRes({ ...group._doc });
   } catch (err) {
     next(err);
@@ -16,16 +16,9 @@ const getGroup = async (req, res, next) => {
 const createGroup = async (req, res, next) => {
   try {
     const { groupName, teachers, allowedClasses } = req.body;
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile Not found", status: 404 };
-    }
-    if (profile.role !== roles.teacher && profile !== roles.admin) {
-      throw { profile: "You are not a teacher", status: 401 };
-    }
     const { errors, valid } = validateGroup({ groupName, teachers, allowedClasses }, true);
     if (!valid) {
-      throw { ...errors };
+      throw new RESTError(errors, 400);
     }
     const group = await Group.create({
       groupName,

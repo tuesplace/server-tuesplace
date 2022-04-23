@@ -5,6 +5,9 @@ const {
   PasswordInvalid,
   PostBodyInvalid,
   PostBodySurpassMaxLength,
+  GroupNameInvalid,
+  GroupTeachersInvalid,
+  GroupAllowedClassesInvalid,
 } = require("../errors");
 
 const validatePost = ({ body }) => {
@@ -112,24 +115,24 @@ const validateUser = ({ fullName, email, password }, isStrict) => {
 };
 
 const validateGroup = ({ groupName, teachers, allowedClasses }, isStrict) => {
-  const errors = {};
+  const errors = [];
   if ((!groupName || isStrict) && (!_.isString(groupName) || groupName.length > 150)) {
-    errors.groupName = "Invalid groupName";
+    errors.push(GroupNameInvalid);
   }
   if ((!teachers || isStrict) && (!_.isArray(teachers) || !teachers.length)) {
-    errors.teachers = "Invalid teachers";
+    errors.push(GroupTeachersInvalid);
   }
   if (
     (!allowedClasses || isStrict) &&
     (!_.isArray(allowedClasses) ||
       !!allowedClasses.filter((e) => !options.classes.includes(e)).length)
   ) {
-    errors.allowedClasses = "Invalid allowedClasses";
+    errors.push(GroupAllowedClassesInvalid);
   }
 
   return {
     errors,
-    valid: Object.keys(errors).length < 1,
+    valid: !errors.length,
   };
 };
 

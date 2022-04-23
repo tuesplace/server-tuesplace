@@ -95,8 +95,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/errors/ResourceBodyInvalid"
-                  - $ref: "#/components/errors/ResourceBodySurpassMaxLength"
+                  - $ref: "#/components/errors/ResourcePropInvalid"
+                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
                 discriminator: errors
 
         401:
@@ -147,8 +147,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/errors/ResourceBodyInvalid"
-                  - $ref: "#/components/errors/ResourceBodySurpassMaxLength"
+                  - $ref: "#/components/errors/ResourcePropInvalid"
+                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
                 discriminator: errors
 
         401:

@@ -36,7 +36,7 @@ app.use(express.json());
 app.use(resSender);
 app.use("/api/profile", profileRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/group", groupRouter);
+app.use("/api/group", verifyToken, groupRouter);
 app.use("/api/group/:groupId/post", verifyToken, verifyGroupExists, verifyInGroup, postRouter);
 app.use(
   "/api/group/:groupId/post/:postId/comment",

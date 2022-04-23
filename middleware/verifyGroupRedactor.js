@@ -1,18 +1,13 @@
-const Group = require("../models/Group");
-const Profile = require("../models/Profile");
+const { RESTError, GroupRedactor } = require("../errors");
 const roles = require("../util/roles");
 
 module.exports = async (req, _, next) => {
   try {
-    const { group } = req;
-    const profile = await Profile.findById(req.auth.userId);
-    if (profile.role !== roles.teacher && profile !== roles.admin) {
-      throw { profile: "You are not a teacher", status: 401 };
+    const { profile } = req;
+    if (profile.role !== roles.teacher && profile.role !== roles.admin) {
+      throw new RESTError(GroupRedactor, 403);
     }
 
-    if (!group.teachers.includes(req.auth.userId) && profile.role !== roles.admin) {
-      throw { group: "You need to be admin or teacher to edit", status: 401 };
-    }
     next();
   } catch (err) {
     next(err);

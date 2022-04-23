@@ -8,19 +8,24 @@ const ResourceNotProvided = (resource) => ({
   message: `Resource of type ${resource} not provided`,
 });
 
-const ResourceBodyInvalid = (resource) => ({
-  type: `${resource}BodyInvalid`,
-  message: `Body of ${resource} not a valid string`,
+const ResourcePropInvalid = (resource, prop, type) => ({
+  type: `${resource}${prop}Invalid`,
+  message: `${prop} of ${resource} not a valid ${type}`,
 });
 
-const ResourceBodySurpassMaxLength = (resource) => ({
+const ResourcePropSurpassMaxLength = (resource, prop) => ({
   type: `${resource}BodySurpassMaxLength`,
-  message: `Body of ${resource} exceeds maximum length`,
+  message: `${prop} of ${resource} exceeds maximum length`,
 });
 
 const NotResourceAuthor = (resource) => ({
   type: `${resource}Author`,
   message: `Request Initiator is not the author of this ${resource}`,
+});
+
+const NotRole = (role) => ({
+  type: `Not${role}`,
+  message: `Request Initiator must have role ${role}`,
 });
 
 module.exports = {
@@ -29,10 +34,15 @@ module.exports = {
   PostNotFound: ResourceNotFound("Post"),
   CommentNotFound: ResourceNotFound("Comment"),
   TokenNotProvided: ResourceNotProvided("Token"),
-  PostBodyInvalid: ResourceBodyInvalid("Post"),
-  CommentBodyInvalid: ResourceBodyInvalid("Comment"),
-  PostBodySurpassMaxLength: ResourceBodySurpassMaxLength("Post"),
-  CommentBodySurpassMaxLength: ResourceBodySurpassMaxLength("Comment"),
+  PostBodyInvalid: ResourcePropInvalid("Post", "Body", "String"),
+  CommentBodyInvalid: ResourcePropInvalid("Comment", "Body", "String"),
+  PostBodySurpassMaxLength: ResourcePropSurpassMaxLength("Post", "Body"),
+  CommentBodySurpassMaxLength: ResourcePropSurpassMaxLength("Comment", "Body"),
+  GroupNameInvalid: ResourcePropInvalid("Group", "Name", "String"),
+  GroupTeachersInvalid: ResourcePropInvalid("Group", "Teachers", "Array"),
+  GroupAllowedClassesInvalid: ResourcePropInvalid("Group", "AllowedClasses", "Array"),
+  NotAdmin: NotRole("Admin"),
+  NotTeacher: NotRole("Admin"),
   NotCommentAuthor: NotResourceAuthor("Comment"),
   EmailInvalid: {
     type: "EmailInvalid",
@@ -57,5 +67,9 @@ module.exports = {
   GroupPersmisson: {
     type: "GroupPersmisson",
     message: "You cannot post in this group",
+  },
+  GroupRedactor: {
+    type: "GroupRedactor",
+    message: "Request Initiator must be a teacher or admin",
   },
 };

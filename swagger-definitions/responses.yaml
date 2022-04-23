@@ -42,21 +42,33 @@ components:
         application/json:
           schema:
             $ref: "#/components/objects/PostComments"
-    ResourceBodyInvalid:
-      description: Body of resource (Post, Comment) is not a string
+    ResourcePropInvalid:
+      description: "{{prop}} of resource {{resource}} is not a {{type}}"
       content:
         application/json:
           schema:
-            $ref: "#/components/errors/ResourceBodyInvalid"
-    ResourceBodySurpassMaxLength:
-      description: Body of resource (Post, Comment) exceeds maximum length
+            $ref: "#/components/errors/ResourcePropInvalid"
+    ResourcePropSurpassMaxLength:
+      description: "{{prop}} of resource {{resource}} exceeds maximum length"
       content:
         application/json:
           schema:
-            $ref: "#/components/errors/ResourceBodySurpassMaxLength"
+            $ref: "#/components/errors/ResourcePropSurpassMaxLength"
     NotResourceAuthor:
       description: Request Initiator is not the author of this {{resource}}
       content:
         application/json:
           schema:
             $ref: "#/components/errors/NotResourceAuthor"
+    NotRole:
+      description: Request Initiator must have role {{role}}
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/errors/NotRole"
+    Group:
+      description: Group Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/Group"

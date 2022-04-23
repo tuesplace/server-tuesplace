@@ -63,6 +63,42 @@ components:
           properties:
             response:
               $ref: "#/components/objects/Comment"
+    Group:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              type: object
+              properties:
+                groupName:
+                  type: string
+                  example: "Group #1"
+                isChat:
+                  type: boolean
+                  example: false
+                allowedClasses:
+                  type: array
+                  items:
+                    type: string
+                    format: class
+                    example: "10v"
+                teachers:
+                  type: array
+                  items:
+                    type: string
+                    format: ObjectId
+                admins:
+                  type: array
+                  items:
+                    type: string
+                    format: ObjectId
+                createdAt:
+                  type: string
+                  format: date-time
+                updatedAt:
+                  type: string
+                  format: date-time
     PostComments:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
