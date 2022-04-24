@@ -20,6 +20,7 @@ import {
   verifyPostExists,
   resSender,
   verifyGroupRedactor,
+  verifyTeacher,
 } from "./middleware";
 import swaggerDoc from "./swaggerDoc";
 
@@ -56,8 +57,8 @@ app.use(
   "/api/group/:groupId/mark",
   verifyToken,
   verifyGroupExists,
+  verifyTeacher,
   verifyInGroup,
-  verifyGroupRedactor,
   markRouter
 );
 app.use(

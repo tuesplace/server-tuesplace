@@ -67,8 +67,14 @@ components:
           schema:
             $ref: "#/components/errors/NotRole"
     Group:
-      description: Group Response
+      description: Group Object
       content:
         application/json:
           schema:
             $ref: "#/components/objects/Group"
+    MarksArray:
+      description: Marks array
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/MarksArray"

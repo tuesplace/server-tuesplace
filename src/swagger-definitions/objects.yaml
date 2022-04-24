@@ -132,3 +132,35 @@ components:
                       - reactions
                       - createdAt
                       - updatedAt
+    Mark:
+      type: object
+      properties:
+        teacherId:
+          type: string
+          format: ObjectId
+        mark:
+          type: string
+        studentId:
+          type: string
+          format: ObjectId
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - teacherId
+        - mark
+        - studentId
+        - createdAt
+        - updatedAt
+    MarksArray:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              type: array
+              items:
+                $ref: "#/components/objects/Mark"

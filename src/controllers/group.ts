@@ -1,7 +1,5 @@
 import { RESTError } from "../errors";
 import Group from "../models/Group";
-import Profile from "../models/Profile";
-import roles from "../util/roles";
 import { validateGroup } from "../util/validators";
 import { Request, Response } from "express";
 import { IGroup } from "../@types/tuesplace";
@@ -38,18 +36,14 @@ const createGroup = async (req: Request, res: Response, next: any) => {
 
 const editGroup = async (req: Request, res: Response, next: any) => {
   try {
-    const { groupId } = req.params;
+    const { group } = req;
     const { groupName, teachers, allowedClasses } = req.body;
     const { errors, valid } = validateGroup(
       <IGroup>{ groupName, teachers, allowedClasses },
       false
     );
     if (!valid) {
-      throw { ...errors };
-    }
-    const group = await Group.findById(groupId);
-    if (!group) {
-      throw { group: "Group not found", status: 404 };
+      throw new RESTError(errors, 400);
     }
 
     group.groupName = groupName || group.groupName;
@@ -64,18 +58,7 @@ const editGroup = async (req: Request, res: Response, next: any) => {
 
 const deleteGroup = async (req: Request, res: Response, next: any) => {
   try {
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Profile Not Found", status: 404 };
-    }
-    if (profile.role != roles.admin) {
-      throw { profile: "Profile not admin", status: 401 };
-    }
-    const { groupId } = req.params;
-    const group = await Group.findById(groupId);
-    if (!group) {
-      throw { group: "Group not found", status: 404 };
-    }
+    const { group } = req;
     await group.deleteOne();
     res.status(204);
   } catch (err) {

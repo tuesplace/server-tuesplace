@@ -36,11 +36,15 @@ const PostNotFound = ResourceNotFound("Post");
 
 const CommentNotFound = ResourceNotFound("Comment");
 
+const StudentNotFound = ResourceNotFound("Student");
+
 const TokenNotProvided = ResourceNotProvided("Token");
 
 const PostBodyInvalid = ResourcePropInvalid("Post", "Body", "String");
 
 const CommentBodyInvalid = ResourcePropInvalid("Comment", "Body", "String");
+
+const StudentRoleInvalid = ResourcePropInvalid("Student", "Role", "Role");
 
 const PostBodySurpassMaxLength = ResourcePropSurpassMaxLength("Post", "Body");
 
@@ -62,6 +66,8 @@ const GroupAllowedClassesInvalid = ResourcePropInvalid(
 const NotAdmin = NotRole("Admin");
 
 const NotTeacher = NotRole("Admin");
+
+const NotStudent = NotRole("Student");
 
 const NotCommentAuthor = NotResourceAuthor("Comment");
 
@@ -100,14 +106,21 @@ const GroupRedactor = {
   message: "Request Initiator must be a teacher or admin",
 };
 
+const StudentNotGroupMember = {
+  type: "StudentNotGroupMember",
+  message: "Student is not a member of the Group",
+};
+
 export {
   ProfileNotFound,
   GroupNotFound,
   PostNotFound,
   CommentNotFound,
+  StudentNotFound,
   TokenNotProvided,
   PostBodyInvalid,
   CommentBodyInvalid,
+  StudentRoleInvalid,
   PostBodySurpassMaxLength,
   CommentBodySurpassMaxLength,
   GroupNameInvalid,
@@ -115,6 +128,7 @@ export {
   GroupAllowedClassesInvalid,
   NotAdmin,
   NotTeacher,
+  NotStudent,
   NotCommentAuthor,
   EmailInvalid,
   PasswordInvalid,
@@ -123,4 +137,5 @@ export {
   EmailTaken,
   GroupPermission,
   GroupRedactor,
+  StudentNotGroupMember,
 };
