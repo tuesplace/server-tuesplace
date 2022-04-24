@@ -1,6 +1,6 @@
-import IMongooseDocument from "./IMongooseDocument";
+import { IMongooseDocument } from "./IMongooseDocument";
 
-export default interface IProfile extends IMongooseDocument {
+export interface IProfile extends IMongooseDocument {
   fullName: string;
   email: string;
   password: string;

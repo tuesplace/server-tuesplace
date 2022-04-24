@@ -11,9 +11,7 @@ import {
   CommentBodyInvalid,
   CommentBodySurpassMaxLength,
 } from "../errors";
-import IPostComment from "../@types/tuesplace/IPostComment";
-import IProfile from "../@types/tuesplace/IProfile";
-import IGroup from "../@types/tuesplace/IGroup";
+import { IGroup, IProfile, IPostComment } from "../@types/tuesplace/";
 
 const validatePost = ({ body }: IPostComment) => {
   const errors = [];
@@ -47,7 +45,10 @@ const validatePassword = (password: string) => {
   const regExPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
   return (
     password &&
-    (!_.isString(password) || password === "" || !password.match(regExPass) || password.length < 7)
+    (!_.isString(password) ||
+      password === "" ||
+      !password.match(regExPass) ||
+      password.length < 7)
   );
 };
 
@@ -57,7 +58,10 @@ const validateSignUp = (
   password: string,
   passwordConfirm: string
 ) => {
-  const { errors } = validateUser(<IProfile>{ fullName, email, password }, true);
+  const { errors } = validateUser(
+    <IProfile>{ fullName, email, password },
+    true
+  );
 
   if (password !== passwordConfirm) {
     errors.passwordConfirm = "Паролите не съвпадат";
@@ -84,8 +88,17 @@ const validateSignIn = (email: string, password: string) => {
   };
 };
 
-const validateUser = ({ fullName, email, password }: IProfile, isStrict: boolean) => {
-  const errors = { general: "", fullName: "", email: "", password: "", passwordConfirm: "" };
+const validateUser = (
+  { fullName, email, password }: IProfile,
+  isStrict: boolean
+) => {
+  const errors = {
+    general: "",
+    fullName: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  };
 
   if (isStrict) {
     if (_.isEmpty(email) || _.isEmpty(password) || _.isEmpty(fullName)) {
@@ -105,6 +118,7 @@ const validateUser = ({ fullName, email, password }: IProfile, isStrict: boolean
   }
 
   const regExEmail =
+    // eslint-disable-next-line no-control-regex
     /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
   if (
     (!_.isEmpty(email) || isStrict) &&
@@ -124,9 +138,15 @@ const validateUser = ({ fullName, email, password }: IProfile, isStrict: boolean
   };
 };
 
-const validateGroup = ({ groupName, teachers, allowedClasses }: IGroup, isStrict: boolean) => {
+const validateGroup = (
+  { groupName, teachers, allowedClasses }: IGroup,
+  isStrict: boolean
+) => {
   const errors = [];
-  if ((!groupName || isStrict) && (!_.isString(groupName) || groupName.length > 150)) {
+  if (
+    (!groupName || isStrict) &&
+    (!_.isString(groupName) || groupName.length > 150)
+  ) {
     errors.push(GroupNameInvalid);
   }
   if ((!teachers || isStrict) && (!_.isArray(teachers) || !teachers.length)) {

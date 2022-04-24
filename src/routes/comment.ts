@@ -11,8 +11,16 @@ import {
 
 router.get("", getComments);
 router.post("", createComment);
-router.put("/:commentId", [verifyCommentExists, verifyMadeComment], editComment);
+router.put(
+  "/:commentId",
+  [verifyCommentExists, verifyMadeComment],
+  editComment
+);
 router.patch("/:commentId", [verifyCommentExists], reactToComment);
-router.delete("/:commentId", [verifyCommentExists, verifyMadeComment], deleteComment);
+router.delete(
+  "/:commentId",
+  [verifyCommentExists, verifyMadeComment],
+  deleteComment
+);
 
 export default router;

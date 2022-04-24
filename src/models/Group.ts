@@ -18,4 +18,4 @@ const groupSchema = new Schema<IGroup>(
   { timestamps: true }
 );
 
-export default model("Group", groupSchema);
+export default model<IGroup>("Group", groupSchema);

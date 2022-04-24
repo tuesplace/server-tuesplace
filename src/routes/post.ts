@@ -1,7 +1,13 @@
 import express from "express";
 const router = express.Router();
 import { verifyPostExists, verifyMadePost } from "../middleware";
-import { createPost, getPosts, editPost, deletePost, reactToPost } from "../controllers/post";
+import {
+  createPost,
+  getPosts,
+  editPost,
+  deletePost,
+  reactToPost,
+} from "../controllers/post";
 
 router.get("", getPosts);
 router.post("", createPost);

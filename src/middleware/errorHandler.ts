@@ -9,20 +9,23 @@ const transformError = (err: unknown) => {
     code: err instanceof RESTError ? err.code : undefined,
     errors:
       err instanceof RESTError
-        ? err.errors || {
-            type: err.name,
-            message: err.message,
-          }
+        ? err.errors || { type: err.name, message: err.message }
         : undefined,
     controller:
-      err instanceof RESTError ? (err.name == "RESTError" ? err.message : undefined) : undefined,
+      err instanceof RESTError
+        ? err.name == "RESTError"
+          ? err.message
+          : undefined
+        : undefined,
   };
 };
 
-export default (err: Request, _: any, res: Response, __: any) => {
+export default (err: Request, _: any, res: Response) => {
   if (err instanceof Error) {
     sendAdminEmail(err);
   }
 
-  res.status(err instanceof RESTError ? Number(err.code) : 500).send(transformError(err));
+  res
+    .status(err instanceof RESTError ? Number(err.code) : 500)
+    .send(transformError(err));
 };

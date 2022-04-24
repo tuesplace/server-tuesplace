@@ -1,3 +1,3 @@
-export default interface IMongooseDocument {
+export interface IMongooseDocument {
   _doc: any;
 }

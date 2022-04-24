@@ -43,7 +43,9 @@ const rotateTokenPair = async (
   refreshTokenFamilyId: string,
   userId: string
 ) => {
-  const refreshTokenFamily = await RefreshTokenFamily.findById(refreshTokenFamilyId);
+  const refreshTokenFamily = await RefreshTokenFamily.findById(
+    refreshTokenFamilyId
+  );
   if (!refreshTokenFamily) {
     throw { tokenPair: "Refresh Token does not exist", status: 401 };
   }

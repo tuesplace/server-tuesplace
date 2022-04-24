@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken";
-import { RedundantAccessToken, ProfileNotFound, TokenNotProvided } from "../errors/index";
+import {
+  RedundantAccessToken,
+  ProfileNotFound,
+  TokenNotProvided,
+} from "../errors/index";
 import RESTError from "../errors/RESTError";
 import Profile from "../models/Profile";
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
@@ -16,7 +20,9 @@ export default async (req: Request, _: any, next: any) => {
 
     req.auth = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
 
-    const refreshTokenFamily = await RefreshTokenFamily.findById(req.auth.refreshTokenFamilyId);
+    const refreshTokenFamily = await RefreshTokenFamily.findById(
+      req.auth.refreshTokenFamilyId
+    );
 
     if (
       !refreshTokenFamily ||

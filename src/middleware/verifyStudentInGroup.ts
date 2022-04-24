@@ -4,7 +4,10 @@ export default async (req: Request, res: Response, next: any) => {
   try {
     const { student, group } = req;
     if (!group.allowedClasses.includes(student.class)) {
-      throw { student: "Student is not a part of this group", status: 400 };
+      throw {
+        student: "Student is not a part of this group",
+        status: 400,
+      };
     }
 
     next();

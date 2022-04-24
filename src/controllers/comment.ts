@@ -3,7 +3,7 @@ import { validateComment } from "../util/validators";
 import reactToPostComment from "../util/reactToPostComment";
 import { RESTError } from "../errors";
 import { Request, Response } from "express";
-import IPostComment from "../@types/tuesplace/IPostComment";
+import { IPostComment } from "../@types/tuesplace/IPostComment";
 
 const getComments = async (req: Request, res: Response, next: any) => {
   try {
@@ -15,8 +15,8 @@ const getComments = async (req: Request, res: Response, next: any) => {
     if (!limit) {
       limit = "10";
     }
-    let pageNum: number = Number(page);
-    let limitNum: number = Number(limit);
+    let pageNum = Number(page);
+    const limitNum = Number(limit);
     if (pageNum > 0) pageNum -= 1;
     const comments = await PostComments(postId)
       .find({})
@@ -50,9 +50,8 @@ const createComment = async (req: Request, res: Response, next: any) => {
 
 const editComment = async (req: Request, res: Response, next: any) => {
   try {
-    const { postId, commentId } = req.params;
+    const { comment } = req;
     const { body } = req.body;
-    const comment = await PostComments(postId).findById(commentId);
 
     const { errors, valid } = validateComment(<IPostComment>{ body });
     if (!valid) {
@@ -68,8 +67,7 @@ const editComment = async (req: Request, res: Response, next: any) => {
 
 const deleteComment = async (req: Request, res: Response, next: any) => {
   try {
-    const { postId, commentId } = req.params;
-    const comment = await PostComments(postId).findById(commentId);
+    const { comment } = req;
     await comment.deleteOne();
     res.status(204).sendRes();
   } catch (err) {
@@ -91,4 +89,10 @@ const reactToComment = async (req: Request, res: Response, next: any) => {
   }
 };
 
-export { getComments, createComment, editComment, deleteComment, reactToComment };
+export {
+  getComments,
+  createComment,
+  editComment,
+  deleteComment,
+  reactToComment,
+};

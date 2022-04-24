@@ -4,7 +4,7 @@ import Profile from "../models/Profile";
 import roles from "../util/roles";
 import { validateGroup } from "../util/validators";
 import { Request, Response } from "express";
-import IGroup from "../@types/tuesplace/IGroup";
+import { IGroup } from "../@types/tuesplace";
 
 const getGroup = async (req: Request, res: Response, next: any) => {
   try {
@@ -18,7 +18,10 @@ const getGroup = async (req: Request, res: Response, next: any) => {
 const createGroup = async (req: Request, res: Response, next: any) => {
   try {
     const { groupName, teachers, allowedClasses } = req.body;
-    const { errors, valid } = validateGroup(<IGroup>{ groupName, teachers, allowedClasses }, true);
+    const { errors, valid } = validateGroup(
+      <IGroup>{ groupName, teachers, allowedClasses },
+      true
+    );
     if (!valid) {
       throw new RESTError(errors, 400);
     }
@@ -37,7 +40,10 @@ const editGroup = async (req: Request, res: Response, next: any) => {
   try {
     const { groupId } = req.params;
     const { groupName, teachers, allowedClasses } = req.body;
-    const { errors, valid } = validateGroup(<IGroup>{ groupName, teachers, allowedClasses }, false);
+    const { errors, valid } = validateGroup(
+      <IGroup>{ groupName, teachers, allowedClasses },
+      false
+    );
     if (!valid) {
       throw { ...errors };
     }

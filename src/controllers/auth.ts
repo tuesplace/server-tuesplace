@@ -17,7 +17,12 @@ const signUp = async (req: Request, res: Response, next: any) => {
   try {
     const { fullName, email, password, passwordConfirm } = req.body;
 
-    const { valid, errors } = validateSignUp(fullName, email, password, passwordConfirm);
+    const { valid, errors } = validateSignUp(
+      fullName,
+      email,
+      password,
+      passwordConfirm
+    );
     if (!valid) {
       throw { ...errors, status: 400 };
     }
@@ -96,7 +101,9 @@ const generateAccessToken = async (req: Request, res: Response, next: any) => {
     res.sendRes({ accessToken, refreshToken, id: userId });
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
-      const { refreshTokenFamilyId } = jwt.decode(req.body.refreshToken) as jwt.JwtPayload;
+      const { refreshTokenFamilyId } = jwt.decode(
+        req.body.refreshToken
+      ) as jwt.JwtPayload;
       await RefreshTokenFamily.findByIdAndDelete(refreshTokenFamilyId);
     }
     next(err);

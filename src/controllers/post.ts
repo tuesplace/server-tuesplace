@@ -1,9 +1,8 @@
 import { GroupPosts } from "../models/Post";
-import Group from "../models/Group";
 import { validatePost } from "../util/validators";
 import reactToPostComment from "../util/reactToPostComment";
 import { Request, Response } from "express";
-import IPostComment from "../@types/tuesplace/IPostComment";
+import { IPostComment } from "../@types/tuesplace/";
 
 const getPosts = async (req: Request, res: Response, next: any) => {
   try {
@@ -15,8 +14,8 @@ const getPosts = async (req: Request, res: Response, next: any) => {
     if (!limit) {
       limit = "10";
     }
-    let pageNum: number = Number(page);
-    let limitNum: number = Number(limit);
+    let pageNum = Number(page);
+    const limitNum = Number(limit);
     if (pageNum > 0) pageNum -= 1;
     const groupPosts = await GroupPosts(groupId)
       .find({})
@@ -51,9 +50,8 @@ const createPost = async (req: Request, res: Response, next: any) => {
 
 const editPost = async (req: Request, res: Response, next: any) => {
   try {
-    const { postId, groupId } = req.params;
     const { body } = req.body;
-    const post = await GroupPosts(`${groupId}`).findById(postId);
+    const { post } = req;
 
     const { errors, valid } = validatePost(<IPostComment>{ body });
     if (!valid) {
@@ -70,8 +68,7 @@ const editPost = async (req: Request, res: Response, next: any) => {
 
 const deletePost = async (req: Request, res: Response, next: any) => {
   try {
-    const { postId, groupId } = req.params;
-    const post = await GroupPosts(`${groupId}`).findById(postId);
+    const { post } = req;
     await post.deleteOne();
     res.status(204).sendRes();
   } catch (err) {

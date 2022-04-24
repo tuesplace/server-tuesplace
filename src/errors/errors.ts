@@ -44,13 +44,20 @@ const CommentBodyInvalid = ResourcePropInvalid("Comment", "Body", "String");
 
 const PostBodySurpassMaxLength = ResourcePropSurpassMaxLength("Post", "Body");
 
-const CommentBodySurpassMaxLength = ResourcePropSurpassMaxLength("Comment", "Body");
+const CommentBodySurpassMaxLength = ResourcePropSurpassMaxLength(
+  "Comment",
+  "Body"
+);
 
 const GroupNameInvalid = ResourcePropInvalid("Group", "Name", "String");
 
 const GroupTeachersInvalid = ResourcePropInvalid("Group", "Teachers", "Array");
 
-const GroupAllowedClassesInvalid = ResourcePropInvalid("Group", "AllowedClasses", "Array");
+const GroupAllowedClassesInvalid = ResourcePropInvalid(
+  "Group",
+  "AllowedClasses",
+  "Array"
+);
 
 const NotAdmin = NotRole("Admin");
 

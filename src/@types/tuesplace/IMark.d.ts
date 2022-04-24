@@ -1,16 +1,16 @@
-import IMongooseDocument from "./IMongooseDocument";
+import { IMongooseDocument } from "./IMongooseDocument";
 
-export default interface IMark extends IMongooseDocument {
+export interface IMark extends IMongooseDocument {
   teacherId: {
-    type: String;
+    type: string;
     required: true;
   };
   mark: {
-    type: String;
+    type: string;
     required: true;
   };
   studentId: {
-    type: String;
+    type: string;
     required: true;
   };
 }

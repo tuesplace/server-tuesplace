@@ -1,10 +1,16 @@
 import { Request } from "express";
 import { IReaction } from "../@types/tuesplace";
 
-export default async (postComment: any, userId: string, emoji: string, req: Request) => {
+export default async (
+  postComment: any,
+  userId: string,
+  emoji: string,
+  req: Request
+) => {
   if (
-    !!postComment.reactions.filter((e: IReaction) => e.authorId === userId && e.emoji == emoji)
-      .length
+    postComment.reactions.filter(
+      (e: IReaction) => e.authorId === userId && e.emoji == emoji
+    ).length
   ) {
     await postComment.updateOne({
       $pull: {

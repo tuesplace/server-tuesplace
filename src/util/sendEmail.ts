@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 import "dotenv/config";
 
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: "mail.privateemail.com",
   port: 465,
   secure: true,
@@ -12,10 +12,15 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-export default async (receiverEmail: string, subject: string, html: string, attachments: any[]) => {
+export default async (
+  receiverEmail: string,
+  subject: string,
+  html: string,
+  attachments: any[]
+) => {
   try {
     await transporter.sendMail({
-      from: `noreply @ tuesplace <no-reply@tuesplace.com>`,
+      from: "noreply @ tuesplace <no-reply@tuesplace.com>",
       to: receiverEmail,
       subject,
       html,

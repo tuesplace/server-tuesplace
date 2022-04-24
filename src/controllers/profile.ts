@@ -33,7 +33,9 @@ const editProfile = async (req: Request, res: Response, next: any) => {
 
     if (password) {
       if (await bcrypt.compare(password, profile.password)) {
-        throw { password: "Новата парола трябва да е различна от старата" };
+        throw {
+          password: "Новата парола трябва да е различна от старата",
+        };
       }
       const hashedPassword = await bcrypt.hash(password, 12);
       profile.password = hashedPassword;

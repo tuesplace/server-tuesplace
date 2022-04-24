@@ -1,5 +1,4 @@
 import { StudentMarks } from "../models/Mark";
-import Profile from "../models/Profile";
 import { validateMark } from "../util/validators";
 import { Request, Response } from "express";
 
