@@ -1,6 +1,7 @@
 import { StudentMarks } from "../models/Mark";
 import { validateMark } from "../util/validators";
 import { Request, Response } from "express";
+import { RESTError } from "../errors";
 
 const getMarks = async (req: Request, res: Response, next: any) => {
   try {
@@ -30,7 +31,7 @@ const addMark = async (req: Request, res: Response, next: any) => {
     const { mark } = req.body;
     const { errors, valid } = validateMark(mark);
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
     await StudentMarks(group._id.toString()).create({
       teacherId: req.auth.userId,
@@ -49,7 +50,7 @@ const editMark = async (req: Request, res: Response, next: any) => {
     const { mark: newMark } = req.body;
     const { errors, valid } = validateMark(newMark);
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
     await mark.updateOne({
       mark: newMark,

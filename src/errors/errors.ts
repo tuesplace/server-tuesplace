@@ -38,6 +38,8 @@ const CommentNotFound = ResourceNotFound("Comment");
 
 const StudentNotFound = ResourceNotFound("Student");
 
+const MarkNotFound = ResourceNotFound("Mark");
+
 const TokenNotProvided = ResourceNotProvided("Token");
 
 const PostBodyInvalid = ResourcePropInvalid("Post", "Body", "String");
@@ -45,6 +47,8 @@ const PostBodyInvalid = ResourcePropInvalid("Post", "Body", "String");
 const CommentBodyInvalid = ResourcePropInvalid("Comment", "Body", "String");
 
 const StudentRoleInvalid = ResourcePropInvalid("Student", "Role", "Role");
+
+const StudentMarkInvalid = ResourcePropInvalid("Student", "Mark", "Number");
 
 const PostBodySurpassMaxLength = ResourcePropSurpassMaxLength("Post", "Body");
 
@@ -117,6 +121,7 @@ export {
   PostNotFound,
   CommentNotFound,
   StudentNotFound,
+  MarkNotFound,
   TokenNotProvided,
   PostBodyInvalid,
   CommentBodyInvalid,
@@ -126,6 +131,7 @@ export {
   GroupNameInvalid,
   GroupTeachersInvalid,
   GroupAllowedClassesInvalid,
+  StudentMarkInvalid,
   NotAdmin,
   NotTeacher,
   NotStudent,

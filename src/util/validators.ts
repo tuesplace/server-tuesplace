@@ -10,6 +10,7 @@ import {
   GroupAllowedClassesInvalid,
   CommentBodyInvalid,
   CommentBodySurpassMaxLength,
+  StudentMarkInvalid,
 } from "../errors";
 import { IGroup, IProfile, IPostComment } from "../@types/tuesplace/";
 
@@ -167,15 +168,15 @@ const validateGroup = (
 };
 
 const validateMark = (mark: number) => {
-  const errors = { mark: "" };
+  const errors = [];
 
   if (!_.isNumber(mark) || mark < 2 || mark > 6) {
-    errors.mark = "Invalid mark type";
+    errors.push(StudentMarkInvalid);
   }
 
   return {
     errors,
-    valid: !Object.keys(errors).length,
+    valid: !errors.length,
   };
 };
 

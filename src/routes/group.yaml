@@ -159,8 +159,8 @@ paths:
             type: string
             format: ObjectId
       responses:
-        200:
-          $ref: "#/components/responses/Group"
+        204:
+          description: Group Deleted Successfully
         400:
           description: Group Validation Error
           content:

@@ -30,3 +30,150 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
+  /group/{groupId}/mark/student/:studentId:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Mark
+      name: Get All Marks of a student
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Returns all marks of a student in a group
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        200:
+          $ref: "#/components/responses/MarksArray"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Mark
+      name: Add Mark
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Adds a mark for a specific student
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: body
+          in: body
+          description: Body
+          required: true
+          schema:
+            type: object
+            properties:
+              mark:
+                type: number
+                format: mark
+            required:
+              - mark
+      responses:
+        204:
+          description: "Added Mark Successfully"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Mark
+      name: Edit Mark
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Edits a Mark
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: markId
+          in: path
+          description: Mark ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        204:
+          description: "Edited Mark Successfully"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Mark
+      name: Delete Mark
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Deletes a Mark
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: markId
+          in: path
+          description: Mark ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        204:
+          description: "Deleted Mark Successfully"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
