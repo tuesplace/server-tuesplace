@@ -1,7 +1,8 @@
 const roles = require("../util/roles");
-import {RESTError, GroupPermission} from '../errors';
+import { RESTError, GroupPermission } from "../errors";
+import { Request } from "express";
 
-export default async (req, _, next) => {
+export default async (req: Request, _: any, next: any) => {
   try {
     const { profile, group } = req;
     if (

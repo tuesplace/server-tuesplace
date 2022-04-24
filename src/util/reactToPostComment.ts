@@ -1,5 +1,11 @@
-export default async (postComment, userId, emoji, req) => {
-  if (!!postComment.reactions.filter((e) => e.authorId === userId && e.emoji == emoji).length) {
+import { Request } from "express";
+import { IReaction } from "../@types/tuesplace";
+
+export default async (postComment: any, userId: string, emoji: string, req: Request) => {
+  if (
+    !!postComment.reactions.filter((e: IReaction) => e.authorId === userId && e.emoji == emoji)
+      .length
+  ) {
     await postComment.updateOne({
       $pull: {
         reactions: { authorId: req.auth.userId, emoji },

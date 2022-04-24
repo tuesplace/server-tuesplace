@@ -1,6 +1,7 @@
 import { RESTError, NotCommentAuthor } from "../errors";
+import { Request } from "express";
 
-export default async (req, _, next) => {
+export default async (req: Request, _: any, next: any) => {
   try {
     const { profile, comment } = req;
     if (comment.authorId !== profile.id) {

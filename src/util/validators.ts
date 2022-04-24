@@ -11,8 +11,11 @@ import {
   CommentBodyInvalid,
   CommentBodySurpassMaxLength,
 } from "../errors";
+import IPostComment from "../@types/tuesplace/IPostComment";
+import IProfile from "../@types/tuesplace/IProfile";
+import IGroup from "../@types/tuesplace/IGroup";
 
-const validatePost = ({ body }) => {
+const validatePost = ({ body }: IPostComment) => {
   const errors = [];
   if (!_.isString(body) || !body.length) {
     errors.push(PostBodyInvalid);
@@ -26,7 +29,7 @@ const validatePost = ({ body }) => {
   };
 };
 
-const validateComment = ({ body }) => {
+const validateComment = ({ body }: IPostComment) => {
   const errors = [];
   if (!_.isString(body) || !body.length) {
     errors.push(CommentBodyInvalid);
@@ -40,7 +43,7 @@ const validateComment = ({ body }) => {
   };
 };
 
-const validatePassword = (password) => {
+const validatePassword = (password: string) => {
   const regExPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
   return (
     password &&
@@ -48,8 +51,13 @@ const validatePassword = (password) => {
   );
 };
 
-const validateSignUp = (fullName, email, password, passwordConfirm) => {
-  const { errors } = validateUser({ fullName, email, password }, true);
+const validateSignUp = (
+  fullName: string,
+  email: string,
+  password: string,
+  passwordConfirm: string
+) => {
+  const { errors } = validateUser(<IProfile>{ fullName, email, password }, true);
 
   if (password !== passwordConfirm) {
     errors.passwordConfirm = "Паролите не съвпадат";
@@ -61,7 +69,7 @@ const validateSignUp = (fullName, email, password, passwordConfirm) => {
   };
 };
 
-const validateSignIn = (email, password) => {
+const validateSignIn = (email: string, password: string) => {
   const errors = [];
 
   if (!_.isString(email)) {
@@ -76,7 +84,7 @@ const validateSignIn = (email, password) => {
   };
 };
 
-const validateUser = ({ fullName, email, password }, isStrict) => {
+const validateUser = ({ fullName, email, password }: IProfile, isStrict: boolean) => {
   const errors = { general: "", fullName: "", email: "", password: "", passwordConfirm: "" };
 
   if (isStrict) {
@@ -116,7 +124,7 @@ const validateUser = ({ fullName, email, password }, isStrict) => {
   };
 };
 
-const validateGroup = ({ groupName, teachers, allowedClasses }, isStrict) => {
+const validateGroup = ({ groupName, teachers, allowedClasses }: IGroup, isStrict: boolean) => {
   const errors = [];
   if ((!groupName || isStrict) && (!_.isString(groupName) || groupName.length > 150)) {
     errors.push(GroupNameInvalid);
@@ -138,7 +146,7 @@ const validateGroup = ({ groupName, teachers, allowedClasses }, isStrict) => {
   };
 };
 
-const validateMark = (mark) => {
+const validateMark = (mark: number) => {
   const errors = { mark: "" };
 
   if (!_.isNumber(mark) || mark < 2 || mark > 6) {

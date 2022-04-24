@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
 
-const createNewTokenPair = async (userId) => {
+const createNewTokenPair = async (userId: string) => {
   await RefreshTokenFamily.findOneAndDelete({ userId });
   const refreshTokenFamilyId = new mongoose.Types.ObjectId();
   const refreshTokenId = new mongoose.Types.ObjectId();
@@ -13,7 +13,7 @@ const createNewTokenPair = async (userId) => {
       refreshTokenId,
       userId,
     },
-    process.env.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET!,
     { expiresIn: "7d" }
   );
 
@@ -28,7 +28,7 @@ const createNewTokenPair = async (userId) => {
       refreshTokenFamilyId,
       refreshTokenId,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET!,
     { expiresIn: "40m" }
   );
 
@@ -38,7 +38,11 @@ const createNewTokenPair = async (userId) => {
   };
 };
 
-const rotateTokenPair = async (refreshTokenId, refreshTokenFamilyId, userId) => {
+const rotateTokenPair = async (
+  refreshTokenId: string,
+  refreshTokenFamilyId: string,
+  userId: string
+) => {
   const refreshTokenFamily = await RefreshTokenFamily.findById(refreshTokenFamilyId);
   if (!refreshTokenFamily) {
     throw { tokenPair: "Refresh Token does not exist", status: 401 };
@@ -57,7 +61,7 @@ const rotateTokenPair = async (refreshTokenId, refreshTokenFamilyId, userId) => 
       refreshTokenId: newRefreshTokenId,
       userId,
     },
-    process.env.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET!,
     { expiresIn: "7d" }
   );
 
@@ -67,7 +71,7 @@ const rotateTokenPair = async (refreshTokenId, refreshTokenFamilyId, userId) => 
       refreshTokenId: newRefreshTokenId,
       userId,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET!,
     { expiresIn: "40m" }
   );
 

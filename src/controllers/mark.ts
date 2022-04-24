@@ -1,8 +1,9 @@
 import { StudentMarks } from "../models/Mark";
 import Profile from "../models/Profile";
 import { validateMark } from "../util/validators";
+import { Request, Response } from "express";
 
-const getMarks = async (req, res, next) => {
+const getMarks = async (req: Request, res: Response, next: any) => {
   try {
     const { group } = req;
     const marks = await StudentMarks(group._id.toString()).find({});
@@ -12,7 +13,7 @@ const getMarks = async (req, res, next) => {
   }
 };
 
-const getStudentMarks = async (req, res, next) => {
+const getStudentMarks = async (req: Request, res: Response, next: any) => {
   try {
     const { group, student } = req;
     const studentMarks = await StudentMarks(group._id.toString()).find({
@@ -24,7 +25,7 @@ const getStudentMarks = async (req, res, next) => {
   }
 };
 
-const addMark = async (req, res, next) => {
+const addMark = async (req: Request, res: Response, next: any) => {
   try {
     const { group, student } = req;
     const { mark } = req.body;
@@ -43,7 +44,7 @@ const addMark = async (req, res, next) => {
   }
 };
 
-const editMark = async (req, res, next) => {
+const editMark = async (req: Request, res: Response, next: any) => {
   try {
     const { mark } = req;
     const { mark: newMark } = req.body;
@@ -60,7 +61,7 @@ const editMark = async (req, res, next) => {
   }
 };
 
-const deleteMark = async (req, res, next) => {
+const deleteMark = async (req: Request, res: Response, next: any) => {
   try {
     const { mark } = req;
     await mark.deleteOne();

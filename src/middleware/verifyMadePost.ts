@@ -1,4 +1,5 @@
-export default async (req, _, next) => {
+import { Request } from "express";
+export default async (req: Request, _: any, next: any) => {
   try {
     const { profile, post } = req;
     if (post.authorId !== profile.id) {

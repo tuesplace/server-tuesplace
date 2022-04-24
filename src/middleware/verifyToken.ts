@@ -3,8 +3,9 @@ import { RedundantAccessToken, ProfileNotFound, TokenNotProvided } from "../erro
 import RESTError from "../errors/RESTError";
 import Profile from "../models/Profile";
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
+import { Request } from "express";
 
-export default async (req, _, next) => {
+export default async (req: Request, _: any, next: any) => {
   const authHeader = req.headers.authorization;
 
   try {
@@ -13,7 +14,7 @@ export default async (req, _, next) => {
     }
     const token = authHeader.split("Bearer ")[1].trim();
 
-    req.auth = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    req.auth = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
 
     const refreshTokenFamily = await RefreshTokenFamily.findById(req.auth.refreshTokenFamilyId);
 

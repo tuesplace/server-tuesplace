@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import { IProfile } from "../@types/tuesplace";
 
-const profileSchema = new Schema(
+const profileSchema = new Schema<IProfile>(
   {
     fullName: {
       type: String,

@@ -1,6 +1,6 @@
 {
   "name": "server-tuesplace",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Server for tuesplace",
   "main": "./src/index.ts",
   "engines": {
@@ -11,8 +11,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon ./src/index.ts",
-    "start": "ts-node ./src/index.ts",
-    "bundle": "copyfiles -u 1 src/**/*.yaml dist/"
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "postbuild": "copyfiles -u 1 src/**/*.yaml dist/",
+    "clean": "npx rimraf dist"
   },
   "repository": {
     "type": "git",

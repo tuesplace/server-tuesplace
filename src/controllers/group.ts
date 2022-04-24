@@ -3,8 +3,10 @@ import Group from "../models/Group";
 import Profile from "../models/Profile";
 import roles from "../util/roles";
 import { validateGroup } from "../util/validators";
+import { Request, Response } from "express";
+import IGroup from "../@types/tuesplace/IGroup";
 
-const getGroup = async (req, res, next) => {
+const getGroup = async (req: Request, res: Response, next: any) => {
   try {
     const { group } = req;
     res.sendRes({ ...group._doc });
@@ -13,10 +15,10 @@ const getGroup = async (req, res, next) => {
   }
 };
 
-const createGroup = async (req, res, next) => {
+const createGroup = async (req: Request, res: Response, next: any) => {
   try {
     const { groupName, teachers, allowedClasses } = req.body;
-    const { errors, valid } = validateGroup({ groupName, teachers, allowedClasses }, true);
+    const { errors, valid } = validateGroup(<IGroup>{ groupName, teachers, allowedClasses }, true);
     if (!valid) {
       throw new RESTError(errors, 400);
     }
@@ -31,11 +33,11 @@ const createGroup = async (req, res, next) => {
   }
 };
 
-const editGroup = async (req, res, next) => {
+const editGroup = async (req: Request, res: Response, next: any) => {
   try {
     const { groupId } = req.params;
     const { groupName, teachers, allowedClasses } = req.body;
-    const { errors, valid } = validateGroup({ groupName, teachers, allowedClasses }, false);
+    const { errors, valid } = validateGroup(<IGroup>{ groupName, teachers, allowedClasses }, false);
     if (!valid) {
       throw { ...errors };
     }
@@ -54,7 +56,7 @@ const editGroup = async (req, res, next) => {
   }
 };
 
-const deleteGroup = async (req, res, next) => {
+const deleteGroup = async (req: Request, res: Response, next: any) => {
   try {
     const profile = await Profile.findById(req.auth.userId);
     if (!profile) {

@@ -2,36 +2,38 @@ import { PostComments } from "../models/Post";
 import { validateComment } from "../util/validators";
 import reactToPostComment from "../util/reactToPostComment";
 import { RESTError } from "../errors";
+import { Request, Response } from "express";
+import IPostComment from "../@types/tuesplace/IPostComment";
 
-const getComments = async (req, res, next) => {
+const getComments = async (req: Request, res: Response, next: any) => {
   try {
     const { postId } = req.params;
     let { page, limit } = req.query;
     if (!page) {
-      page = 0;
+      page = "0";
     }
     if (!limit) {
-      limit = 10;
+      limit = "10";
     }
-    page = parseInt(page);
-    limit = parseInt(limit);
-    if (page > 0) page -= 1;
+    let pageNum: number = Number(page);
+    let limitNum: number = Number(limit);
+    if (pageNum > 0) pageNum -= 1;
     const comments = await PostComments(postId)
       .find({})
       .sort({ createdAt: -1 })
-      .skip(page * limit)
-      .limit(limit);
+      .skip(pageNum * limitNum)
+      .limit(limitNum);
     res.sendRes(comments);
   } catch (err) {
     next(err);
   }
 };
 
-const createComment = async (req, res, next) => {
+const createComment = async (req: Request, res: Response, next: any) => {
   try {
     const { postId } = req.params;
     const { body } = req.body;
-    const { errors, valid } = validateComment({ body });
+    const { errors, valid } = validateComment(<IPostComment>{ body });
     if (!valid) {
       throw new RESTError(errors, 400);
     }
@@ -46,13 +48,13 @@ const createComment = async (req, res, next) => {
   }
 };
 
-const editComment = async (req, res, next) => {
+const editComment = async (req: Request, res: Response, next: any) => {
   try {
     const { postId, commentId } = req.params;
     const { body } = req.body;
     const comment = await PostComments(postId).findById(commentId);
 
-    const { errors, valid } = validateComment({ body });
+    const { errors, valid } = validateComment(<IPostComment>{ body });
     if (!valid) {
       throw new RESTError(errors, 400);
     }
@@ -64,7 +66,7 @@ const editComment = async (req, res, next) => {
   }
 };
 
-const deleteComment = async (req, res, next) => {
+const deleteComment = async (req: Request, res: Response, next: any) => {
   try {
     const { postId, commentId } = req.params;
     const comment = await PostComments(postId).findById(commentId);
@@ -75,7 +77,7 @@ const deleteComment = async (req, res, next) => {
   }
 };
 
-const reactToComment = async (req, res, next) => {
+const reactToComment = async (req: Request, res: Response, next: any) => {
   try {
     const { postId, commentId } = req.params;
     const { emoji } = req.body;

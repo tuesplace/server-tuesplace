@@ -12,7 +12,7 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-export default async (receiverEmail, subject, html, attachments) => {
+export default async (receiverEmail: string, subject: string, html: string, attachments: any[]) => {
   try {
     await transporter.sendMail({
       from: `noreply @ tuesplace <no-reply@tuesplace.com>`,

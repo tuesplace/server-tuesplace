@@ -1,12 +1,14 @@
 import { validateUser } from "../util/validators";
 import Profile from "../models/Profile";
 import bcrypt from "bcryptjs";
+import { Request, Response } from "express";
+import IProfile from "../@types/tuesplace/IProfile";
 
-const editProfile = async (req, res, next) => {
+const editProfile = async (req: Request, res: Response, next: any) => {
   try {
     const { fullName, email, password } = req.body;
     const { errors, valid } = validateUser(
-      {
+      <IProfile>{
         fullName,
         email,
         password,
@@ -47,7 +49,7 @@ const editProfile = async (req, res, next) => {
   }
 };
 
-const deleteProfile = async (req, res, next) => {
+const deleteProfile = async (req: Request, res: Response, next: any) => {
   try {
     const profile = await Profile.findById(req.auth.userId);
     if (!profile) {

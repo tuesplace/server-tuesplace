@@ -1,20 +1,24 @@
 import { isArray } from "lodash";
 
+interface Error {
+  type: string;
+  message: string;
+}
 class RESTError extends Error {
-  errors = [];
+  errors = Array<Error>();
   code = "";
-  constructor(errors, code) {
+  constructor(errors: Error | Array<Error>, code: string | number) {
     super("");
     Error.captureStackTrace(this, RESTError);
 
     this.name = "RESTError";
 
     if (!isArray(errors)) {
-      this.errors = new Array(errors);
+      this.errors = new Array<Error>(errors);
     } else {
       this.errors = errors;
     }
-    this.code = code;
+    this.code = code.toString();
   }
 }
 

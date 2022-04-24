@@ -1,4 +1,6 @@
-export default async (req, res, next) => {
+import { Request, Response } from "express";
+
+export default async (req: Request, res: Response, next: any) => {
   try {
     const { student, group } = req;
     if (!group.allowedClasses.includes(student.class)) {

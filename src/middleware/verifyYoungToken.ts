@@ -1,6 +1,7 @@
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
+import { Request } from "express";
 
-export default async (req, _, next) => {
+export default async (req: Request, _: unknown, next: any) => {
   try {
     const refreshTokenFamily = await RefreshTokenFamily.findById(req.auth.refreshTokenFamilyId);
     const utcMilllisecondsSinceEpoch = Date.now();

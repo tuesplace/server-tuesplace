@@ -1,6 +1,7 @@
 import { StudentMarks } from "../models/Mark";
+import { Request } from "express";
 
-export default async (req, _, next) => {
+export default async (req: Request, _: any, next: any) => {
   try {
     const { markId } = req.params;
     const { group } = req;

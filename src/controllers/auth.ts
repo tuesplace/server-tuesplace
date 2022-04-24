@@ -11,8 +11,9 @@ import { createNewTokenPair, rotateTokenPair } from "../util/createTokenPair";
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
 import RESTError from "../errors/RESTError";
 import { WrongPassword, ProfileNotFound, EmailTaken } from "../errors";
+import { Request, Response } from "express";
 
-const signUp = async (req, res, next) => {
+const signUp = async (req: Request, res: Response, next: any) => {
   try {
     const { fullName, email, password, passwordConfirm } = req.body;
 
@@ -49,7 +50,7 @@ const signUp = async (req, res, next) => {
   }
 };
 
-const signIn = async (req, res, next) => {
+const signIn = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password } = req.body;
 
@@ -75,11 +76,11 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const generateAccessToken = async (req, res, next) => {
+const generateAccessToken = async (req: Request, res: Response, next: any) => {
   try {
     const { userId, refreshTokenFamilyId, refreshTokenId } = jwt.verify(
       req.body.refreshToken,
-      process.env.REFRESH_TOKEN_SECRET
+      process.env.REFRESH_TOKEN_SECRET!
     ) as jwt.JwtPayload;
 
     const profile = await Profile.findById(userId);
@@ -94,7 +95,7 @@ const generateAccessToken = async (req, res, next) => {
     );
     res.sendRes({ accessToken, refreshToken, id: userId });
   } catch (err) {
-    if (err.name === "TokenExpiredError") {
+    if (err instanceof jwt.TokenExpiredError) {
       const { refreshTokenFamilyId } = jwt.decode(req.body.refreshToken) as jwt.JwtPayload;
       await RefreshTokenFamily.findByIdAndDelete(refreshTokenFamilyId);
     }

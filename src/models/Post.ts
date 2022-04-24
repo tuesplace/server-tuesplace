@@ -1,6 +1,7 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
+import { IPostComment } from "../@types/tuesplace";
 
-const postSchema = new Schema(
+const postSchema = new Schema<IPostComment>(
   {
     authorId: {
       type: String,
@@ -15,9 +16,10 @@ const postSchema = new Schema(
   { timestamps: true }
 );
 
-const GroupPosts = (groupId) => model(`group${groupId}posts`, postSchema, `group${groupId}posts`);
+const GroupPosts = (groupId: string) =>
+  model(`group${groupId}posts`, postSchema, `group${groupId}posts`);
 
-const PostComments = (postId) =>
+const PostComments = (postId: string) =>
   model(`post${postId}comments`, postSchema, `post${postId}comments`);
 
 export { GroupPosts, PostComments };

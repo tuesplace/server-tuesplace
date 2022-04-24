@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import { IGroup } from "../@types/tuesplace";
 
-const groupSchema = new Schema(
+const groupSchema = new Schema<IGroup>(
   {
     groupName: {
       type: String,

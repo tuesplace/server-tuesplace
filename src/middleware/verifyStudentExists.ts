@@ -1,7 +1,8 @@
 import Profile from "../models/Profile";
 import roles from "../util/roles";
+import { Request, Response } from "express";
 
-export default async (req, res, next) => {
+export default async (req: Request, _res: Response, next: any) => {
   try {
     const { studentId } = req.params;
     const student = await Profile.findById(studentId);

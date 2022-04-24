@@ -62,11 +62,10 @@ app.use(
   })
 );
 app.use(errorHandler);
-
 app.use(express.static("./assets"));
 
 mongoose
-  .connect(process.env.MONGO_DB_CONNECTION_STRING)
+  .connect(process.env.MONGO_DB_CONNECTION_STRING!)
   .then(() => {
     const port = process.env.PORT || 8888;
 

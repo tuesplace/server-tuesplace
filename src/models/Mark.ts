@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import IMark from "../@types/tuesplace/IMark";
 
-const markSchema = new Schema(
+const markSchema = new Schema<IMark>(
   {
     teacherId: {
       type: String,
@@ -18,6 +19,7 @@ const markSchema = new Schema(
   { timestamps: true }
 );
 
-const StudentMarks = (groupId) => model(`group${groupId}marks`, markSchema, `group${groupId}marks`);
+const StudentMarks = (groupId: string) =>
+  model(`group${groupId}marks`, markSchema, `group${groupId}marks`);
 
 export { StudentMarks };
