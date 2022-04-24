@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import IMark from "../@types/tuesplace/IMark";
+import { IMark } from "../@types/tuesplace/IMark";
 
 const markSchema = new Schema<IMark>(
   {

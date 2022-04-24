@@ -2,7 +2,7 @@ import { validateUser } from "../util/validators";
 import Profile from "../models/Profile";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import IProfile from "../@types/tuesplace/IProfile";
+import { IProfile } from "../@types/tuesplace/IProfile";
 
 const editProfile = async (req: Request, res: Response, next: any) => {
   try {
