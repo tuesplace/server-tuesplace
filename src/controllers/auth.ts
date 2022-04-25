@@ -24,7 +24,7 @@ const signUp = async (req: Request, res: Response, next: any) => {
       passwordConfirm
     );
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
 
     const emailTaken = await Profile.findOne({ email });

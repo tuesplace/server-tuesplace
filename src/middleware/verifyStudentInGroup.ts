@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
+import { RESTError, StudentNotGroupMember } from "../errors";
 
 export default async (req: Request, res: Response, next: any) => {
   try {
     const { student, group } = req;
     if (!group.allowedClasses.includes(student.class)) {
-      throw {
-        student: "Student is not a part of this group",
-        status: 400,
-      };
+      throw new RESTError(StudentNotGroupMember, 403);
     }
 
     next();

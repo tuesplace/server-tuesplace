@@ -1,5 +1,6 @@
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
 import { Request } from "express";
+import { OldRefreshToken, RESTError } from "../errors";
 
 export default async (req: Request, _: unknown, next: any) => {
   try {
@@ -14,11 +15,7 @@ export default async (req: Request, _: unknown, next: any) => {
       60;
     if (tokenAgeInMinutes > 20) {
       refreshTokenFamily.deleteOne();
-      throw {
-        token:
-          "Трябва да потвърдим Вашата самоличност. Излезте и влезте обратно в профила си",
-        status: 401,
-      };
+      throw new RESTError(OldRefreshToken, 401);
     }
     next();
   } catch (err) {

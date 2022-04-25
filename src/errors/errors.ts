@@ -40,6 +40,8 @@ const StudentNotFound = ResourceNotFound("Student");
 
 const MarkNotFound = ResourceNotFound("Mark");
 
+const RefreshTokenFamilyNotFound = ResourceNotFound("RefreshTokenFamily");
+
 const TokenNotProvided = ResourceNotProvided("Token");
 
 const EmailNotProvided = ResourceNotProvided("Email");
@@ -152,6 +154,18 @@ const StudentNotGroupMember = {
   message: "Student is not a member of the Group",
 };
 
+const OldRefreshToken = {
+  type: "OldRefreshToken",
+  message:
+    "Refresh Token is too old. Cannot confirm Request Initiator Identity",
+};
+
+const RefreshTokenRedundant = {
+  type: "RefreshTokenRedundant",
+  message:
+    "Refresh Token Famoly contains Refresh Token used by Request Initiator",
+};
+
 export {
   ProfileNotFound,
   GroupNotFound,
@@ -159,6 +173,7 @@ export {
   CommentNotFound,
   StudentNotFound,
   MarkNotFound,
+  RefreshTokenFamilyNotFound,
   TokenNotProvided,
   EmailNotProvided,
   PasswordNotProvided,
@@ -191,4 +206,6 @@ export {
   GroupPermission,
   GroupRedactor,
   StudentNotGroupMember,
+  OldRefreshToken,
+  RefreshTokenRedundant,
 };

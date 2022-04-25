@@ -2,6 +2,11 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import "dotenv/config";
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
+import {
+  RefreshTokenFamilyNotFound,
+  RefreshTokenRedundant,
+  RESTError,
+} from "../errors";
 
 const createNewTokenPair = async (userId: string) => {
   await RefreshTokenFamily.findOneAndDelete({ userId });
@@ -47,11 +52,11 @@ const rotateTokenPair = async (
     refreshTokenFamilyId
   );
   if (!refreshTokenFamily) {
-    throw { tokenPair: "Refresh Token does not exist", status: 401 };
+    throw new RESTError(RefreshTokenFamilyNotFound, 404);
   }
   if (refreshTokenFamily.redundantTokens.includes(refreshTokenId)) {
     refreshTokenFamily.deleteOne();
-    throw { tokenPair: "Refresh Token Redundant", status: 401 };
+    throw new RESTError(RefreshTokenRedundant, 401);
   }
 
   refreshTokenFamily.redundantTokens.push(refreshTokenId);

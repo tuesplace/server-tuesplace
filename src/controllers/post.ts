@@ -56,7 +56,7 @@ const editPost = async (req: Request, res: Response, next: any) => {
 
     const { errors, valid } = validatePost(<IPostComment>{ body });
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
 
     post.body = body || "";

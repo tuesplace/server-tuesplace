@@ -1,5 +1,4 @@
 import { validateUser } from "../util/validators";
-import Profile from "../models/Profile";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { IProfile } from "../@types/tuesplace/IProfile";
