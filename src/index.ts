@@ -19,7 +19,7 @@ import {
   verifyInGroup,
   verifyPostExists,
   resSender,
-  verifyGroupRedactor,
+  verifyYoungToken,
   verifyTeacher,
 } from "./middleware";
 import swaggerDoc from "./swaggerDoc";
@@ -35,7 +35,6 @@ app.use(
 
 app.use(express.json());
 app.use(resSender);
-app.use("/api/profile", profileRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/group", verifyToken, groupRouter);
 app.use(
@@ -68,6 +67,7 @@ app.use(
     customSiteTitle: "tuesplace API Docs",
   })
 );
+app.use("/api/profile", verifyToken, verifyYoungToken, profileRouter);
 app.use(errorHandler);
 app.use(express.static("./assets"));
 

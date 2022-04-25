@@ -1,0 +1,84 @@
+paths:
+  /profile/:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Edit Profile
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Edits a Profile
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              fullName:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
+            required:
+              - fullName
+              - email
+              - password
+      responses:
+        204:
+          description: "Edited Profile Successfully"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Delete Profile
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Deletes a Profile
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Profile ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        204:
+          description: "Deleted Profile Successfully"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"

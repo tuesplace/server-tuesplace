@@ -42,6 +42,12 @@ const MarkNotFound = ResourceNotFound("Mark");
 
 const TokenNotProvided = ResourceNotProvided("Token");
 
+const EmailNotProvided = ResourceNotProvided("Email");
+
+const PasswordNotProvided = ResourceNotProvided("Password");
+
+const FullNameNotProvided = ResourceNotProvided("FullName");
+
 const PostBodyInvalid = ResourcePropInvalid("Post", "Body", "String");
 
 const CommentBodyInvalid = ResourcePropInvalid("Comment", "Body", "String");
@@ -50,11 +56,24 @@ const StudentRoleInvalid = ResourcePropInvalid("Student", "Role", "Role");
 
 const StudentMarkInvalid = ResourcePropInvalid("Student", "Mark", "Number");
 
+const ProfileFullNameInvalid = ResourcePropInvalid(
+  "Profile",
+  "FullName",
+  "String"
+);
+
+const ProfileEmailInvalid = ResourcePropInvalid("Profile", "Email", "String");
+
 const PostBodySurpassMaxLength = ResourcePropSurpassMaxLength("Post", "Body");
 
 const CommentBodySurpassMaxLength = ResourcePropSurpassMaxLength(
   "Comment",
   "Body"
+);
+
+const ProfileFullNameSurpassMaxLength = ResourcePropSurpassMaxLength(
+  "Profile",
+  "FullName"
 );
 
 const GroupNameInvalid = ResourcePropInvalid("Group", "Name", "String");
@@ -87,9 +106,25 @@ const PasswordInvalid = {
   message: "Password must be a valid string",
 };
 
+const PasswordInvalidExtended = {
+  type: "PasswordInvalidExtended",
+  message:
+    "Password must contain 1 digit, upper-, lowe-case letters and be at least 7 chars long",
+};
+
 const WrongPassword = {
   type: "WrongPassword",
   message: "Password is incorrect",
+};
+
+const PasswordConfirm = {
+  type: "PasswordConfirm",
+  message: "Password and Password Confirm are not equal",
+};
+
+const RepeatOldPassword = {
+  type: "RepeatOldPassword",
+  message: "New Password cannot be the same as the Old Password",
 };
 
 const RedundantAccessToken = {
@@ -125,11 +160,17 @@ export {
   StudentNotFound,
   MarkNotFound,
   TokenNotProvided,
+  EmailNotProvided,
+  PasswordNotProvided,
+  FullNameNotProvided,
   PostBodyInvalid,
   CommentBodyInvalid,
   StudentRoleInvalid,
+  ProfileFullNameInvalid,
+  ProfileEmailInvalid,
   PostBodySurpassMaxLength,
   CommentBodySurpassMaxLength,
+  ProfileFullNameSurpassMaxLength,
   GroupNameInvalid,
   GroupTeachersInvalid,
   GroupAllowedClassesInvalid,
@@ -141,7 +182,10 @@ export {
   NotPostAuthor,
   EmailInvalid,
   PasswordInvalid,
+  PasswordInvalidExtended,
   WrongPassword,
+  PasswordConfirm,
+  RepeatOldPassword,
   RedundantAccessToken,
   EmailTaken,
   GroupPermission,

@@ -3,10 +3,12 @@ import Profile from "../models/Profile";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { IProfile } from "../@types/tuesplace/IProfile";
+import { RepeatOldPassword, RESTError } from "../errors";
 
 const editProfile = async (req: Request, res: Response, next: any) => {
   try {
     const { fullName, email, password } = req.body;
+    const { profile } = req;
     const { errors, valid } = validateUser(
       <IProfile>{
         fullName,
@@ -17,13 +19,7 @@ const editProfile = async (req: Request, res: Response, next: any) => {
     );
 
     if (!valid) {
-      throw { ...errors, status: 400 };
-    }
-
-    const profile = await Profile.findById(req.auth.userId);
-
-    if (!profile) {
-      throw { profile: "Профилът не е намерен", status: 404 };
+      throw new RESTError(errors, 400);
     }
 
     if (email) {
@@ -33,9 +29,7 @@ const editProfile = async (req: Request, res: Response, next: any) => {
 
     if (password) {
       if (await bcrypt.compare(password, profile.password)) {
-        throw {
-          password: "Новата парола трябва да е различна от старата",
-        };
+        throw new RESTError(RepeatOldPassword, 400);
       }
       const hashedPassword = await bcrypt.hash(password, 12);
       profile.password = hashedPassword;
@@ -45,7 +39,7 @@ const editProfile = async (req: Request, res: Response, next: any) => {
 
     await profile.save();
 
-    res.sendRes({ ...profile._doc });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }
@@ -53,10 +47,7 @@ const editProfile = async (req: Request, res: Response, next: any) => {
 
 const deleteProfile = async (req: Request, res: Response, next: any) => {
   try {
-    const profile = await Profile.findById(req.auth.userId);
-    if (!profile) {
-      throw { profile: "Профилът не е намерен", status: 404 };
-    }
+    const { profile } = req;
 
     await profile.deleteOne();
 

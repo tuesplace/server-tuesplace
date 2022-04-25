@@ -11,6 +11,14 @@ import {
   CommentBodyInvalid,
   CommentBodySurpassMaxLength,
   StudentMarkInvalid,
+  EmailNotProvided,
+  PasswordNotProvided,
+  FullNameNotProvided,
+  ProfileFullNameInvalid,
+  ProfileFullNameSurpassMaxLength,
+  PasswordConfirm,
+  ProfileEmailInvalid,
+  PasswordInvalidExtended,
 } from "../errors";
 import { IGroup, IProfile, IPostComment } from "../@types/tuesplace/";
 
@@ -65,12 +73,12 @@ const validateSignUp = (
   );
 
   if (password !== passwordConfirm) {
-    errors.passwordConfirm = "Паролите не съвпадат";
+    errors.push(PasswordConfirm);
   }
 
   return {
     errors,
-    valid: Object.keys(errors).length < 1,
+    valid: errors.length < 1,
   };
 };
 
@@ -93,17 +101,11 @@ const validateUser = (
   { fullName, email, password }: IProfile,
   isStrict: boolean
 ) => {
-  const errors = {
-    general: "",
-    fullName: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
-  };
+  const errors = [];
 
   if (isStrict) {
     if (_.isEmpty(email) || _.isEmpty(password) || _.isEmpty(fullName)) {
-      errors.general = "Props must not be empty";
+      errors.push(EmailNotProvided, PasswordNotProvided, FullNameNotProvided);
       return {
         errors,
         valid: false,
@@ -113,9 +115,12 @@ const validateUser = (
 
   if (
     (!_.isEmpty(fullName) || isStrict) &&
-    (!_.isString(fullName) || fullName === "" || fullName.length > 100)
+    (!_.isString(fullName) || fullName === "")
   ) {
-    errors.fullName = "Пълното име трябва да е валидно име";
+    errors.push(ProfileFullNameInvalid);
+    if (fullName.length > 100) {
+      errors.push(ProfileFullNameSurpassMaxLength);
+    }
   }
 
   const regExEmail =
@@ -125,17 +130,16 @@ const validateUser = (
     (!_.isEmpty(email) || isStrict) &&
     (!_.isString(email) || email === "" || !email.match(regExEmail))
   ) {
-    errors.email = "Имейлът трябва да е валиден имейл";
+    errors.push(ProfileEmailInvalid);
   }
 
   if ((!_.isEmpty(password) || isStrict) && validatePassword(password)) {
-    errors.password =
-      "Паролата трябва да съдържа поне 1 цифра, 1 главна и 1 малка буква на латиница и трябва да има дължина от минимум 7 символа";
+    errors.push(PasswordInvalidExtended);
   }
 
   return {
     errors,
-    valid: Object.keys(errors).length < 1,
+    valid: errors.length < 1,
   };
 };
 
