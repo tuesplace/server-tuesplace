@@ -78,3 +78,15 @@ components:
         application/json:
           schema:
             $ref: "#/components/objects/MarksArray"
+    PostsArray:
+      description: Posts array
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/PostsArray"
+    PostComment:
+      description: Posts array
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/PostCommentResponse"

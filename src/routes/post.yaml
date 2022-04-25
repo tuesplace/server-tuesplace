@@ -1,16 +1,16 @@
 paths:
-  /group/{groupId}/mark:
+  /group/{groupId}/post:
     get:
       security:
         - bearerAuth: []
       tags:
-        - Mark
-      name: Get All Marks
+        - Post
+      name: Get All Posts
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Returns all marks of a group
+      summary: Returns all posts of a group
       parameters:
         - name: groupId
           in: path
@@ -21,40 +21,9 @@ paths:
             format: ObjectId
       responses:
         200:
-          $ref: "#/components/responses/MarksArray"
+          $ref: "#/components/responses/PostsArray"
         400:
-          $ref: "#/components/responses/ResourceNotProvided"
-        401:
-          $ref: "#/components/responses/GroupPermission"
-        404:
-          $ref: "#/components/responses/ResourceNotFound"
-        500:
-          $ref: "#/components/responses/ServerError"
-  /group/{groupId}/mark/student/{studentId}:
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Mark
-      name: Get All Marks of a student
-      produces:
-        - application/json
-      consumes:
-        - application/json
-      summary: Returns all marks of a student in a group
-      parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-      responses:
-        200:
-          $ref: "#/components/responses/MarksArray"
-        400:
-          $ref: "#/components/responses/ResourceNotProvided"
+          $ref: "#/components/responses/ResourcePropInvalid"
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
@@ -65,13 +34,13 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Mark
-      name: Add Mark
+        - Post
+      name: Create Post
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Adds a mark for a specific student
+      summary: Creates a post in a group
       parameters:
         - name: groupId
           in: path
@@ -80,42 +49,29 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: body
-          in: body
-          description: Body
-          required: true
-          schema:
-            type: object
-            properties:
-              mark:
-                type: number
-                format: mark
-            required:
-              - mark
       responses:
-        204:
-          description: "Added Mark Successfully"
+        200:
+          $ref: "#/components/responses/PostComment"
         400:
-          $ref: "#/components/responses/ResourceNotProvided"
+          $ref: "#/components/responses/ResourcePropInvalid"
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-
-  /group/{groupId}/mark/student/{studentId}/{markId}:
+  /group/{groupId}/post/{postId}:
     put:
       security:
         - bearerAuth: []
       tags:
-        - Mark
-      name: Edit Mark
+        - Post
+      name: Edit Post
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Edits a Mark
+      summary: Edits a Post
       parameters:
         - name: groupId
           in: path
@@ -124,16 +80,16 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: markId
+        - name: postId
           in: path
-          description: Mark ID
+          description: Post ID
           required: true
           schema:
             type: string
             format: ObjectId
       responses:
         204:
-          description: "Edited Mark Successfully"
+          description: "Edited Post Successfully"
         400:
           $ref: "#/components/responses/ResourceNotProvided"
         401:
@@ -148,13 +104,13 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Mark
-      name: Delete Mark
+        - Post
+      name: Delete Post
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Deletes a Mark
+      summary: Deletes a Post
       parameters:
         - name: groupId
           in: path
@@ -163,16 +119,16 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: markId
+        - name: postId
           in: path
-          description: Mark ID
+          description: Post ID
           required: true
           schema:
             type: string
             format: ObjectId
       responses:
         204:
-          description: "Deleted Mark Successfully"
+          description: "Deleted Post Successfully"
         400:
           $ref: "#/components/responses/ResourceNotProvided"
         401:

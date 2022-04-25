@@ -3,6 +3,7 @@ import { validatePost } from "../util/validators";
 import reactToPostComment from "../util/reactToPostComment";
 import { Request, Response } from "express";
 import { IPostComment } from "../@types/tuesplace/";
+import { RESTError } from "../errors";
 
 const getPosts = async (req: Request, res: Response, next: any) => {
   try {
@@ -34,7 +35,7 @@ const createPost = async (req: Request, res: Response, next: any) => {
     const { body } = req.body;
     const { errors, valid } = validatePost(<IPostComment>{ body });
     if (!valid) {
-      throw { ...errors, status: 400 };
+      throw new RESTError(errors, 400);
     }
 
     const post = await GroupPosts(`${groupId}`).create({
@@ -60,7 +61,7 @@ const editPost = async (req: Request, res: Response, next: any) => {
 
     post.body = body || "";
     await post.save();
-    res.sendRes({ ...post._doc });
+    res.status(204).sendRes();
   } catch (err) {
     next(err);
   }

@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/objects/CommentResponse"
+                $ref: "#/components/objects/PostCommentResponse"
         400:
           description: Comment Validation Error
           content:
@@ -138,9 +138,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/objects/CommentResponse"
-        403:
-          $ref: "#/components/responses/NotResourceAuthor"
+                $ref: "#/components/objects/PostCommentResponse"
         400:
           description: Comment Validation Error
           content:
@@ -153,6 +151,8 @@ paths:
 
         401:
           $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
@@ -237,6 +237,8 @@ paths:
           $ref: "#/components/responses/NotResourceAuthor"
         401:
           $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:

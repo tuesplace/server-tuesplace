@@ -75,6 +75,8 @@ const NotStudent = NotRole("Student");
 
 const NotCommentAuthor = NotResourceAuthor("Comment");
 
+const NotPostAuthor = NotResourceAuthor("Post");
+
 const EmailInvalid = {
   type: "EmailInvalid",
   message: "Email must be a valid string",
@@ -136,6 +138,7 @@ export {
   NotTeacher,
   NotStudent,
   NotCommentAuthor,
+  NotPostAuthor,
   EmailInvalid,
   PasswordInvalid,
   WrongPassword,

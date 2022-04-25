@@ -39,13 +39,6 @@ app.use("/api/profile", profileRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/group", verifyToken, groupRouter);
 app.use(
-  "/api/group/:groupId/post",
-  verifyToken,
-  verifyGroupExists,
-  verifyInGroup,
-  postRouter
-);
-app.use(
   "/api/group/:groupId/post/:postId/comment",
   verifyToken,
   verifyGroupExists,
@@ -60,6 +53,13 @@ app.use(
   verifyTeacher,
   verifyInGroup,
   markRouter
+);
+app.use(
+  "/api/group/:groupId/post",
+  verifyToken,
+  verifyGroupExists,
+  verifyInGroup,
+  postRouter
 );
 app.use(
   "/api-docs",

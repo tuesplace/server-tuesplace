@@ -46,23 +46,36 @@ components:
       required:
         - success
         - response
-    Comment:
+    PostComment:
       type: object
       properties:
         authorId:
           type: string
-        reaction:
+        reactions:
+          type: array
+          items:
+            $ref: "#/components/objects/Reaction"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        body:
           type: string
       required:
         - authorId
-        - reaction
-    CommentResponse:
+        - reactions
+        - body
+        - createdAt
+        - updatedAt
+    PostCommentResponse:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
         - type: object
           properties:
             response:
-              $ref: "#/components/objects/Comment"
+              $ref: "#/components/objects/PostComment"
     Group:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
@@ -99,6 +112,18 @@ components:
                 updatedAt:
                   type: string
                   format: date-time
+    Reaction:
+      type: object
+      properties:
+        authorId:
+          type: string
+          format: ObjectId
+        emoji:
+          type: string
+          format: emoji
+      required:
+        - authordId
+        - emoji
     PostComments:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
@@ -119,7 +144,7 @@ components:
                       reactions:
                         type: array
                         items:
-                          $ref: "#/components/object/Comment"
+                          $ref: "#/components/object/Reaction"
                       createdAt:
                         type: string
                         format: date-time
@@ -164,3 +189,12 @@ components:
               type: array
               items:
                 $ref: "#/components/objects/Mark"
+    PostsArray:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              type: array
+              items:
+                $ref: "#/components/objects/PostComment"
