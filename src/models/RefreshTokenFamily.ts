@@ -1,10 +1,11 @@
 import { model, Schema } from "mongoose";
+import { IRefreshTokenFamily } from "../@types/tuesplace";
 
-const refreshTokenFamilySchema = new Schema(
+const refreshTokenFamilySchema = new Schema<IRefreshTokenFamily>(
   {
     redundantTokens: Array,
     lastRefresh: {
-      type: Date,
+      type: Number,
       default: Date.now,
     },
     userId: String,

@@ -1,12 +1,21 @@
 import RefreshTokenFamily from "../models/RefreshTokenFamily";
 import { Request } from "express";
-import { OldRefreshToken, RESTError } from "../errors";
+import {
+  OldRefreshToken,
+  RESTError,
+  RefreshTokenFamilyNotFound,
+} from "../errors";
 
 export default async (req: Request, _: unknown, next: any) => {
   try {
     const refreshTokenFamily = await RefreshTokenFamily.findById(
       req.auth.refreshTokenFamilyId
     );
+
+    if (!refreshTokenFamily) {
+      throw new RESTError(RefreshTokenFamilyNotFound, 404);
+    }
+
     const utcMilllisecondsSinceEpoch = Date.now();
     const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000);
 
