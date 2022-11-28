@@ -1,10 +1,10 @@
 import { model, Schema } from "mongoose";
-import { IPostComment } from "../@types/tuesplace";
+import { IPost } from "../@types/tuesplace";
 
-const postSchema = new Schema<IPostComment>(
+const postSchema = new Schema<IPost>(
   {
-    authorId: {
-      type: String,
+    owner: {
+      type: Object,
       required: true,
     },
     body: {
@@ -12,14 +12,23 @@ const postSchema = new Schema<IPostComment>(
       default: "",
     },
     reactions: Array,
+    assets: {
+      type: Object,
+      default: {},
+    },
+    assignmentInfo: {
+      type: Object,
+      default: {
+        isAssignment: false,
+        deadline: null,
+      },
+    },
+    associations: {
+      type: Object,
+      default: {},
+    },
   },
   { timestamps: true }
 );
 
-const GroupPosts = (groupId: string) =>
-  model(`group${groupId}posts`, postSchema, `group${groupId}posts`);
-
-const PostComments = (postId: string) =>
-  model(`post${postId}comments`, postSchema, `post${postId}comments`);
-
-export { GroupPosts, PostComments };
+export const Post = model("Post", postSchema);

@@ -84,13 +84,13 @@ components:
             response:
               type: object
               properties:
-                groupName:
+                name:
                   type: string
                   example: "Group #1"
-                isChat:
-                  type: boolean
-                  example: false
-                allowedClasses:
+                type:
+                  type: string
+                  example: "chat"
+                classes:
                   type: array
                   items:
                     type: string

@@ -1,30 +1,17 @@
-import RefreshTokenFamily from "../models/RefreshTokenFamily";
 import { Request } from "express";
-import {
-  OldRefreshToken,
-  RESTError,
-  RefreshTokenFamilyNotFound,
-} from "../errors";
+import { accessTokenSecret } from "../config";
+import { RESTError, OldTokenError } from "../errors";
+import { getToken } from "../util";
 
-export default async (req: Request, _: unknown, next: any) => {
+export const verifyYoungToken = async (req: Request, _: any, next: any) => {
   try {
-    const refreshTokenFamily = await RefreshTokenFamily.findById(
-      req.auth.refreshTokenFamilyId
-    );
-
-    if (!refreshTokenFamily) {
-      throw new RESTError(RefreshTokenFamilyNotFound, 404);
-    }
-
+    const token = getToken(req, accessTokenSecret);
     const utcMilllisecondsSinceEpoch = Date.now();
     const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000);
 
-    const tokenAgeInMinutes =
-      (utcSecondsSinceEpoch - Date.parse(refreshTokenFamily.createdAt) / 1000) /
-      60;
+    const tokenAgeInMinutes = (utcSecondsSinceEpoch - token.iat!) / 60;
     if (tokenAgeInMinutes > 20) {
-      refreshTokenFamily.deleteOne();
-      throw new RESTError(OldRefreshToken, 401);
+      throw new RESTError(OldTokenError, 403);
     }
     next();
   } catch (err) {

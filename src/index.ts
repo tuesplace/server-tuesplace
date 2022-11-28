@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request } from "express";
 import "dotenv/config";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -14,15 +14,16 @@ import {
 } from "./routes";
 import {
   errorHandler,
-  verifyToken,
-  verifyGroupExists,
-  verifyInGroup,
-  verifyPostExists,
-  resSender,
+  verifyAccessToken,
   verifyYoungToken,
-  verifyTeacher,
+  verifyRole,
+  init,
+  verifyResourceExists,
+  verifyInGroup,
 } from "./middleware";
 import swaggerDoc from "./swaggerDoc";
+import { Group, Post, Teacher } from "./definitions";
+import { mongoDBConnectionString, port } from "./config";
 
 const app = express();
 
@@ -34,32 +35,42 @@ app.use(
 );
 
 app.use(express.json());
-app.use(resSender);
-app.use("/api/auth", authRouter);
-app.use("/api/group", verifyToken, groupRouter);
+app.use("/api/auth", init, authRouter);
 app.use(
-  "/api/group/:groupId/post/:postId/comment",
-  verifyToken,
-  verifyGroupExists,
-  verifyInGroup,
-  verifyPostExists,
+  "/api/group/:groupId/post/:postId/comment/",
+  init,
+  verifyAccessToken,
+  verifyResourceExists(Group),
+  verifyInGroup(),
+  verifyResourceExists(Post, {
+    resolveAttrs: (context: Request) => ({
+      association: { group: { _id: context.ids!.groupId } },
+    }),
+  }),
   commentRouter
 );
+
 app.use(
-  "/api/group/:groupId/mark",
-  verifyToken,
-  verifyGroupExists,
-  verifyTeacher,
-  verifyInGroup,
-  markRouter
-);
-app.use(
-  "/api/group/:groupId/post",
-  verifyToken,
-  verifyGroupExists,
-  verifyInGroup,
+  "/api/group/:groupId/post/",
+  init,
+  verifyAccessToken,
+  verifyResourceExists(Group),
+  verifyInGroup(),
   postRouter
 );
+
+app.use(
+  "/api/mark/group/:groupId/",
+  init,
+  verifyAccessToken,
+  verifyRole(Teacher),
+  verifyResourceExists(Group),
+  verifyInGroup(),
+  markRouter
+);
+
+app.use("/api/group/", init, verifyAccessToken, groupRouter);
+
 app.use(
   "/api-docs",
   swaggerUI.serve,
@@ -67,15 +78,19 @@ app.use(
     customSiteTitle: "tuesplace API Docs",
   })
 );
-app.use("/api/profile", verifyToken, verifyYoungToken, profileRouter);
+
+app.use(
+  "/api/profile/",
+  init,
+  verifyAccessToken,
+  verifyYoungToken,
+  profileRouter
+);
 app.use(errorHandler);
-app.use(express.static("./assets"));
 
 mongoose
-  .connect(process.env.MONGO_DB_CONNECTION_STRING!)
+  .connect(mongoDBConnectionString)
   .then(() => {
-    const port = process.env.PORT || 8888;
-
     app.listen(port, () => {
       console.log(`Server listening on port ${port}`);
     });

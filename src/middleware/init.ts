@@ -1,0 +1,29 @@
+import { Request, Response } from "express";
+import { Types } from "mongoose";
+import { Languages } from "../definitions";
+
+export const init = (req: Request, res: Response, next: any) => {
+  try {
+    req.ids = {};
+    req.resources = {};
+    req.language =
+      Languages.find((lang) => lang === req.headers?.["accept-language"]) ||
+      "eng";
+
+    Object.keys(req.params)
+      .filter((key: string) => key.endsWith("Id"))
+      .forEach((key) => {
+        req.ids![key] = new Types.ObjectId(req.params[key]);
+      });
+
+    req.id = new Types.ObjectId().toString();
+
+    res.sendRes = async (response?: object, code = 200) => {
+      res.status(code).send({ success: code >= 200 && code <= 206, response });
+    };
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};

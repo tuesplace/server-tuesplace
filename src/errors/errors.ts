@@ -1,211 +1,147 @@
-const ResourceNotFound = (resource: string) => ({
-  type: `${resource}NotFound`,
-  message: `Resource of type ${resource} not found in database`,
+import {
+  Named,
+  TypedError,
+  ValueType,
+  RequestBodyBlueprint,
+  Translation,
+  Resource,
+  Role,
+} from "../@types/tuesplace";
+
+export const NotFoundError = ({ name }: Named): TypedError => ({
+  type: "NotFoundError",
+  message: {
+    eng: `${name.eng} was not found in our database`,
+    bg: `'${name.bg}' не е намерен`,
+  },
 });
 
-const ResourceNotProvided = (resource: string) => ({
-  type: `${resource}NotProvided`,
-  message: `Resource of type ${resource} not provided`,
+export const NotProvidedError = ({ name }: Named): TypedError => ({
+  type: "NotProvidedError",
+  message: {
+    eng: `${name.eng} was not provided `,
+    bg: `'${name.bg}' не е предоставен`,
+  },
 });
 
-const ResourcePropInvalid = (resource: string, prop: string, type: string) => ({
-  type: `${resource}${prop}Invalid`,
-  message: `${prop} of ${resource} not a valid ${type}`,
+export const BreaksRulesError = (requirement: Translation): TypedError => ({
+  type: "BreaksRuleError",
+  message: requirement,
 });
 
-const ResourcePropSurpassMaxLength = (resource: string, prop: string) => ({
-  type: `${resource}BodySurpassMaxLength`,
-  message: `${prop} of ${resource} exceeds maximum length`,
+export const InvalidTypeError = (
+  { name }: Named,
+  type: ValueType
+): TypedError => ({
+  type: "InvalidType",
+  message: {
+    eng: `${name.eng} is not a ${type.eng}`,
+    bg: `${name.bg} не е ${type.bg}`,
+  },
 });
 
-const NotResourceAuthor = (resource: string) => ({
-  type: `${resource}Author`,
-  message: `Request Initiator is not the author of this ${resource}`,
-});
-
-const NotRole = (role: string) => ({
-  type: `Not${role}`,
-  message: `Request Initiator must have role ${role}`,
-});
-
-const ProfileNotFound = ResourceNotFound("User");
-
-const GroupNotFound = ResourceNotFound("Group");
-
-const PostNotFound = ResourceNotFound("Post");
-
-const CommentNotFound = ResourceNotFound("Comment");
-
-const StudentNotFound = ResourceNotFound("Student");
-
-const MarkNotFound = ResourceNotFound("Mark");
-
-const RefreshTokenFamilyNotFound = ResourceNotFound("RefreshTokenFamily");
-
-const TokenNotProvided = ResourceNotProvided("Token");
-
-const EmailNotProvided = ResourceNotProvided("Email");
-
-const PasswordNotProvided = ResourceNotProvided("Password");
-
-const FullNameNotProvided = ResourceNotProvided("FullName");
-
-const PostBodyInvalid = ResourcePropInvalid("Post", "Body", "String");
-
-const CommentBodyInvalid = ResourcePropInvalid("Comment", "Body", "String");
-
-const StudentRoleInvalid = ResourcePropInvalid("Student", "Role", "Role");
-
-const StudentMarkInvalid = ResourcePropInvalid("Student", "Mark", "Number");
-
-const ProfileFullNameInvalid = ResourcePropInvalid(
-  "Profile",
-  "FullName",
-  "String"
-);
-
-const ProfileEmailInvalid = ResourcePropInvalid("Profile", "Email", "String");
-
-const PostBodySurpassMaxLength = ResourcePropSurpassMaxLength("Post", "Body");
-
-const CommentBodySurpassMaxLength = ResourcePropSurpassMaxLength(
-  "Comment",
-  "Body"
-);
-
-const ProfileFullNameSurpassMaxLength = ResourcePropSurpassMaxLength(
-  "Profile",
-  "FullName"
-);
-
-const GroupNameInvalid = ResourcePropInvalid("Group", "Name", "String");
-
-const GroupTeachersInvalid = ResourcePropInvalid("Group", "Teachers", "Array");
-
-const GroupAllowedClassesInvalid = ResourcePropInvalid(
-  "Group",
-  "AllowedClasses",
-  "Array"
-);
-
-const NotAdmin = NotRole("Admin");
-
-const NotTeacher = NotRole("Admin");
-
-const NotStudent = NotRole("Student");
-
-const NotCommentAuthor = NotResourceAuthor("Comment");
-
-const NotPostAuthor = NotResourceAuthor("Post");
-
-const EmailInvalid = {
-  type: "EmailInvalid",
-  message: "Email must be a valid string",
-};
-
-const PasswordInvalid = {
-  type: "PasswordInvalid",
-  message: "Password must be a valid string",
-};
-
-const PasswordInvalidExtended = {
-  type: "PasswordInvalidExtended",
-  message:
-    "Password must contain 1 digit, upper-, lowe-case letters and be at least 7 chars long",
-};
-
-const WrongPassword = {
+export const WrongPasswordError: TypedError = {
   type: "WrongPassword",
-  message: "Password is incorrect",
+  message: {
+    eng: "Password is incorrect",
+    bg: "Паролата е грешна",
+  },
 };
 
-const PasswordConfirm = {
-  type: "PasswordConfirm",
-  message: "Password and Password Confirm are not equal",
-};
-
-const RepeatOldPassword = {
-  type: "RepeatOldPassword",
-  message: "New Password cannot be the same as the Old Password",
-};
-
-const RedundantAccessToken = {
-  type: "RedundantAccessToken",
-  message: "Access token points to invalid refresh token",
-};
-
-const EmailTaken = {
+export const EmailUsernameTakenError: TypedError = {
   type: "EmailTaken",
-  message: "Email is already used",
+  message: {
+    eng: "Email is already used by another account",
+    bg: "Имейлът се използва от друг акаунт",
+  },
 };
 
-const GroupPermission = {
-  type: "GroupPersmisson",
-  message: "You cannot post in this group",
+export const NotComformToSchemaError = (
+  { name }: Named,
+  schema: RequestBodyBlueprint
+): TypedError => ({
+  type: "NotComformToSchema",
+  message: {
+    eng: `${name.eng} does not comform to schema {${Object.keys(schema).map(
+      (key) => `${key}: ${schema[key].name.eng}`
+    )}}`,
+    bg: `${name.bg} не е по схемата {${Object.keys(schema).map(
+      (key) => `${key}: ${schema[key].name.bg}`
+    )}}`,
+  },
+});
+
+export const InvalidLengthError = (
+  { name }: Named,
+  length: number | string
+): TypedError => ({
+  type: "InvalidLength",
+  message: {
+    eng: `${name.eng} length is not ${length}`,
+    bg: `Дължината на ${name.bg} не е ${length}`,
+  },
+});
+
+export const PasswordConfirmError: TypedError = {
+  type: "PasswordConfirm",
+  message: {
+    eng: "Password Confirm is not equal to Password",
+    bg: "Паролите не съвпадат",
+  },
 };
 
-const GroupRedactor = {
-  type: "GroupRedactor",
-  message: "Request Initiator must be a teacher or admin",
+export const OldTokenError: TypedError = {
+  type: "OldToken",
+  message: {
+    eng: "Last sign in more than 20 minutes ago. You have to sign out and sign in again",
+    bg: "Последното влизане в профила е било преди 20 минути. Трябва да излезете и влезете в профила си",
+  },
 };
 
-const StudentNotGroupMember = {
-  type: "StudentNotGroupMember",
-  message: "Student is not a member of the Group",
+export const PasswordPolicyError: TypedError = {
+  type: "PasswordPolicyError",
+  message: {
+    eng: "Password must contain 1 upper-, 1 lower-cased letter, 1 number and 1 special character and be at least 7 characters long",
+    bg: "Паролата трябва да съдържа 1 главна и 1 малка буква, 1 цифра и 1 специален символ и трябва да бъде поне 7 символа",
+  },
 };
 
-const OldRefreshToken = {
-  type: "OldRefreshToken",
-  message:
-    "Refresh Token is too old. Cannot confirm Request Initiator Identity",
-};
+export const NoQueryError = <T>(resource: Resource<T>): TypedError => ({
+  type: "NoQueryError",
+  message: {
+    eng: `The server could not build a lookup query for ${resource.name.eng}. Contact an administrator`,
+    bg: `Сървърът не успя да създате lookup заявка за ${resource.name.bg}. Свържете се с администратор.`,
+  },
+});
 
-const RefreshTokenRedundant = {
-  type: "RefreshTokenRedundant",
-  message:
-    "Refresh Token Famoly contains Refresh Token used by Request Initiator",
-};
+export const NotOwnerError = <T>(resource: Resource<T>): TypedError => ({
+  type: "NotOwnerError",
+  message: {
+    eng: `You are not the owner of ${resource.name.eng}`,
+    bg: `Вие не сте собственика на ${resource.name.bg}`,
+  },
+});
 
-export {
-  ProfileNotFound,
-  GroupNotFound,
-  PostNotFound,
-  CommentNotFound,
-  StudentNotFound,
-  MarkNotFound,
-  RefreshTokenFamilyNotFound,
-  TokenNotProvided,
-  EmailNotProvided,
-  PasswordNotProvided,
-  FullNameNotProvided,
-  PostBodyInvalid,
-  CommentBodyInvalid,
-  StudentRoleInvalid,
-  ProfileFullNameInvalid,
-  ProfileEmailInvalid,
-  PostBodySurpassMaxLength,
-  CommentBodySurpassMaxLength,
-  ProfileFullNameSurpassMaxLength,
-  GroupNameInvalid,
-  GroupTeachersInvalid,
-  GroupAllowedClassesInvalid,
-  StudentMarkInvalid,
-  NotAdmin,
-  NotTeacher,
-  NotStudent,
-  NotCommentAuthor,
-  NotPostAuthor,
-  EmailInvalid,
-  PasswordInvalid,
-  PasswordInvalidExtended,
-  WrongPassword,
-  PasswordConfirm,
-  RepeatOldPassword,
-  RedundantAccessToken,
-  EmailTaken,
-  GroupPermission,
-  GroupRedactor,
-  StudentNotGroupMember,
-  OldRefreshToken,
-  RefreshTokenRedundant,
+export const NotRoleError = (role: Role): TypedError => ({
+  type: "NotRoleError",
+  message: {
+    eng: `Your profile is not a ${role.name.eng}`,
+    bg: `Вашият профил не е ${role.name.bg}`,
+  },
+});
+
+export const NoWriteAccessError = <T>(resource: Resource<T>): TypedError => ({
+  type: "NoWriteAccess",
+  message: {
+    eng: `You do not have permission to write to ${resource.name.eng}`,
+    bg: `Нямате правата да променяте ${resource.name.bg}`,
+  },
+});
+
+export const PasswordRedundantError: TypedError = {
+  type: "PasswordRedundantError",
+  message: {
+    eng: "Your new password cannot be the same as your old one",
+    bg: "Новата Ви парола не може да бъде същата със старата",
+  },
 };

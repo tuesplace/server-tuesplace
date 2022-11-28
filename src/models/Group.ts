@@ -3,19 +3,22 @@ import { IGroup } from "../@types/tuesplace";
 
 const groupSchema = new Schema<IGroup>(
   {
-    groupName: {
+    name: {
       type: String,
-      default: "",
+      required: true,
     },
-    isChat: {
-      type: Boolean,
-      default: false,
+    type: {
+      type: String,
+      required: true,
     },
-    allowedClasses: Array,
-    teachers: Array,
-    admins: Array,
+    classes: Array,
+    owners: Array,
+    assets: {
+      type: Object,
+      default: {},
+    },
   },
   { timestamps: true }
 );
 
-export default model<IGroup>("Group", groupSchema);
+export const Group = model<IGroup>("Group", groupSchema);

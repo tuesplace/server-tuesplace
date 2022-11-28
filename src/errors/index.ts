@@ -1,4 +1,3 @@
-import RESTError from "./RESTError";
-
-export { RESTError };
+export * from "./RESTError";
 export * from "./errors";
+export * from "./CriticalError";

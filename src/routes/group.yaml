@@ -17,7 +17,7 @@ paths:
           schema:
             type: object
             properties:
-              groupName:
+              name:
                 type: string
                 example: 9В - Руски
               teachers:
@@ -25,15 +25,15 @@ paths:
                 items:
                   type: string
                   format: ObjectId
-              allowedClasses:
+              classes:
                 type: array
                 items:
                   type: string
                   format: class
             required:
-              - groupName
+              - name
               - teachers
-              - allowedClasses
+              - classes
       responses:
         200:
           $ref: "#/components/responses/Group"
@@ -108,7 +108,7 @@ paths:
           schema:
             type: object
             properties:
-              groupName:
+              name:
                 type: string
                 example: 9В - Руски
               teachers:
@@ -116,7 +116,7 @@ paths:
                 items:
                   type: string
                   format: ObjectId
-              allowedClasses:
+              classes:
                 type: array
                 items:
                   type: string

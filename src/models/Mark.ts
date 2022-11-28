@@ -1,25 +1,22 @@
 import { model, Schema } from "mongoose";
-import { IMark } from "../@types/tuesplace/IMark";
+import { IMark } from "../@types/tuesplace";
 
 const markSchema = new Schema<IMark>(
   {
-    teacherId: {
-      type: String,
+    owner: {
+      type: Object,
       required: true,
     },
     mark: {
-      type: String,
+      type: Number,
       required: true,
     },
-    studentId: {
-      type: String,
+    associations: {
+      type: Object,
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const StudentMarks = (groupId: string) =>
-  model(`group${groupId}marks`, markSchema, `group${groupId}marks`);
-
-export { StudentMarks };
+export const Mark = model("Mark", markSchema);

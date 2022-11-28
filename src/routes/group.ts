@@ -1,28 +1,63 @@
 import express from "express";
-const router = express.Router();
-import { verifyAdmin, verifyInGroup, verifyGroupExists } from "../middleware";
 import {
-  getGroup,
-  createGroup,
-  editGroup,
-  deleteGroup,
-} from "../controllers/group";
+  createResource,
+  deleteResource,
+  editResource,
+  getAllSortedByCreateDatePaginated,
+  getResource,
+} from "../controllers";
+import { Admin } from "../definitions";
+const router = express.Router({ mergeParams: true });
+import {
+  verifyRole,
+  verifyInGroup,
+  verifyResourceOwner,
+  verifyResourceExists,
+  verifyBodySchema,
+} from "../middleware";
+import { Group, Profile } from "../definitions";
+import { createGroupSchema } from "../requestSchema/group";
 
-router.get("/:groupId", verifyGroupExists, verifyInGroup, getGroup);
-router.post("", verifyAdmin, createGroup);
+router.get("/", getAllSortedByCreateDatePaginated(Group));
+
+router.get(
+  "/:groupId",
+  verifyResourceOwner(Profile, Group),
+  verifyInGroup(),
+  getResource(Group)
+);
+
+router.post(
+  "/",
+  verifyRole(Admin),
+  verifyBodySchema(createGroupSchema),
+  createResource(Group, {
+    resolveAttrs: (context) => ({
+      owners: [
+        {
+          _id: context.profile?._id,
+          collectionName: "profiles",
+          shouldResolve: true,
+        },
+      ],
+    }),
+  })
+);
+
 router.put(
   "/:groupId",
-  verifyGroupExists,
-  verifyAdmin,
-  verifyInGroup,
-  editGroup
+  verifyResourceExists(Group),
+  verifyRole(Admin),
+  verifyInGroup(),
+  editResource(Group)
 );
+
 router.delete(
   "/:groupId",
-  verifyGroupExists,
-  verifyAdmin,
-  verifyInGroup,
-  deleteGroup
+  verifyResourceExists(Group),
+  verifyRole(Admin),
+  verifyInGroup(),
+  deleteResource(Group)
 );
 
 export default router;

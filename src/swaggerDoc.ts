@@ -1,5 +1,5 @@
-import "dotenv/config";
 import swaggerJsdoc from "swagger-jsdoc";
+import { port, serverUrl } from "./config";
 
 const options = {
   definition: {
@@ -20,7 +20,7 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.SERVER_URL}:${process.env.PORT || 8888}/api`,
+        url: `${serverUrl}:${port}/api`,
       },
     ],
   },

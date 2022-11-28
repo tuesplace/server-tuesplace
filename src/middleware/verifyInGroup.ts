@@ -1,22 +1,40 @@
-import roles from "../util/roles";
-import { RESTError, GroupPermission } from "../errors";
+import { Teacher, Admin, Group, Profile, Student } from "../definitions";
+import { CriticalError, RESTError, NoWriteAccessError } from "../errors";
 import { Request } from "express";
+import {
+  Association,
+  IDocument,
+  IProfile,
+  Resource,
+} from "../@types/tuesplace";
+import { get } from "lodash";
 
-export default async (req: Request, _: any, next: any) => {
-  try {
-    const { profile, group } = req;
-    if (
-      (profile.role === roles.teacher &&
-        !group.teachers.includes(req.auth.userId)) ||
-      (profile.role === roles.admin &&
-        !group.admins.includes(req.auth.userId)) ||
-      !group.allowedClasses.includes(profile.class)
-    ) {
-      throw new RESTError(GroupPermission, 401);
+export const verifyInGroup =
+  <T>(resource: Resource<T> = Profile) =>
+  async (req: Request, _: any, next: any) => {
+    try {
+      const { group } = req.resources;
+      const profile = get(
+        req,
+        resource.documentLocation
+      ) as IDocument<IProfile>;
+      if (!profile) {
+        throw new CriticalError();
+      }
+
+      if (
+        ((profile.role === Teacher.value || profile.role === Admin.value) &&
+          group.owners.filter(
+            (owner: Association) =>
+              owner._id?.toString() === profile._id?.toString()
+          ).length) ||
+        (profile.role == Student.value && group.classes.includes(profile.class))
+      ) {
+        next();
+      } else {
+        throw new RESTError(NoWriteAccessError(Group), 401);
+      }
+    } catch (err) {
+      next(err);
     }
-
-    next();
-  } catch (err) {
-    next(err);
-  }
-};
+  };

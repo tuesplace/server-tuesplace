@@ -1,25 +1,20 @@
 import { isArray } from "lodash";
+import { IRESTError, TypedError } from "../@types/tuesplace";
 
-interface Error {
-  type: string;
-  message: string;
-}
-class RESTError extends Error {
-  errors = Array<Error>();
-  code = "";
-  constructor(errors: Error | Array<Error>, code: string | number) {
+export class RESTError extends Error implements IRESTError {
+  errors = Array<TypedError>();
+  code = 0;
+  constructor(errors: TypedError | Array<TypedError>, code: number) {
     super("");
     Error.captureStackTrace(this, RESTError);
 
     this.name = "RESTError";
 
     if (!isArray(errors)) {
-      this.errors = new Array<Error>(errors);
+      this.errors = new Array<TypedError>(errors);
     } else {
       this.errors = errors;
     }
-    this.code = code.toString();
+    this.code = code;
   }
 }
-
-export default RESTError;

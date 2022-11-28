@@ -15,9 +15,11 @@ const profileSchema = new Schema<IProfile>(
       type: String,
       required: true,
     },
-    emailVerified: {
-      type: Boolean,
-      default: false,
+    verifications: {
+      type: Object,
+      default: {
+        email: false,
+      },
     },
     class: {
       type: String,
@@ -25,10 +27,10 @@ const profileSchema = new Schema<IProfile>(
     },
     role: {
       type: String,
-      default: "",
+      required: true,
     },
   },
   { timestamps: true }
 );
 
-export default model("Profile", profileSchema);
+export const Profile = model("Profile", profileSchema);
