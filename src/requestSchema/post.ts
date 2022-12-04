@@ -1,5 +1,5 @@
 import { RequestBodyBlueprint } from "../@types/tuesplace";
-import { AssignmentInfo, CommentBody, MarkField } from "../definitions";
+import { AssignmentInfo, CommentBody, PostBody } from "../definitions";
 
 export const createPostSchema: RequestBodyBlueprint = {
   body: CommentBody,
@@ -7,5 +7,5 @@ export const createPostSchema: RequestBodyBlueprint = {
 };
 
 export const editPostSchema: RequestBodyBlueprint = {
-  mark: MarkField,
+  body: PostBody,
 };

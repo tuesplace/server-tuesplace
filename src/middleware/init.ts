@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
 import { Languages } from "../definitions";
+import { resolveDocuments } from "../util";
 
 export const init = (req: Request, res: Response, next: any) => {
   try {
@@ -16,10 +17,17 @@ export const init = (req: Request, res: Response, next: any) => {
         req.ids![key] = new Types.ObjectId(req.params[key]);
       });
 
+    req.assets = {};
+
+    req.resolvedFiles = [];
+
     req.id = new Types.ObjectId().toString();
 
     res.sendRes = async (response?: object, code = 200) => {
-      res.status(code).send({ success: code >= 200 && code <= 206, response });
+      res.status(code).send({
+        success: code >= 200 && code <= 206,
+        response: await resolveDocuments(response),
+      });
     };
 
     next();

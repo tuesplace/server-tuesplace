@@ -27,3 +27,10 @@ export const GroupTypeName: Named = {
     bg: "Тип на Група",
   },
 };
+
+export const Asset: Named = {
+  name: {
+    eng: "Asset",
+    bg: "Прикачен Файл",
+  },
+};

@@ -5,3 +5,4 @@ export * from "./Profile";
 export * from "./RefreshTokenGroup";
 export * from "./Comment";
 export * from "./Submission";
+export * from "./Asset";

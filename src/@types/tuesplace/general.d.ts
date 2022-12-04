@@ -1,15 +1,12 @@
 import { Request } from "express";
 import { Types } from "mongoose";
+import multer from "multer";
 import { IDocument, IModel } from "./models";
 
-export type Asset = {
-  src?: string;
-  key: string;
-  mimeType: string;
-};
-
 export type Assets = {
-  [key]?: Asset;
+  assets: {
+    [key: string]: Association[];
+  };
 };
 
 export type Verifications = {
@@ -137,3 +134,11 @@ export type CreateResourceOptions = {
 export type FindResourceOptions = {
   resolveAttrs?: (context: Request) => object;
 };
+
+export interface FileFormField extends multer.Field {
+  mimetype?: string;
+}
+
+export interface ResolvedMulterFile extends Express.Multer.File {
+  key: string;
+}

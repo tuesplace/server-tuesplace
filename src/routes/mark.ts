@@ -16,7 +16,7 @@ import {
 import { editMarkSchema, createMarkSchema } from "../requestSchema";
 
 router.get(
-  "",
+  "/",
   getAllSortedByCreateDatePaginated(Mark, {
     modelQuery: {
       ids: {

@@ -127,7 +127,7 @@ const generateTokenPair = async (userId: string) => {
     { expiresIn: accessTokenExpiry }
   );
 
-  return { refreshToken, accessToken };
+  return { accessToken, refreshToken };
 };
 
 export { getToken, rotateTokenPair, verifyAccessToken, generateTokenPair };

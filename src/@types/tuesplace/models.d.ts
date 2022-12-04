@@ -38,9 +38,12 @@ export interface ITimestamped {
   updatedAt: date;
 }
 
-interface ISendable extends IMongoSchema, Owned, Associations, ITimestamped {
-  assets: Assets;
-}
+interface ISendable
+  extends IMongoSchema,
+    Owned,
+    Associations,
+    ITimestamped,
+    Assets {}
 
 interface IPublicSendable extends ISendable, Body {
   reactions: Reaction[];
@@ -57,14 +60,13 @@ export interface IComment extends IPublicSendable {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ISubmission extends ISendable {}
 
-export interface IProfile extends IMongoSchema {
+export interface IProfile extends IMongoSchema, Assets {
   fullName: string;
   email: string;
   password: string;
   verifications: Verifications;
   class: string;
   role: string;
-  assets: Assets;
 }
 
 export interface IMark extends IMongoSchema, Owned, Associations {
@@ -80,4 +82,14 @@ export interface IGroup extends IMongoSchema, OwnedByMany, Associations {
   type: string;
   assets: Assets;
   classes: Array<string>;
+}
+
+export interface IAsset extends IMongoSchema, Owned, ITimestamped {
+  key: string;
+  mimetype: string;
+  src?: string;
+  meta: {
+    originalName: string;
+    size: number;
+  };
 }

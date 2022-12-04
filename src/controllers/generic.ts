@@ -8,8 +8,12 @@ import {
   QueryOptions,
   Resource,
   CreateResourceOptions,
+  Assets,
+  IAsset,
+  Association,
 } from "../@types/tuesplace";
 import { reactToSendable } from "../util";
+import { reduceArrayOfObject } from "../util/array";
 import { constructQueryValues } from "../util/fields";
 
 export const getAllSortedByCreateDatePaginated =
@@ -32,7 +36,7 @@ export const getAllSortedByCreateDatePaginated =
         .skip(pageNum * limitNum)
         .limit(limitNum);
 
-      res.sendRes(documents);
+      res.sendRes(documents.map((doc: any) => doc._doc));
     } catch (err) {
       next(err);
     }
@@ -44,6 +48,20 @@ export const getResource =
     try {
       const document = get(req, resource.documentLocation) as IDocument<T>;
       res.sendRes(document._doc);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+export const createResource =
+  <T>(resource: Resource<T>, options?: CreateResourceOptions) =>
+  async (req: Request, res: Response, next: any) => {
+    try {
+      await resource.model.create({
+        ...req.body,
+        ...(options?.resolveAttrs?.(req) || {}),
+      });
+      res.sendRes(null, 204);
     } catch (err) {
       next(err);
     }
@@ -66,14 +84,24 @@ export const editResource =
     }
   };
 
-export const createResource =
-  <T>(resource: Resource<T>, options?: CreateResourceOptions) =>
+export const editResourceAssets =
+  (resource: Resource<Assets>) =>
   async (req: Request, res: Response, next: any) => {
     try {
-      await resource.model.create({
-        ...req.body,
-        ...(options?.resolveAttrs?.(req) || {}),
-      });
+      const document = get(req, resource.documentLocation) as IDocument<Assets>;
+      document.assets = reduceArrayOfObject(
+        Object.keys(req.assets).map((key) => ({
+          [key]: req.assets[key].map(
+            (asset: IAsset): Association => ({
+              _id: asset._doc._id,
+              collectionName: "assets",
+              shouldResolve: true,
+            })
+          ),
+        }))
+      );
+
+      await document.save();
       res.sendRes(null, 204);
     } catch (err) {
       next(err);

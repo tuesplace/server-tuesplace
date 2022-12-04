@@ -6,7 +6,9 @@ import {
   createResource,
   deleteResource,
   editResource,
+  editResourceAssets,
   getAllSortedByCreateDatePaginated,
+  getResource,
   reactToSendableResource,
 } from "../controllers";
 import {
@@ -15,6 +17,7 @@ import {
   verifyResourceOwner,
 } from "../middleware";
 import { createPostSchema, editPostSchema } from "../requestSchema";
+import { createAssets } from "../controllers";
 
 router.get(
   "/",
@@ -28,6 +31,16 @@ router.get(
       },
     },
   })
+);
+
+router.get(
+  "/:postId",
+  verifyResourceExists(Post, {
+    resolveAttrs: (context) => ({
+      association: { group: { _id: context.ids!.groupId } },
+    }),
+  }),
+  getResource(Post)
 );
 
 router.post(
@@ -61,6 +74,35 @@ router.put(
   verifyResourceOwner(Profile, Post),
   verifyBodySchema(editPostSchema),
   editResource(Post)
+);
+
+router.put(
+  "/:postId/asset",
+  verifyResourceExists(Post, {
+    resolveAttrs: (context) => ({
+      association: { group: { _id: context.ids!.groupId } },
+    }),
+  }),
+  verifyResourceOwner(Profile, Post),
+  createAssets(
+    {
+      resolveAttrs: (context) => ({
+        owner: {
+          _id: context.profile!._id,
+          collectionName: "profiles",
+          shouldResolve: false,
+        },
+      }),
+    },
+    Post,
+    [
+      {
+        name: "assets",
+        maxCount: 15,
+      },
+    ]
+  ),
+  editResourceAssets(Post)
 );
 
 router.delete(

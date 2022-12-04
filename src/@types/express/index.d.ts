@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IDocument, IProfile } from "../tuesplace";
+import { IAsset, IDocument, IProfile, ResolvedMulterFile } from "../tuesplace";
 
 declare global {
   namespace Express {
@@ -15,6 +15,10 @@ declare global {
       ids?: {
         [key: string]: Types.ObjectId;
       };
+      assets: {
+        [key: string]: IDocument<IAsset>[];
+      };
+      resolvedFiles: ResolvedMulterFile[];
     }
   }
 }

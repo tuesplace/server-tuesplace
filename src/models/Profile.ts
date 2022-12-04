@@ -29,6 +29,10 @@ const profileSchema = new Schema<IProfile>(
       type: String,
       required: true,
     },
+    assets: {
+      type: Object,
+      default: {},
+    },
   },
   { timestamps: true }
 );
