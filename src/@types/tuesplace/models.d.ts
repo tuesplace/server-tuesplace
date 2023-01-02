@@ -73,7 +73,7 @@ export interface IMark extends IMongoSchema, Owned, Associations {
   mark: number;
 }
 
-export interface IRefreshTokenGroup extends IMongoSchema, Owned, Associations {
+export interface IRefreshTokenGroup extends IMongoSchema, Owned {
   usedRefreshTokens: string[];
 }
 

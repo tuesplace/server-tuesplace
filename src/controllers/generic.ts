@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { get } from "lodash";
+import { get, merge } from "lodash";
 import {
   EditResourceOptions,
   IDocument,
@@ -89,7 +89,8 @@ export const editResourceAssets =
   async (req: Request, res: Response, next: any) => {
     try {
       const document = get(req, resource.documentLocation) as IDocument<Assets>;
-      document.assets = reduceArrayOfObject(
+      const { mode } = req.query;
+      const resolvedAssets = reduceArrayOfObject(
         Object.keys(req.assets).map((key) => ({
           [key]: req.assets[key].map(
             (asset: IAsset): Association => ({
@@ -100,6 +101,13 @@ export const editResourceAssets =
           ),
         }))
       );
+
+      if (resolvedAssets.length) {
+        document.assets =
+          !mode || mode === "replace"
+            ? resolvedAssets
+            : merge(document.assets, resolvedAssets);
+      }
 
       await document.save();
       res.sendRes(null, 204);

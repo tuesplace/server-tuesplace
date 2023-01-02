@@ -15,6 +15,7 @@ import {
   Mark as MarkModel,
   Group as GroupModel,
   Comment as CommentModel,
+  RefreshTokenGroup as RefreshTokenGroupModel,
 } from "../../models/";
 
 export const Token: Named = {
@@ -59,13 +60,13 @@ export const Mark: Resource<IMark> = {
 
 export const RefreshTokenGroup: Resource<IRefreshTokenGroup> = {
   name: {
-    eng: "Mark",
-    bg: "Оценка",
+    eng: "RefreshTokenGroup",
+    bg: "RefreshTokenGroup",
   },
-  lookupFieldLocation: "params.markId",
+  lookupFieldLocation: "",
   documentLocation: "resources.refreshTokenGroup",
   by: "_id",
-  model: MarkModel,
+  model: RefreshTokenGroupModel,
 };
 
 export const Group: Resource<IGroup> = {

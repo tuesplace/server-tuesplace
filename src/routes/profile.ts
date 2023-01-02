@@ -1,10 +1,12 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import { deleteResource, editResource } from "../controllers";
+import { deleteResource, editResource, getResource } from "../controllers";
 const router = express.Router({ mergeParams: true });
 import { Profile } from "../definitions";
 import { verifyBodySchema } from "../middleware";
 import { editProfileSchema } from "../requestSchema";
+
+router.post("/me", getResource(Profile));
 
 router.post(
   "/",
