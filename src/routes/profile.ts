@@ -6,7 +6,7 @@ import { Profile } from "../definitions";
 import { verifyBodySchema } from "../middleware";
 import { editProfileSchema } from "../requestSchema";
 
-router.post("/me", getResource(Profile));
+router.get("/me", getResource(Profile));
 
 router.post(
   "/",
