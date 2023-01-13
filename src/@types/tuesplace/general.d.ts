@@ -45,11 +45,6 @@ export interface Field extends Named, Asserted {
 }
 
 export type ValueType = Translation;
-
-export type RequestBodyBlueprint = {
-  [key: string]: Field;
-};
-
 export interface Resource<T> extends Named {
   model: IModel<T>;
   lookupFieldLocation: string;

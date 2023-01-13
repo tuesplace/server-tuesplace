@@ -14,7 +14,7 @@ import {
   verifyBodySchema,
 } from "../middleware";
 import { Group } from "../definitions";
-import { createGroupSchema } from "../requestSchema/group";
+import { createGroupSchema, editGroupSchema } from "../requestSchema/group";
 
 const router = express.Router({ mergeParams: true });
 
@@ -46,8 +46,9 @@ router.post(
 
 router.put(
   "/:groupId",
-  verifyResourceExists(Group),
   verifyRole(Admin),
+  verifyBodySchema(editGroupSchema),
+  verifyResourceExists(Group),
   verifyInGroup(),
   editResource(Group)
 );

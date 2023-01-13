@@ -1,6 +1,6 @@
-import { RequestBodyBlueprint } from "../@types/tuesplace";
+import zod from "zod";
 import { Reaction } from "../definitions";
 
-export const reactToSendableSchema: RequestBodyBlueprint = {
+export const reactToSendableSchema = zod.object({
   reaction: Reaction,
-};
+});

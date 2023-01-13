@@ -44,7 +44,7 @@ app.use(
   verifyInGroup(),
   verifyResourceExists(Post, {
     resolveAttrs: (context: Request) => ({
-      "associations.group_id": context.ids!.groupId,
+      "associations.group._id": context.ids!.groupId,
     }),
   }),
   commentRouter

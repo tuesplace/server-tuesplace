@@ -1,129 +1,71 @@
-import { Field, Named, Translation } from "../../@types/tuesplace";
-import { ConformsToArray, LongerThan, Unique } from "../rules";
-
+import zod from "zod";
 import {
-  assertEmail,
-  assertPassword,
-  assertPasswordConfirm,
-  assertRole,
-  assertString,
-  assertBoolean,
-  assertEmoji,
-  assertMark,
-  assertGroupClasses,
-  assertAssignmentInfo,
-} from "../../util/assertions";
+  assertConformsToArray,
+  assertEmailLike,
+  assertInDB,
+  assertLengthInRange,
+  assertNumberInRange,
+  assertPasswordLike,
+} from "../rules";
+import { Profile } from "../resources";
 import {
-  FullNameName,
-  GroupTypeName,
-  PasswordName,
-  ReactionName,
-} from "../names";
-import { Profile as ProfileModel } from "../../models";
-import { Profile as ProfileResource } from "../resources";
-import { types as groupTypes, classes as groupClasses } from "../../util";
+  types as groupTypes,
+  classes as groupClasses,
+  emojis,
+} from "../../util";
+import { customZodRefinement } from "../../util/zod";
 
-export const Email: Field = {
-  name: {
-    eng: "Email",
-    bg: "Имейл",
-  },
-  assert: assertEmail(),
-};
+export const FullName = zod
+  .string()
+  .superRefine(customZodRefinement((val) => assertLengthInRange(60, val)));
 
-export const Password: Field = {
-  ...PasswordName,
-  assert: assertPassword([LongerThan(7)]),
-};
+export const Email = zod
+  .string()
+  .superRefine(customZodRefinement(assertEmailLike));
 
-export const Role: Field = {
-  name: {
-    eng: "Role",
-    bg: "Роля",
-  },
-  assert: assertRole,
-};
+export const UniqueEmail = Email.superRefine(
+  customZodRefinement(
+    async (email) => await assertInDB(Profile, false, { email })
+  )
+);
 
-export const FullName: Field = {
-  ...FullNameName,
-  assert: assertString(FullNameName)(),
-};
+export const Password = zod
+  .string()
+  .superRefine(customZodRefinement(assertPasswordLike));
 
-export const PasswordConfirm: Field = {
-  name: {
-    eng: "Password Confirm",
-    bg: "Потвърждение на паролата",
-  },
-  assert: assertPasswordConfirm,
-};
+export const PostBody = zod
+  .string()
+  .superRefine(customZodRefinement((val) => assertLengthInRange(400, val)));
 
-export const IRRepeatableEmail = {
-  ...Email,
-  assert: assertEmail([Unique(Email, ProfileModel, ProfileResource)]),
-};
+export const CommentBody = zod
+  .string()
+  .superRefine(customZodRefinement((val) => assertLengthInRange(400, val)));
 
-export const IRRepeatableString =
-  (field: Named) => (checkModel: any, resource: Named) => ({
-    ...field,
-    assert: assertString(field)([Unique(field, checkModel, resource)]),
-  });
+export const CommentIsPrivate = zod.boolean();
 
-export const StringField = (name: Translation): Field => ({
-  name,
-  assert: assertString({ name })(),
-});
+export const Reaction = zod
+  .string()
+  .superRefine((val) => assertConformsToArray(emojis, val));
 
-export const BooleanField = (name: Translation): Field => ({
-  name,
-  assert: assertBoolean({ name })(),
-});
+export const MarkField = zod
+  .number()
+  .superRefine(customZodRefinement((val) => assertNumberInRange(6, val, 2)));
 
-export const PostBody: Field = StringField({
-  eng: "Post Body",
-  bg: "Тяло на Пост",
-});
+export const GroupName = zod
+  .string()
+  .superRefine(customZodRefinement((val) => assertLengthInRange(60, val)));
 
-export const CommentBody: Field = StringField({
-  eng: "Comment Body",
-  bg: "Тяло на Коментар",
-});
+export const GroupType = zod
+  .string()
+  .superRefine((val) => assertConformsToArray(groupTypes, val));
 
-export const CommentIsPrivate: Field = BooleanField({
-  eng: "Comment isPrivate",
-  bg: "Comment isPrivate",
-});
+export const GroupClasses = zod
+  .array(zod.string())
+  .superRefine((val) => assertConformsToArray(groupClasses, val));
 
-export const Reaction: Field = {
-  ...ReactionName,
-  assert: assertEmoji(ReactionName),
-};
-
-export const MarkField: Field = {
-  name: {
-    eng: "Mark",
-    bg: "Оценка",
-  },
-  assert: assertMark,
-};
-
-export const GroupType: Field = {
-  ...GroupTypeName,
-  assert: assertString(GroupTypeName)([ConformsToArray(groupTypes)]),
-};
-
-export const GroupClasses: Field = {
-  name: {
-    eng: "Group Classes",
-    bg: "Класове на Група",
-  },
-  assert: assertGroupClasses([ConformsToArray(groupClasses)]),
-};
-
-export const AssignmentInfo: Field = {
-  name: {
-    eng: "Assignment Info",
-    bg: "Информация за Задание",
-  },
-  optional: true,
-  assert: assertAssignmentInfo,
-};
+export const AssignmentInfo = zod
+  .object({
+    isAssignment: zod.boolean(),
+    deadline: zod.date().optional(),
+  })
+  .optional();

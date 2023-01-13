@@ -1,4 +1,3 @@
-export * from "./ObjectBlueprint";
 export * from "./auth";
 export * from "./generic";
 export * from "./mark";

@@ -1,5 +1,12 @@
 import { Named } from "../../@types/tuesplace";
 
+export const EmailName: Named = {
+  name: {
+    eng: "Email",
+    bg: "Имейл",
+  },
+};
+
 export const PasswordName: Named = {
   name: {
     eng: "Password",

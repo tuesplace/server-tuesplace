@@ -2,7 +2,6 @@ import {
   Named,
   TypedError,
   ValueType,
-  RequestBodyBlueprint,
   Translation,
   Resource,
   Role,
@@ -56,29 +55,22 @@ export const EmailUsernameTakenError: TypedError = {
   },
 };
 
-export const NotConformToSchemaError = (
-  { name }: Named,
-  schema: RequestBodyBlueprint
-): TypedError => ({
+export const NotConformToSchemaError = ({ name }: Named): TypedError => ({
   type: "NotConformToSchema",
   message: {
-    eng: `${name.eng} does not conform to schema {${Object.keys(schema).map(
-      (key) => `${key}: ${schema[key].name.eng}`
-    )}}`,
-    bg: `${name.bg} не е по схемата {${Object.keys(schema).map(
-      (key) => `${key}: ${schema[key].name.bg}`
-    )}}`,
+    eng: `${name.eng} does not conform to schema`,
+    bg: `${name.bg} не е по схемата`,
   },
 });
 
-export const InvalidLengthError = (
-  { name }: Named,
-  length: number | string
+export const InvalidRangeError = (
+  moreThan: number | string,
+  lessThan: number | string = 0
 ): TypedError => ({
   type: "InvalidLength",
   message: {
-    eng: `${name.eng} length is not ${length}`,
-    bg: `Дължината на ${name.bg} не е ${length}`,
+    eng: `{{name.eng}} needs to have a length which is more than ${moreThan} and less than ${lessThan} `,
+    bg: `Дължината на {{name.bg}} трябва да бъде по-голяма от ${moreThan} и по-малка от ${lessThan}`,
   },
 });
 
@@ -130,6 +122,14 @@ export const NotRoleError = (role: Role): TypedError => ({
   },
 });
 
+export const InvalidValueError = (expectedValue: any): TypedError => ({
+  type: "InvalidValueError",
+  message: {
+    eng: `{{name.eng}} was supposed to have a value equal to '${expectedValue}'`,
+    bg: `{{name.bg}} е трябвало да има стойност, равна на '${expectedValue}'`,
+  },
+});
+
 export const NoAccessError = <T>(resource: Resource<T>): TypedError => ({
   type: "NoWriteAccess",
   message: {
@@ -143,5 +143,29 @@ export const PasswordRedundantError: TypedError = {
   message: {
     eng: "Your new password cannot be the same as your old one",
     bg: "Новата Ви парола не може да бъде същата със старата",
+  },
+};
+
+export const NotConformToArrayError = (array: any[]): TypedError => ({
+  type: "NotConformToArrayError",
+  message: {
+    eng: `{{name.eng}} can have one or more of the following values: [${array}]`,
+    bg: `{{name.bg}} може да има следните възможни стойности: [${array}]`,
+  },
+});
+
+export const NotUniqueError = <T>({ name }: Resource<T>): TypedError => ({
+  type: "NotUniqueError",
+  message: {
+    eng: `{{name.eng}} has already been used in another ${name.eng}`,
+    bg: `{{name.bg}} се ползва от друг ${name.bg}`,
+  },
+});
+
+export const ArrayElementsNotUniqueError: TypedError = {
+  type: "ArrayElementsNotUniqueError",
+  message: {
+    eng: "{{name.eng}} must be an array of unique values",
+    bg: "{{name.bg}} трябва да бъде масив от различни стойности",
   },
 };

@@ -1,8 +1,8 @@
-import { RequestBodyBlueprint } from "../@types/tuesplace";
-import { FullName, IRRepeatableEmail, Password } from "../definitions";
+import zod from "zod";
+import { FullName, Password, UniqueEmail } from "../definitions";
 
-export const editProfileSchema: RequestBodyBlueprint = {
-  fullName: FullName,
-  email: { ...IRRepeatableEmail, optional: true },
-  password: { ...Password, optional: true },
-};
+export const editProfileSchema = zod.object({
+  fullName: FullName.optional(),
+  email: UniqueEmail.optional(),
+  password: Password.optional(),
+});

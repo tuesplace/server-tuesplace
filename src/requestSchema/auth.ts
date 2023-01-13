@@ -1,7 +1,7 @@
-import { RequestBodyBlueprint } from "../@types/tuesplace";
+import zod from "zod";
 import { Email, Password } from "../definitions";
 
-export const signInSchema: RequestBodyBlueprint = {
+export const signInSchema = zod.object({
   email: Email,
   password: Password,
-};
+});

@@ -1,11 +1,11 @@
-import { RequestBodyBlueprint } from "../@types/tuesplace";
+import zod from "zod";
 import { CommentBody, CommentIsPrivate } from "../definitions";
 
-export const createComment: RequestBodyBlueprint = {
+export const createComment = zod.object({
   body: CommentBody,
   isPrivate: CommentIsPrivate,
-};
+});
 
-export const editCommentSchema: RequestBodyBlueprint = {
+export const editCommentSchema = zod.object({
   body: CommentBody,
-};
+});
