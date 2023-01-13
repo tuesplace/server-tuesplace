@@ -1,4 +1,4 @@
-import _ from "lodash";
+import lo from "lodash";
 import {
   AssignmentInfo,
   Email,
@@ -77,7 +77,7 @@ export const assertPasswordConfirm = (passwordConfirm: string, obj: any) => {
 
 export const assertRole = (role: unknown) => {
   if (
-    !_.isString(role) ||
+    !lo.isString(role) ||
     !allRoles.filter((roleDef) => roleDef.value === role)
   ) {
     return InvalidTypeError(Role, Role.name);
@@ -87,7 +87,7 @@ export const assertRole = (role: unknown) => {
 
 export const assertString =
   (field: Named) => (rules?: Rule[]) => (string: any) => {
-    if (!_.isString(string) || !string.length) {
+    if (!lo.isString(string) || !string.length) {
       return InvalidTypeError(field, field.name);
     }
     if (rules && rules.length) {
@@ -98,7 +98,7 @@ export const assertString =
 
 export const assertBoolean =
   (field: Named) => (rules?: Rule[]) => (boolean: any) => {
-    if (!_.isBoolean(boolean)) {
+    if (!lo.isBoolean(boolean)) {
       return InvalidTypeError(field, field.name);
     }
     if (rules && rules.length) {
@@ -110,7 +110,7 @@ export const assertBoolean =
 
 export const assertEmoji =
   (field: Named) => (rules?: Rule[]) => (emoji: any) => {
-    if (!_.isString(emoji) || !emojis.includes(emoji)) {
+    if (!lo.isString(emoji) || !emojis.includes(emoji)) {
       return InvalidTypeError(field, field.name);
     }
     if (rules && rules.length) {
@@ -120,14 +120,14 @@ export const assertEmoji =
   };
 
 export const assertMark = (mark: any) => {
-  if (!_.isNumber(mark) || mark < 2 || mark > 6) {
+  if (!lo.isNumber(mark) || mark < 2 || mark > 6) {
     return InvalidTypeError(MarkField, MarkField.name);
   }
   return null;
 };
 
 export const assertGroupClasses = (rules: Rule[]) => (classes: any) => {
-  if (!_.isArray(classes) || !classes.length) {
+  if (!lo.isArray(classes) || !classes.length) {
     return InvalidTypeError(GroupClasses, GroupClasses.name);
   }
   if (rules && rules.length) {
@@ -138,12 +138,12 @@ export const assertGroupClasses = (rules: Rule[]) => (classes: any) => {
 
 export const assertAssignmentInfo = (assignmentInfo: any) => {
   if (
-    !_.isObject(assignmentInfo) ||
+    !lo.isObject(assignmentInfo) ||
     !Object.keys(assignmentInfo).length ||
     Object.keys(assignmentInfo).length > 2 ||
-    !_.isBoolean(
+    !lo.isBoolean(
       (assignmentInfo as Assignment).isAssignment ||
-        !_.isDate((assignmentInfo as Assignment).deadline)
+        !lo.isDate((assignmentInfo as Assignment).deadline)
     )
   ) {
     return InvalidTypeError(AssignmentInfo, AssignmentInfo.name);

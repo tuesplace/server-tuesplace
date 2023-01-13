@@ -2,6 +2,8 @@ import { sendAdminEmail } from "../util";
 import { Request, Response } from "express";
 import { CriticalError, RESTError } from "../errors";
 import { TransformedError, TypedError } from "../@types/tuesplace";
+import { environment } from "../config";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 const transformError = (err: any, lang: string): TransformedError => ({
   success: false,
@@ -25,15 +27,22 @@ export const errorHandler = async (
 ) => {
   const transformedError = transformError(err, req.language);
 
-  if (err instanceof CriticalError || !(err instanceof RESTError)) {
+  if (environment === "DEV") {
+    console.log(err.stack);
+  }
+
+  if (
+    environment !== "DEV" &&
+    (err instanceof CriticalError ||
+      (!(err instanceof RESTError) && !(err instanceof JsonWebTokenError)))
+  ) {
     await sendAdminEmail(
       { ...transformedError, stacktrace: err.stack },
       req.id
     );
   }
 
-  res.sendRes(
-    transformedError,
-    err instanceof RESTError ? Number(err.code) : 500
-  );
+  res
+    .status(err instanceof RESTError ? Number(err.code) : 500)
+    .send(transformedError);
 };

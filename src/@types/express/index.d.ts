@@ -26,7 +26,7 @@ declare global {
 declare global {
   namespace Express {
     interface Response {
-      sendRes: (resp?: any, code?: number) => void;
+      sendRes: (resp?: any, code?: number, shouldResolve?: boolean) => void;
     }
   }
 }

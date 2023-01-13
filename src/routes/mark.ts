@@ -18,39 +18,26 @@ import { editMarkSchema, createMarkSchema } from "../requestSchema";
 router.get(
   "/",
   getAllSortedByCreateDatePaginated(Mark, {
-    modelQuery: {
-      ids: {
-        groupId: {
-          name: "groupId",
-          documentLocation: "associations.group._id",
-        },
-      },
-    },
+    resolveAttrs: (context) => ({
+      "associations.group._id": context.ids!.groupId,
+    }),
   })
 );
 
 router.get(
   "/student/:studentId/",
   verifyResourceExists(StudentResource, {
-    resolveAttrs: (context: Request) => ({
+    resolveAttrs: (context) => ({
       class: {
         $in: context.resources.group.classes,
       },
     }),
   }),
   getAllSortedByCreateDatePaginated(Mark, {
-    modelQuery: {
-      ids: {
-        studentId: {
-          name: "studentId",
-          documentLocation: "associations.student._id",
-        },
-        groupId: {
-          name: "groupId",
-          documentLocation: "associations.group._id",
-        },
-      },
-    },
+    resolveAttrs: (context) => ({
+      "associations.student._id": context.ids!.studentId,
+      "associations.group._id": context.ids!.groupId,
+    }),
   })
 );
 
@@ -65,7 +52,7 @@ router.post(
     }),
   }),
   createResource(Mark, {
-    resolveAttrs: (context: Request) => ({
+    resolveAttrs: (context) => ({
       associations: {
         group: {
           _id: context.ids!.groupId,
@@ -99,7 +86,7 @@ router.put(
   }),
   verifyResourceExists(Mark, {
     resolveAttrs: (context) => ({
-      associations: { student: { _id: context.ids!.studentId } },
+      "associations.student._id": context.ids!.studentId,
     }),
   }),
   verifyResourceOwner(Profile, Mark),
@@ -118,7 +105,7 @@ router.delete(
   verifyInGroup(StudentResource),
   verifyResourceExists(Mark, {
     resolveAttrs: (context) => ({
-      associations: { student: { _id: context.ids!.studentId } },
+      "associations.student._id": context.ids!.studentId,
     }),
   }),
   verifyResourceOwner(Profile, Mark),

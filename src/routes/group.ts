@@ -11,18 +11,17 @@ const router = express.Router({ mergeParams: true });
 import {
   verifyRole,
   verifyInGroup,
-  verifyResourceOwner,
   verifyResourceExists,
   verifyBodySchema,
 } from "../middleware";
-import { Group, Profile } from "../definitions";
+import { Group } from "../definitions";
 import { createGroupSchema } from "../requestSchema/group";
 
 router.get("/", getAllSortedByCreateDatePaginated(Group));
 
 router.get(
   "/:groupId",
-  verifyResourceOwner(Profile, Group),
+  verifyResourceExists(Group),
   verifyInGroup(),
   getResource(Group)
 );

@@ -1,4 +1,4 @@
-import _ from "lodash";
+import lo from "lodash";
 import { Assets, Association, IDocument } from "../@types/tuesplace";
 import { Asset } from "../models";
 import { collectionToModels } from "../models/collectionToModels";
@@ -9,9 +9,13 @@ import { getObjectSignedUrl, isSignedURLExpired } from "./s3";
 const resolvableAttrs = ["associations", "owners", "owner", "assets"];
 
 const mapToPublicDoc = <T>(document: IDocument<T>) =>
-  _.omit(document._doc, ["password", "verifications"]);
+  lo.omit(document._doc, ["password", "verifications", "email", "createdAt"]);
 
 const resolveAssociation = async (owner: Association) => {
+  if (!Object.keys(owner).length) {
+    return {};
+  }
+
   return mapToPublicDoc(
     await collectionToModels[owner.collectionName].findById(owner._id)
   );
@@ -89,10 +93,12 @@ const refactorObject = async (
             await Promise.all(
               Object.keys(association).map(async (key) => ({
                 [key]: await Promise.all(
-                  typedAssociation[key].map(async (asset) => ({
-                    ...asset,
-                    data: await resolveAsset(asset),
-                  }))
+                  lo.isArray(typedAssociation[key])
+                    ? typedAssociation[key].map(async (asset) => ({
+                        ...asset,
+                        data: await resolveAsset(asset),
+                      }))
+                    : []
                 ),
               }))
             )
@@ -101,7 +107,9 @@ const refactorObject = async (
         }
 
         return {
-          [key]: _.isArray(association) ? [...association] : { ...association },
+          [key]: lo.isArray(association)
+            ? [...association]
+            : { ...association },
         };
       })
   );
@@ -122,7 +130,7 @@ export const resolveDocuments = async (
     return;
   }
 
-  if (_.isArray(objs)) {
+  if (lo.isArray(objs)) {
     return await Promise.all(
       objs.map(async (obj: any) => {
         return { ...obj, ...(await refactorObject(obj, resolveAttrs)) };

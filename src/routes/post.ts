@@ -22,14 +22,9 @@ import { createAssets } from "../controllers";
 router.get(
   "/",
   getAllSortedByCreateDatePaginated(Post, {
-    modelQuery: {
-      ids: {
-        groupId: {
-          name: "groupId",
-          documentLocation: "associations.group._id",
-        },
-      },
-    },
+    resolveAttrs: (context) => ({
+      "associations.group._id": context.ids!.groupId,
+    }),
   })
 );
 
@@ -37,7 +32,7 @@ router.get(
   "/:postId",
   verifyResourceExists(Post, {
     resolveAttrs: (context) => ({
-      association: { group: { _id: context.ids!.groupId } },
+      "associations.group._id": context.ids!.groupId,
     }),
   }),
   getResource(Post)
@@ -68,7 +63,7 @@ router.put(
   "/:postId",
   verifyResourceExists(Post, {
     resolveAttrs: (context) => ({
-      association: { group: { _id: context.ids!.groupId } },
+      "associations.group._id": context.ids!.groupId,
     }),
   }),
   verifyResourceOwner(Profile, Post),
@@ -77,10 +72,10 @@ router.put(
 );
 
 router.put(
-  "/:postId/asset",
+  "/:postId/assets",
   verifyResourceExists(Post, {
     resolveAttrs: (context) => ({
-      association: { group: { _id: context.ids!.groupId } },
+      "associations.group._id": context.ids!.groupId,
     }),
   }),
   verifyResourceOwner(Profile, Post),
@@ -109,7 +104,7 @@ router.delete(
   "/:postId",
   verifyResourceExists(Post, {
     resolveAttrs: (context) => ({
-      association: { group: { _id: context.ids!.groupId } },
+      "associations.group._id": context.ids!.groupId,
     }),
   }),
   verifyResourceOwner(Profile, Post),
@@ -119,8 +114,8 @@ router.delete(
 router.patch(
   "/:postId",
   verifyResourceExists(Post, {
-    resolveAttrs: (context: Request) => ({
-      association: { group: { _id: context.ids!.groupId } },
+    resolveAttrs: (context) => ({
+      "associations.group._id": context.ids!.groupId,
     }),
   }),
   reactToSendableResource(Post)

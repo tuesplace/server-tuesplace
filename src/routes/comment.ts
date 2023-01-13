@@ -1,8 +1,10 @@
 import express, { Request } from "express";
 import {
+  createAssets,
   createResource,
   deleteResource,
   editResource,
+  editResourceAssets,
   getAllSortedByCreateDatePaginated,
   reactToSendableResource,
 } from "../controllers";
@@ -20,11 +22,9 @@ const router = express.Router({ mergeParams: true, strict: true });
 router.get(
   "/",
   getAllSortedByCreateDatePaginated(Comment, {
-    modelQuery: {
-      ids: {
-        postId: { name: "postId", documentLocation: "associations.post._id" },
-      },
-    },
+    resolveAttrs: (context) => ({
+      "associations.post._id": context.ids!.postId,
+    }),
   })
 );
 
@@ -59,11 +59,36 @@ router.put(
   verifyBodySchema(editCommentSchema),
   verifyResourceExists(Comment, {
     resolveAttrs: (context) => ({
-      association: { post: { _id: context.ids!.postId } },
+      "associations.post._id": context.ids!.postId,
     }),
   }),
   verifyResourceOwner(Profile, Comment),
   editResource(Comment)
+);
+
+router.put(
+  "/:commentId",
+  verifyResourceExists(Comment),
+  verifyResourceOwner(Profile, Comment),
+  createAssets(
+    {
+      resolveAttrs: (context) => ({
+        owner: {
+          _id: context.profile!._id,
+          collectionName: "profiles",
+          shouldResolve: false,
+        },
+      }),
+    },
+    Comment,
+    [
+      {
+        name: "assets",
+        maxCount: 15,
+      },
+    ]
+  ),
+  editResourceAssets(Comment)
 );
 
 router.patch(
@@ -71,7 +96,7 @@ router.patch(
   verifyBodySchema(reactToSendableSchema),
   verifyResourceExists(Comment, {
     resolveAttrs: (context) => ({
-      association: { post: { _id: context.ids!.postId } },
+      "associations.post._id": context.ids!.postId,
     }),
   }),
   reactToSendableResource(Comment)
@@ -81,7 +106,7 @@ router.delete(
   "/:commentId",
   verifyResourceExists(Comment, {
     resolveAttrs: (context) => ({
-      association: { post: { _id: context.ids!.postId } },
+      "associations.post._id": context.ids!.postId,
     }),
   }),
   verifyResourceOwner(Profile, Comment),

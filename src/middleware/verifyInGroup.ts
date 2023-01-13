@@ -1,5 +1,5 @@
 import { Teacher, Admin, Group, Profile, Student } from "../definitions";
-import { CriticalError, RESTError, NoWriteAccessError } from "../errors";
+import { CriticalError, RESTError, NoAccessError } from "../errors";
 import { Request } from "express";
 import {
   Association,
@@ -32,7 +32,7 @@ export const verifyInGroup =
       ) {
         next();
       } else {
-        throw new RESTError(NoWriteAccessError(Group), 401);
+        throw new RESTError(NoAccessError(Group), 401);
       }
     } catch (err) {
       next(err);

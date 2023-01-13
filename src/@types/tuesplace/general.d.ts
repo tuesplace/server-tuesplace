@@ -93,7 +93,7 @@ export type Body = {
 
 export type EditResourceOptions<T> = {
   afterEdit: {
-    [key: string]: (doc: IDocument<T>) => Promise<void>;
+    [key: string]: (doc: IDocument<T>, context: Request) => Promise<void>;
   };
 };
 
@@ -142,3 +142,15 @@ export interface FileFormField extends multer.Field {
 export interface ResolvedMulterFile extends Express.Multer.File {
   key: string;
 }
+
+export type SecondaryAssociationResolverInfo = {
+  resource: Resource<unknown>;
+  association: string;
+  query: "count" | "ifPresent" | "itself";
+  from: string;
+}[];
+
+export type EditAssetsOptions = {
+  toCreate?: boolean;
+  ignoreMode: boolean;
+};

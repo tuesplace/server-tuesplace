@@ -1,6 +1,12 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import { deleteResource, editResource, getResource } from "../controllers";
+import {
+  createAssets,
+  deleteResource,
+  editResource,
+  editResourceAssets,
+  getResource,
+} from "../controllers";
 const router = express.Router({ mergeParams: true });
 import { Profile } from "../definitions";
 import { verifyBodySchema } from "../middleware";
@@ -21,6 +27,30 @@ router.post(
       },
     },
   })
+);
+
+router.put(
+  "/me/assets",
+  createAssets(
+    {
+      resolveAttrs: (context) => ({
+        owner: {
+          _id: context.profile!._id,
+          collectionName: "profiles",
+          shouldResolve: false,
+        },
+      }),
+    },
+    Profile,
+    [
+      {
+        name: "profilePic",
+        mimetype: "image",
+        maxCount: 1,
+      },
+    ]
+  ),
+  editResourceAssets(Profile)
 );
 
 router.delete("/", deleteResource(Profile));

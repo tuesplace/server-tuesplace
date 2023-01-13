@@ -1,4 +1,4 @@
-import _ from "lodash";
+import lo from "lodash";
 import { RequestBodyBlueprint, Named, TypedError } from "../@types/tuesplace";
 import { InvalidLengthError } from "../errors";
 
@@ -37,7 +37,7 @@ export class ObjectBlueprint {
 
     let reducedErrors: TypedError[] = [];
     errors.forEach((err: TypedError | TypedError[]) => {
-      if (_.isArray(err)) {
+      if (lo.isArray(err)) {
         reducedErrors = reducedErrors.concat(err);
         return;
       }

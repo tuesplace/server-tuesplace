@@ -9,3 +9,4 @@ export * from "./resolvers";
 export * from "./s3";
 export * from "./array";
 export * from "./numbers";
+export * from "./capitalizeString";

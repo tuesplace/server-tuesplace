@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { get } from "lodash";
+import lo from "lodash";
 import {
   Association,
   IDocument,
@@ -13,15 +13,18 @@ export const verifyResourceOwner =
   (owner: Resource<any>, resource: Resource<any>) =>
   async (req: Request, _res: Response, next: any) => {
     try {
-      const document = get(req, resource.documentLocation) as IDocument<
+      const document = lo.get(req, resource.documentLocation) as IDocument<
         Owned & OwnedByMany
       >;
-      const ownerDoc = get(req, owner.documentLocation) as IDocument<unknown>;
+      const ownerDoc = lo.get(
+        req,
+        owner.documentLocation
+      ) as IDocument<unknown>;
       if (!ownerDoc?._id?.toString()) {
         throw new CriticalError();
       }
       if (
-        !document.owner ||
+        (!document.owner && !document.owners) ||
         (document.owner &&
           document.owner._id.toString() !== ownerDoc._id.toString()) ||
         (document.owners &&

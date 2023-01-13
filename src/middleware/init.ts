@@ -23,10 +23,14 @@ export const init = (req: Request, res: Response, next: any) => {
 
     req.id = new Types.ObjectId().toString();
 
-    res.sendRes = async (response?: object, code = 200) => {
+    res.sendRes = async (
+      response?: object,
+      code = 200,
+      shouldResolve = true
+    ) => {
       res.status(code).send({
         success: code >= 200 && code <= 206,
-        response: await resolveDocuments(response),
+        response: shouldResolve ? await resolveDocuments(response) : response,
       });
     };
 

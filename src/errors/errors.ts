@@ -130,11 +130,11 @@ export const NotRoleError = (role: Role): TypedError => ({
   },
 });
 
-export const NoWriteAccessError = <T>(resource: Resource<T>): TypedError => ({
+export const NoAccessError = <T>(resource: Resource<T>): TypedError => ({
   type: "NoWriteAccess",
   message: {
-    eng: `You do not have permission to write to ${resource.name.eng}`,
-    bg: `Нямате правата да променяте ${resource.name.bg}`,
+    eng: `You do not have access to this ${resource.name.eng}`,
+    bg: `Нямате достъп до ${resource.name.bg}`,
   },
 });
 

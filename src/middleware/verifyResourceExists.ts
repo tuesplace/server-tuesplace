@@ -2,7 +2,7 @@ import { Request } from "express";
 import { NotFoundError, RESTError, NoQueryError } from "../errors";
 import { resolveResourceLookupLocation } from "../util";
 import { Resource, FindResourceOptions } from "../@types/tuesplace";
-import { set } from "lodash";
+import lo from "lodash";
 
 export const verifyResourceExists =
   <T>(resource: Resource<T>, options?: FindResourceOptions) =>
@@ -22,7 +22,7 @@ export const verifyResourceExists =
         throw new RESTError(NotFoundError(resource), 404);
       }
 
-      set(req, resource.documentLocation, document);
+      lo.set(req, resource.documentLocation, document);
 
       next();
     } catch (err) {

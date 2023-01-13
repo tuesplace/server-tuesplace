@@ -1,4 +1,4 @@
-import _ from "lodash";
+import lo from "lodash";
 import { Rule, Named } from "../../@types/tuesplace";
 
 export const Unique = (
@@ -35,7 +35,7 @@ export const ConformsToArray = (array: Array<any>): Rule => ({
   },
   assertions: [
     (val: any) =>
-      !_.isArray(val)
+      !lo.isArray(val)
         ? array.includes(val)
         : array.length >= val.length &&
           !val.filter((el) => !array.includes(el)).length,

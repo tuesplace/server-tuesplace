@@ -15,7 +15,7 @@ export const twilioNotifyServiceCredentialSid =
   process.env.TWILIO_NOTIFY_SERVICE_CREDENTIAL_SID!;
 export const noreplyEmail = process.env.NOREPLY_EMAIL!;
 export const noreplyEmailPassword = process.env.NOREPLY_EMAIL_PASSWORD!;
-export const environment = process.env.ENVIRONMENT;
+export const environment = process.env.ENVIRONMENT! as "DEV" | "PROD";
 export const serverUrl = process.env.SERVER_URL!;
 export const adminEmail = process.env.ADMIN_EMAIL!;
 export const s3AccessKey = process.env.S3_ACCESS_KEY!;

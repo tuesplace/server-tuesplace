@@ -44,7 +44,7 @@ app.use(
   verifyInGroup(),
   verifyResourceExists(Post, {
     resolveAttrs: (context: Request) => ({
-      association: { group: { _id: context.ids!.groupId } },
+      "associations.group_id": context.ids!.groupId,
     }),
   }),
   commentRouter
@@ -87,6 +87,8 @@ app.use(
   profileRouter
 );
 app.use(errorHandler);
+
+mongoose.set("strictQuery", false);
 
 mongoose
   .connect(mongoDBConnectionString)
