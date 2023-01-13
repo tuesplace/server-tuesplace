@@ -56,13 +56,13 @@ export const EmailUsernameTakenError: TypedError = {
   },
 };
 
-export const NotComformToSchemaError = (
+export const NotConformToSchemaError = (
   { name }: Named,
   schema: RequestBodyBlueprint
 ): TypedError => ({
-  type: "NotComformToSchema",
+  type: "NotConformToSchema",
   message: {
-    eng: `${name.eng} does not comform to schema {${Object.keys(schema).map(
+    eng: `${name.eng} does not conform to schema {${Object.keys(schema).map(
       (key) => `${key}: ${schema[key].name.eng}`
     )}}`,
     bg: `${name.bg} не е по схемата {${Object.keys(schema).map(

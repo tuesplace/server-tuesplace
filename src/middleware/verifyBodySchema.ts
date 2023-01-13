@@ -1,5 +1,5 @@
 import { RequestBodyBlueprint } from "../@types/tuesplace";
-import { NotComformToSchemaError, RESTError } from "../errors";
+import { NotConformToSchemaError, RESTError } from "../errors";
 import { Request, Response } from "express";
 import { ObjectBlueprint } from "../requestSchema";
 import { RequestBody } from "../definitions";
@@ -13,7 +13,7 @@ export const verifyBodySchema =
       const errors = await blueprint.assert(req.body);
       if (errors.length) {
         throw new RESTError(
-          [NotComformToSchemaError(RequestBody, schema), ...errors],
+          [NotConformToSchemaError(RequestBody, schema), ...errors],
           400
         );
       }
