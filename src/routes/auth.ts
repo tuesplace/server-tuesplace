@@ -1,9 +1,10 @@
 import express from "express";
-const router = express.Router({ mergeParams: true });
 import { signIn, refreshTokenPair } from "../controllers/auth";
 import { verifyBodySchema, verifyResourceExists } from "../middleware";
 import { Profile } from "../definitions";
 import { signInSchema } from "../requestSchema";
+
+const router = express.Router({ mergeParams: true });
 
 router.post(
   "/sign-in",
@@ -17,4 +18,4 @@ router.post(
 );
 router.post("/generate-token-pair", refreshTokenPair);
 
-export default router;
+export { router as authRouter };

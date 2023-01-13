@@ -113,4 +113,4 @@ router.delete(
   deleteResource(Comment)
 );
 
-export default router;
+export { router as commentRouter };

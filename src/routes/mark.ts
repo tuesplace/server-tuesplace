@@ -112,4 +112,4 @@ router.delete(
   deleteResource(Mark)
 );
 
-export default router;
+export { router as markRouter };

@@ -7,7 +7,6 @@ import {
   getResource,
 } from "../controllers";
 import { Admin } from "../definitions";
-const router = express.Router({ mergeParams: true });
 import {
   verifyRole,
   verifyInGroup,
@@ -16,6 +15,8 @@ import {
 } from "../middleware";
 import { Group } from "../definitions";
 import { createGroupSchema } from "../requestSchema/group";
+
+const router = express.Router({ mergeParams: true });
 
 router.get("/", getAllSortedByCreateDatePaginated(Group));
 
@@ -59,4 +60,4 @@ router.delete(
   deleteResource(Group)
 );
 
-export default router;
+export { router as groupRouter };

@@ -1,6 +1,4 @@
 import express from "express";
-const router = express.Router({ mergeParams: true });
-
 import { Profile, Post } from "../definitions";
 import {
   createResource,
@@ -18,6 +16,8 @@ import {
 } from "../middleware";
 import { createPostSchema, editPostSchema } from "../requestSchema";
 import { createAssets } from "../controllers";
+
+const router = express.Router({ mergeParams: true, strict: true });
 
 router.get(
   "/",
@@ -121,4 +121,4 @@ router.patch(
   reactToSendableResource(Post)
 );
 
-export default router;
+export { router as postRouter };

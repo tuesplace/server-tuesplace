@@ -55,4 +55,4 @@ router.put(
 
 router.delete("/", deleteResource(Profile));
 
-export default router;
+export { router as profileRouter };
