@@ -1,4 +1,4 @@
-import express, { Request } from "express";
+import express from "express";
 const router = express.Router({ mergeParams: true });
 
 import { Profile, Post } from "../definitions";

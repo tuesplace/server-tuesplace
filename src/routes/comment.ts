@@ -67,7 +67,7 @@ router.put(
 );
 
 router.put(
-  "/:commentId",
+  "/:commentId/assets",
   verifyResourceExists(Comment),
   verifyResourceOwner(Profile, Comment),
   createAssets(

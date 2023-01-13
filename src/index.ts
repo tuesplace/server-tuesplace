@@ -37,7 +37,7 @@ app.use(
 app.use(express.json());
 app.use("/api/auth", init, authRouter);
 app.use(
-  "/api/group/:groupId/post/:postId/comment/",
+  "/api/groups/:groupId/posts/:postId/comments/",
   init,
   verifyAccessToken,
   verifyResourceExists(Group),
@@ -51,7 +51,7 @@ app.use(
 );
 
 app.use(
-  "/api/group/:groupId/post/",
+  "/api/groups/:groupId/posts/",
   init,
   verifyAccessToken,
   verifyResourceExists(Group),
@@ -60,7 +60,7 @@ app.use(
 );
 
 app.use(
-  "/api/mark/group/:groupId/",
+  "/api/marks/groups/:groupId/",
   init,
   verifyAccessToken,
   verifyRole(Teacher),
@@ -69,7 +69,7 @@ app.use(
   markRouter
 );
 
-app.use("/api/group/", init, verifyAccessToken, groupRouter);
+app.use("/api/groups/", init, verifyAccessToken, groupRouter);
 
 app.use(
   "/api-docs",
@@ -80,7 +80,7 @@ app.use(
 );
 
 app.use(
-  "/api/profile/",
+  "/api/profiles/me",
   init,
   verifyAccessToken,
   verifyYoungToken,

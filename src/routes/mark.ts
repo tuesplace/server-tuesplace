@@ -1,4 +1,4 @@
-import express, { Request } from "express";
+import express from "express";
 import {
   createResource,
   deleteResource,
@@ -25,7 +25,7 @@ router.get(
 );
 
 router.get(
-  "/student/:studentId/",
+  "/students/:studentId/",
   verifyResourceExists(StudentResource, {
     resolveAttrs: (context) => ({
       class: {
@@ -42,7 +42,7 @@ router.get(
 );
 
 router.post(
-  "/student/:studentId/",
+  "/students/:studentId/",
   verifyBodySchema(createMarkSchema),
   verifyResourceExists(StudentResource, {
     resolveAttrs: (context) => ({
@@ -75,7 +75,7 @@ router.post(
 );
 
 router.put(
-  "/student/:studentId/:markId",
+  "/students/:studentId/:markId",
   verifyBodySchema(editMarkSchema),
   verifyResourceExists(StudentResource, {
     resolveAttrs: (context) => ({
@@ -94,7 +94,7 @@ router.put(
 );
 
 router.delete(
-  "/student/:studentId/mark/:markId",
+  "/students/:studentId/marks/:markId",
   verifyResourceExists(StudentResource, {
     resolveAttrs: (context) => ({
       class: {

@@ -12,7 +12,7 @@ import { Profile } from "../definitions";
 import { verifyBodySchema } from "../middleware";
 import { editProfileSchema } from "../requestSchema";
 
-router.get("/me", getResource(Profile));
+router.get("/", getResource(Profile));
 
 router.post(
   "/",
@@ -30,7 +30,7 @@ router.post(
 );
 
 router.put(
-  "/me/assets",
+  "/",
   createAssets(
     {
       resolveAttrs: (context) => ({
