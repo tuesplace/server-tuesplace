@@ -49,8 +49,34 @@ components:
     PostComment:
       type: object
       properties:
-        authorId:
+        _id:
           type: string
+        owner:
+          $ref: "#/components/objects/Owner"
+        body:
+          type: string
+
+        isPrivate:
+          type: boolean
+        associations:
+          type: object
+          properties:
+            group:
+              allOf:
+                - $ref: "#/components/objects/Association"
+                - type: object
+                  properties:
+                    collectionName:
+                      example: "groups"
+
+            post:
+              allOf:
+                - $ref: "#/components/objects/Association"
+                - type: object
+                  properties:
+                    collectionName:
+                      example: "posts"
+
         reactions:
           type: array
           items:
@@ -61,12 +87,10 @@ components:
         updatedAt:
           type: string
           format: date-time
-        body:
-          type: string
       required:
         - authorId
-        - reactions
         - body
+        - reactions
         - createdAt
         - updatedAt
     PostCommentResponse:
@@ -77,41 +101,35 @@ components:
             response:
               $ref: "#/components/objects/PostComment"
     Group:
-      allOf:
-        - $ref: "#/components/objects/SuccessfulResponse"
-        - type: object
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Group #1"
+        type:
+          type: string
+          example: "chat"
+        classes:
+          type: array
+          items:
+            type: string
+            format: class
+            example: "10v"
+        owners:
+          type: array
+          items:
+            $ref: "#/components/objects/Owner"
+        assets:
+          type: object
           properties:
-            response:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: "Group #1"
-                type:
-                  type: string
-                  example: "chat"
-                classes:
-                  type: array
-                  items:
-                    type: string
-                    format: class
-                    example: "10v"
-                teachers:
-                  type: array
-                  items:
-                    type: string
-                    format: ObjectId
-                admins:
-                  type: array
-                  items:
-                    type: string
-                    format: ObjectId
-                createdAt:
-                  type: string
-                  format: date-time
-                updatedAt:
-                  type: string
-                  format: date-time
+            coverPhoto:
+              $ref: "#/components/objects/Asset"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     Reaction:
       type: object
       properties:
@@ -124,50 +142,120 @@ components:
       required:
         - authordId
         - emoji
+
+    Association:
+      type: object
+      properties:
+        _id:
+          type: string
+        collectionName:
+          type: string
+        shouldResolve:
+          type: boolean
+          example: false
+    ResolvedAssociation:
+      allOf:
+        - $ref: "#/components/objects/Association"
+        - type: object
+          properties:
+            data:
+              type: object
+
+    Asset:
+      type: object
+      properties:
+        _id:
+          type: string
+        owner:
+          allOf:
+            - $ref: "#/components/objects/Association"
+            - type: object
+              properties:
+                collectionName:
+                  example: profiles
+                shouldResolve:
+                  example: true
+        key:
+          type: string
+        mimetype:
+          type: string
+        meta:
+          type: object
+          properties:
+            originalName:
+              type: string
+        src:
+          type: string
+
+    Profile:
+      type: object
+      properties:
+        _id:
+          type: string
+        fullName:
+          type: string
+        class:
+          type: string
+        role:
+          type: string
+        updatedAt:
+          type: string
+          format: date
+        assets:
+          type: object
+          properties:
+            profilePic:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  collectionName:
+                    type: string
+                    example: "assets"
+                  shouldResolve:
+                    type: boolean
+                    example: "true"
+                  data:
+                    $ref: "#/components/objects/Asset"
+
+    Owner:
+      type: object
+      properties:
+        _id:
+          type: string
+        collectionName:
+          type: string
+          example: profiles
+        shouldResolve:
+          type: boolean
+        data:
+          $ref: "#/components/objects/Profile"
+
     PostComments:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
         - type: object
           properties:
             response:
-              type: object
-              properties:
-                comments:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      authorId:
-                        type: string
-                      body:
-                        type: string
-                      reactions:
-                        type: array
-                        items:
-                          $ref: "#/components/object/Reaction"
-                      createdAt:
-                        type: string
-                        format: date-time
-                      updatedAt:
-                        type: string
-                        format: date-time
-                    required:
-                      - authorId
-                      - body
-                      - reactions
-                      - createdAt
-                      - updatedAt
+              type: array
+              items:
+                $ref: "#/components/objects/PostComment"
     Mark:
       type: object
       properties:
-        teacherId:
-          type: string
-          format: ObjectId
+        owner:
+          $ref: "#/components/objects/Owner"
         mark:
           type: string
-        studentId:
-          type: string
-          format: ObjectId
+        associations:
+          type: object
+          properties:
+            student:
+              $ref: "#/components/objects/ResolvedAssociation"
+            group:
+              $ref: "#/components/objects/Association"
         createdAt:
           type: string
           format: date-time
@@ -198,3 +286,19 @@ components:
               type: array
               items:
                 $ref: "#/components/objects/PostComment"
+
+    IdResponse:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              type: object
+              properties:
+                id:
+                  type: string
+    EmptyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean

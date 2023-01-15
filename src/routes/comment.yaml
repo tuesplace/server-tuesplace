@@ -1,5 +1,5 @@
 paths:
-  /group/{groupId}/post/{postId}/comment:
+  /groups/{groupId}/posts/{postId}/comments:
     get:
       security:
         - bearerAuth: []
@@ -26,6 +26,18 @@ paths:
           schema:
             type: string
             format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
       responses:
         200:
           $ref: "#/components/responses/PostComments"
@@ -59,36 +71,38 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: page
+        - name: responseBehavior
           in: query
           schema:
-            type: integer
-          description: Page Number of Results
+            type: string
+            enum: ["id", "doc", "none"]
           nullable: true
-        - name: limit
-          in: query
-          schema:
-            type: integer
-          description: Number of Results per Page
-          nullable: true
-        - name: body
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              body:
-                type: string
-                example: What a nice post!
-            required:
-              - body
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  example: What a nice post!
+                isPrivate:
+                  type: boolean
+              required:
+                - body
+
       responses:
-        200:
+        201:
           description: Created Comment
           content:
             application/json:
               schema:
-                $ref: "#/components/objects/PostCommentResponse"
+                type: object
+                oneOf:
+                  - $ref: "#/components/objects/PostCommentResponse"
+                  - $ref: "#/components/objects/IdResponse"
+                  - $ref: "#/components/objects/EmptyResponse"
         400:
           description: Comment Validation Error
           content:
@@ -105,7 +119,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /group/{groupId}/post/{postId}/comment/{commentId}:
+  /groups/{groupId}/posts/{postId}/comments/{commentId}:
     put:
       security:
         - bearerAuth: []
@@ -132,13 +146,24 @@ paths:
           schema:
             type: string
             format: ObjectId
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+              required:
+                - body
       responses:
-        200:
+        204:
           description: Edited Comment
           content:
             application/json:
               schema:
-                $ref: "#/components/objects/PostCommentResponse"
+                $ref: "#/components/objects/EmptyResponse"
         400:
           description: Comment Validation Error
           content:
@@ -189,7 +214,7 @@ paths:
           schema:
             type: object
             properties:
-              emoji:
+              reaction:
                 type: string
                 example: 🙂
                 format: emoji
@@ -233,6 +258,62 @@ paths:
       responses:
         204:
           description: Deleted Comment
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /groups/{groupId}/posts/{postId}/comments/{commentId}/assets:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      name: Edit Comment Assets
+      summary: Changes a Comment's Assets
+      produces:
+        - application/json
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: mode
+          in: query
+          description: Asset Replacement Mode
+          required: false
+          schema:
+            type: string
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        204:
+          description: Edited Assets Comment
         401:
           $ref: "#/components/responses/GroupPermission"
         403:

@@ -71,7 +71,25 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/objects/Group"
+            allOf:
+              - $ref: "#/components/objects/SuccessfulResponse"
+              - type: object
+                properties:
+                  response:
+                    $ref: "#/components/objects/Group"
+    Groups:
+      description: Group Object
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/objects/SuccessfulResponse"
+              - type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      $ref: "#/components/objects/Group"
     MarksArray:
       description: Marks array
       content:
@@ -90,3 +108,8 @@ components:
         application/json:
           schema:
             $ref: "#/components/objects/PostCommentResponse"
+    EmptyResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/componennts/objects/EmptyResponse"

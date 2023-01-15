@@ -1,5 +1,5 @@
 paths:
-  /group/{groupId}/post:
+  /groups/{groupId}/posts:
     get:
       security:
         - bearerAuth: []
@@ -19,6 +19,18 @@ paths:
           schema:
             type: string
             format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
       responses:
         200:
           $ref: "#/components/responses/PostsArray"
@@ -49,9 +61,45 @@ paths:
           schema:
             type: string
             format: ObjectId
+        - name: responseBehavior
+          in: query
+          schema:
+            type: string
+            enum: ["id", "doc", "none"]
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  example: What a nice post!
+                assignmentInfo:
+                  type: object
+                  properties:
+                    isAssignment:
+                      type: boolean
+                    deadline:
+                      type: string
+                      format: date-time
+                  required:
+                    - isAssignment
+                    - deadline
+              required:
+                - body
       responses:
-        200:
-          $ref: "#/components/responses/PostComment"
+        201:
+          description: Created Post
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: "#/components/objects/PostComment"
+                  - $ref: "#/components/objects/IdResponse"
+                  - $ref: "#/components/objects/EmptyResponse"
         400:
           $ref: "#/components/responses/ResourcePropInvalid"
         401:
@@ -60,7 +108,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /group/{groupId}/post/{postId}:
+  /groups/{groupId}/posts/{postId}:
     put:
       security:
         - bearerAuth: []
@@ -87,6 +135,15 @@ paths:
           schema:
             type: string
             format: ObjectId
+      requestBody:
+        schema:
+          type: object
+          properties:
+            body:
+              type: string
+          required:
+            - body
+
       responses:
         204:
           description: "Edited Post Successfully"
@@ -135,6 +192,44 @@ paths:
           $ref: "#/components/responses/GroupPermission"
         403:
           $ref: "#/components/responses/NotResourceAuthor"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /groups/{groupId}/posts/{postId}/assets:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Post
+      name: Edit Post Assets
+      summary: Changes a Post's Assets
+      produces:
+        - application/json
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: mode
+          in: query
+          description: Asset Replacement Mode
+          required: false
+          schema:
+            type: string
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        204:
+          $ref: "#/components/responses/EmptyResponse"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:

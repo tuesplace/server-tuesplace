@@ -1,5 +1,5 @@
 paths:
-  /group/{groupId}/mark:
+  /groups/{groupId}/marks:
     get:
       security:
         - bearerAuth: []
@@ -19,6 +19,18 @@ paths:
           schema:
             type: string
             format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
       responses:
         200:
           $ref: "#/components/responses/MarksArray"
@@ -30,7 +42,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /group/{groupId}/mark/student/{studentId}:
+  /groups/{groupId}/marks/students/{studentId}:
     get:
       security:
         - bearerAuth: []
@@ -50,6 +62,18 @@ paths:
           schema:
             type: string
             format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
       responses:
         200:
           $ref: "#/components/responses/MarksArray"
@@ -73,6 +97,12 @@ paths:
         - application/json
       summary: Adds a mark for a specific student
       parameters:
+        - name: responseBehavior
+          in: query
+          schema:
+            type: string
+            enum: ["id", "doc", "none"]
+          nullable: true
         - name: groupId
           in: path
           description: Group ID
@@ -93,8 +123,16 @@ paths:
             required:
               - mark
       responses:
-        204:
-          description: "Added Mark Successfully"
+        201:
+          description: Created Mark
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: "#/components/objects/Mark"
+                  - $ref: "#/components/objects/IdResponse"
+                  - $ref: "#/components/objects/EmptyResponse"
         400:
           $ref: "#/components/responses/ResourceNotProvided"
         401:
@@ -104,7 +142,7 @@ paths:
         500:
           $ref: "#/components/responses/ServerError"
 
-  /group/{groupId}/mark/student/{studentId}/{markId}:
+  /groups/{groupId}/marks/students/{studentId}/{markId}:
     put:
       security:
         - bearerAuth: []

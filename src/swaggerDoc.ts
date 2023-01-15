@@ -6,7 +6,7 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "tuesplace API",
-      version: "0.2.0",
+      version: "0.5.5",
       description: "tuesplace API Documentation",
       license: {
         name: "MIT",

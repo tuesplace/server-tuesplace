@@ -19,6 +19,8 @@ import { reactToSendableSchema } from "../requestSchema/generic";
 
 const router = express.Router({ mergeParams: true, strict: true });
 
+// /api/groups/:groupId/posts/:postId/comments/
+
 router.get(
   "/",
   getAllSortedByCreateDatePaginated(Comment, {

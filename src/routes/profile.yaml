@@ -1,5 +1,26 @@
 paths:
-  /profile/:
+  /profiles/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Get Profile
+      summary: Return Current Profile
+      produces:
+        - application/json
+      consumes:
+        - multipart/form-data
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/objects/Profile"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
     put:
       security:
         - bearerAuth: []
@@ -78,6 +99,44 @@ paths:
           $ref: "#/components/responses/GroupPermission"
         403:
           $ref: "#/components/responses/NotResourceAuthor"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /profiles/me/assets:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Edit Profile Assets
+      summary: Changes a Profile's Assets
+      produces:
+        - application/json
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: mode
+          in: query
+          description: Asset Replacement Mode
+          required: false
+          schema:
+            type: string
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                profilePic:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        204:
+          $ref: "#/components/responses/EmptyResponse"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:

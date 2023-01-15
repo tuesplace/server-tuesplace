@@ -48,23 +48,14 @@ paths:
     post:
       tags:
         - Auth
+      security:
+        - bearerAuth: []
       name: Generate Token Pair
       summary: Generates an Auth Token Pair
       produces:
         - application/json
       consumes:
         - application/json
-      parameters:
-        - name: body
-          in: body
-          schema:
-            type: object
-            properties:
-              refreshToken:
-                type: string
-                example: eyJajajajaaawda
-            required:
-              - refreshToken
       responses:
         200:
           $ref: "#/components/responses/Auth"
