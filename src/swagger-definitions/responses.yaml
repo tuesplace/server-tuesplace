@@ -77,6 +77,30 @@ components:
                 properties:
                   response:
                     $ref: "#/components/objects/Group"
+    Activity:
+      description: Activity Object
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/objects/SuccessfulResponse"
+              - type: object
+                properties:
+                  response:
+                    $ref: "#/components/objects/Activity"
+    Activities:
+      description: Activity Object
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/objects/SuccessfulResponse"
+              - type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      $ref: "#/components/objects/Activity"
     Groups:
       description: Group Object
       content:

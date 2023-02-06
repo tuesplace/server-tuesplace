@@ -7,6 +7,8 @@ import {
   RefreshTokenGroup,
   Submission,
   Asset,
+  Activity,
+  Room,
 } from ".";
 import { IModel } from "../@types/tuesplace";
 
@@ -19,4 +21,6 @@ export const collectionToModels: { [key: string]: IModel<unknown> } = {
   refreshTokenGroups: RefreshTokenGroup,
   submissions: Submission,
   assets: Asset,
+  activities: Activity,
+  rooms: Room,
 };

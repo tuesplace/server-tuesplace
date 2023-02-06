@@ -1,0 +1,159 @@
+paths:
+  /activities:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Activity
+      name: Get All Activities
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get All Activities
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+      responses:
+        200:
+          $ref: "#/components/responses/Activities"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Activity
+      name: Create Activity
+      summary: Create an Activity
+      parameters:
+        - name: responseBehavior
+          in: query
+          schema:
+            type: string
+            enum: ["id", "doc", "none"]
+          nullable: true
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                day:
+                  type: number
+                start:
+                  type: number
+                end:
+                  type: number
+                group:
+                  type: string
+                room:
+                  type: string
+              required:
+                - day
+                - start
+                - end
+                - group
+                - room
+
+      responses:
+        201:
+          description: Created Comment
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: "#/components/objects/PostCommentResponse"
+                  - $ref: "#/components/objects/IdResponse"
+                  - $ref: "#/components/objects/EmptyResponse"
+        400:
+          description: Comment Validation Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/errors/ResourcePropInvalid"
+                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
+                discriminator: errors
+
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /activities/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Activity
+      name: Get My Activities
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get My Activities
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+      responses:
+        200:
+          $ref: "#/components/responses/Activities"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /activities/{activityId}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Activity
+      name: Delete Activity
+      summary: Delete Activity
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: activityId
+          in: path
+          description: Activity ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        204:
+          description: Deleted Activity
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"

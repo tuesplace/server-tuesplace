@@ -169,3 +169,19 @@ export const ArrayElementsNotUniqueError: TypedError = {
     bg: "{{name.bg}} трябва да бъде масив от различни стойности",
   },
 };
+
+export const ActivityRoomCollisionError: TypedError = {
+  type: "ActivityRoomCollisionError",
+  message: {
+    eng: "This Room is used by another Activity in this timeframe",
+    bg: "Тази Стая се използва от друга Дейност в това време",
+  },
+};
+
+export const ActivityGroupCollisionError: TypedError = {
+  type: "ActivityGroupCollisionError",
+  message: {
+    eng: "This Group is assigned to another Activity in this timeframe",
+    bg: "Тази Група е предназначена за друга Дейност в това време",
+  },
+};

@@ -28,7 +28,7 @@ paths:
         200:
           $ref: "#/components/responses/Groups"
         400:
-          description: Comment Validation Error
+          description: Group Validation Error
           content:
             application/json:
               schema:

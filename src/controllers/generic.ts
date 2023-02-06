@@ -17,7 +17,6 @@ import {
 import { reactToSendable } from "../util";
 import { reduceArrayOfObject } from "../util/array";
 import { resolveDocuments } from "../util";
-import capitalizeString from "../util/capitalizeString";
 
 export const getAllResource =
   <T>(resource: Resource<T>, options?: FindResourceOptions) =>
@@ -47,6 +46,7 @@ export const getAllSortedByCreateDatePaginated =
         .sort({ createdAt: -1 })
         .skip(pageNum * limitNum)
         .limit(limitNum);
+
       res.sendRes(documents.map((doc: any) => doc._doc));
     } catch (err) {
       next(err);
@@ -70,32 +70,38 @@ export const getSecondaryResourceInformation =
     try {
       const document = get(req, resource.documentLocation);
       const secondaryInformation = [];
-      for (let index = 0; index < info.length; index += 1) {
-        const secondaryInfo = (
-          await info[index].resource.model.find({
-            [info[index].association]: document[info[index].from],
-          })
-        ).map((doc: any) => doc._doc);
 
-        const secondaryResourceName = `${info[index].query}${
-          info[index].resource.name.eng
-        }Where${capitalizeString(info[index].association.split(".")[0])}`;
+      for (let index = 0; index < info.length; index += 1) {
+        let secondaryInfo;
+        if (!info[index].resolveAttrs) {
+          secondaryInfo = (
+            await info[index].resource.model.find({
+              [info[index].association!]: get(document, info[index].from!),
+            })
+          ).map((doc: any) => doc._doc);
+        } else {
+          secondaryInfo = (
+            await info[index].resource.model.find(
+              await info[index].resolveAttrs!(req)
+            )
+          ).map((doc: any) => doc._doc);
+        }
 
         if (info[index].query === "itself") {
           secondaryInformation.push({
-            [secondaryResourceName]: await resolveDocuments(secondaryInfo),
+            [info[index].lookupName]: await resolveDocuments(secondaryInfo),
           });
           continue;
         }
         if (info[index].query === "count") {
           secondaryInformation.push({
-            [secondaryResourceName]: secondaryInfo.length,
+            [info[index].lookupName]: secondaryInfo.length,
           });
           continue;
         }
         if (info[index].query === "ifPresent") {
           secondaryInformation.push({
-            [secondaryResourceName]: !!secondaryInfo && !!secondaryInfo.length,
+            [info[index].lookupName]: !!secondaryInfo && !!secondaryInfo.length,
           });
           continue;
         }

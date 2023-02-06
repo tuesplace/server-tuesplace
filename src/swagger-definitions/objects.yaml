@@ -187,6 +187,47 @@ components:
         src:
           type: string
 
+    Room:
+      type: object
+      properties:
+        _id:
+          type: string
+        location:
+          type: string
+    Activity:
+      type: object
+      properties:
+        _id:
+          type: string
+        day:
+          type: number
+        start:
+          type: number
+        end:
+          type: number
+        associations:
+          type: object
+          properties:
+            group:
+              type: object
+              properties:
+                _id:
+                  type: string
+                shouldResolve:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: "#/components/objects/Group"
+            room:
+              type: object
+              properties:
+                _id:
+                  type: string
+                shouldResolve:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: "#/components/objects/Room"
     Profile:
       type: object
       properties:

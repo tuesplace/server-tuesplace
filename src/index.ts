@@ -11,18 +11,19 @@ import {
   groupRouter,
   commentRouter,
   markRouter,
+  activityRouter,
+  roomRouter,
 } from "./routes";
 import {
   errorHandler,
   verifyAccessToken,
-  verifyYoungToken,
   verifyRole,
   init,
   verifyResourceExists,
   verifyInGroup,
 } from "./middleware";
 import swaggerDoc from "./swaggerDoc";
-import { Group, Post, Teacher } from "./definitions";
+import { Admin, Group, Post, Teacher } from "./definitions";
 import { mongoDBConnectionString, port } from "./config";
 
 const app = express();
@@ -79,13 +80,12 @@ app.use(
   })
 );
 
-app.use(
-  "/api/profiles/me",
-  init,
-  verifyAccessToken,
-  verifyYoungToken,
-  profileRouter
-);
+app.use("/api/profiles", init, verifyAccessToken, profileRouter);
+
+app.use("/api/rooms", init, verifyAccessToken, verifyRole(Admin), roomRouter);
+
+app.use("/api/activities", init, verifyAccessToken, activityRouter);
+
 app.use(errorHandler);
 
 mongoose.set("strictQuery", false);

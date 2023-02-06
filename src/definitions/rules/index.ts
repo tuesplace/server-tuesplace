@@ -1,4 +1,5 @@
 import lo from "lodash";
+import { Types } from "mongoose";
 import { Resource } from "../../@types/tuesplace";
 import {
   PasswordPolicyError,
@@ -8,8 +9,11 @@ import {
   NotConformToArrayError,
   ArrayElementsNotUniqueError,
   NotFoundError,
+  ActivityRoomCollisionError,
+  ActivityGroupCollisionError,
 } from "../../errors";
 import { EmailName } from "../names";
+import { Activity } from "../resources";
 
 export const assertEmailLike = (value: string) => {
   const emailRegEx =
@@ -27,6 +31,117 @@ export const assertPasswordLike = (value: string) => {
     ? PasswordPolicyError
     : null;
 };
+
+export const assertActivityUniqueByGroup = async (val: {
+  group: string;
+  day: number;
+  start: number;
+  end: number;
+}) =>
+  (await assertInDB(Activity, false, {
+    $or: [
+      {
+        "associations.group._id": new Types.ObjectId(val.group),
+        day: val.day,
+        start: {
+          $gte: val.start,
+        },
+        end: {
+          $lte: val.end,
+        },
+      },
+      {
+        "associations.group._id": new Types.ObjectId(val.group),
+        day: val.day,
+        start: {
+          $lte: val.start,
+        },
+        end: {
+          $gte: val.start,
+        },
+      },
+      {
+        "associations.group._id": new Types.ObjectId(val.group),
+        day: val.day,
+        start: {
+          $lte: val.start,
+        },
+        end: {
+          $gte: val.end,
+        },
+      },
+      {
+        "associations.group._id": new Types.ObjectId(val.group),
+        day: val.day,
+        start: {
+          $gte: val.start,
+        },
+        end: {
+          $gte: val.end,
+        },
+      },
+    ],
+  }))
+    ? ActivityGroupCollisionError
+    : null;
+
+export const assertActivityUniqueByRoom = async ({
+  room,
+  day,
+  start,
+  end,
+}: {
+  room: string;
+  day: number;
+  start: number;
+  end: number;
+}) =>
+  (await assertInDB(Activity, false, {
+    $or: [
+      {
+        "associations.room._id": new Types.ObjectId(room),
+        day: day,
+        start: {
+          $gte: start,
+        },
+        end: {
+          $lte: end,
+        },
+      },
+      {
+        "associations.room._id": new Types.ObjectId(room),
+        day: day,
+        start: {
+          $lte: start,
+        },
+        end: {
+          $gte: start,
+        },
+      },
+      {
+        "associations.room._id": new Types.ObjectId(room),
+        day: day,
+        start: {
+          $lte: start,
+        },
+        end: {
+          $gte: end,
+        },
+      },
+      {
+        "associations.room._id": new Types.ObjectId(room),
+        day: day,
+        start: {
+          $gte: start,
+        },
+        end: {
+          $gte: end,
+        },
+      },
+    ],
+  }))
+    ? ActivityRoomCollisionError
+    : null;
 
 export const assertNumberInRange = (
   lessThan: number,

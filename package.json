@@ -1,6 +1,6 @@
 {
   "name": "tuesplace",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "description": "Server for tuesplace",
   "main": "./src/index.ts",
   "engines": {

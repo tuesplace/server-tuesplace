@@ -45,7 +45,9 @@ export const CommentIsPrivate = zod.boolean();
 
 export const Reaction = zod
   .string()
-  .superRefine((val) => assertConformsToArray(emojis, val));
+  .superRefine(
+    customZodRefinement((val) => assertConformsToArray(emojis, val))
+  );
 
 export const MarkField = zod
   .number()
@@ -57,11 +59,15 @@ export const GroupName = zod
 
 export const GroupType = zod
   .string()
-  .superRefine((val) => assertConformsToArray(groupTypes, val));
+  .superRefine(
+    customZodRefinement((val) => assertConformsToArray(groupTypes, val))
+  );
 
 export const GroupClasses = zod
   .array(zod.string())
-  .superRefine((val) => assertConformsToArray(groupClasses, val));
+  .superRefine(
+    customZodRefinement((val) => assertConformsToArray(groupClasses, val))
+  );
 
 export const AssignmentInfo = zod
   .object({

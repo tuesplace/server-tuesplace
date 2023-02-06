@@ -1,10 +1,12 @@
 import {
+  IActivity,
   IComment,
   IGroup,
   IMark,
   IPost,
   IProfile,
   IRefreshTokenGroup,
+  IRoom,
   Named,
   Resource,
 } from "../../@types/tuesplace";
@@ -16,6 +18,8 @@ import {
   Group as GroupModel,
   Comment as CommentModel,
   RefreshTokenGroup as RefreshTokenGroupModel,
+  Activity as ActivityModel,
+  Room as RoomModel,
 } from "../../models/";
 
 export const Token: Named = {
@@ -95,4 +99,26 @@ export const StudentResource: Resource<IProfile> = {
   ...Profile,
   lookupFieldLocation: "params.studentId",
   documentLocation: "resources.student",
+};
+
+export const Activity: Resource<IActivity> = {
+  name: {
+    eng: "Activity",
+    bg: "Дейност",
+  },
+  lookupFieldLocation: "params.activityId",
+  documentLocation: "resources.activity",
+  by: "_id",
+  model: ActivityModel,
+};
+
+export const Room: Resource<IRoom> = {
+  name: {
+    eng: "Room",
+    bg: "Стая",
+  },
+  lookupFieldLocation: "params.roomId",
+  documentLocation: "resources.room",
+  by: "_id",
+  model: RoomModel,
 };

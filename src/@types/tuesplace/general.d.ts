@@ -138,12 +138,15 @@ export interface ResolvedMulterFile extends Express.Multer.File {
   key: string;
 }
 
-export type SecondaryAssociationResolverInfo = {
-  resource: Resource<unknown>;
-  association: string;
-  query: "count" | "ifPresent" | "itself";
-  from: string;
-}[];
+export type SecondaryAssociationResolverInfo =
+  | {
+      resource: Resource<unknown>;
+      lookupName: string;
+      association?: string;
+      query: "count" | "ifPresent" | "itself";
+      from?: string;
+      resolveAttrs?: (context: Request) => Promise<object>;
+    }[];
 
 export type EditAssetsOptions = {
   toCreate?: boolean;

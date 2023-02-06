@@ -8,14 +8,20 @@ import {
   getResource,
 } from "../controllers";
 const router = express.Router({ mergeParams: true });
-import { Profile } from "../definitions";
-import { verifyBodySchema } from "../middleware";
+import { Admin, Profile } from "../definitions";
+import {
+  verifyBodySchema,
+  verifyResourceExists,
+  verifyRole,
+  verifyYoungToken,
+} from "../middleware";
 import { editProfileSchema } from "../requestSchema";
 
-router.get("/", getResource(Profile));
+router.get("/me", getResource(Profile));
 
-router.post(
-  "/",
+router.put(
+  "/me",
+  verifyYoungToken,
   verifyBodySchema(editProfileSchema),
   editResource(Profile, {
     afterEdit: {
@@ -30,7 +36,7 @@ router.post(
 );
 
 router.put(
-  "/",
+  "/me",
   createAssets(
     {
       resolveAttrs: (context) => ({
@@ -53,6 +59,15 @@ router.put(
   editResourceAssets(Profile)
 );
 
-router.delete("/", deleteResource(Profile));
+router.delete(
+  "/:profileId",
+  verifyRole(Admin),
+  verifyResourceExists({
+    ...Profile,
+    lookupFieldLocation: "params.profileId",
+    documentLocation: "resources.profile",
+  }),
+  deleteResource({ ...Profile, documentLocation: "resources.profile" })
+);
 
 export { router as profileRouter };

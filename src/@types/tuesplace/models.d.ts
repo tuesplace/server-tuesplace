@@ -93,3 +93,13 @@ export interface IAsset extends IMongoSchema, Owned, ITimestamped {
     size: number;
   };
 }
+
+export interface IActivity extends IMongoSchema, Associations {
+  start: number;
+  end: number;
+  day: number;
+}
+
+export interface IRoom extends IMongoSchema {
+  location: string;
+}
