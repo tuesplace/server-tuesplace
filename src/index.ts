@@ -13,6 +13,7 @@ import {
   markRouter,
   activityRouter,
   roomRouter,
+  submissionRouter,
 } from "./routes";
 import {
   errorHandler,
@@ -68,6 +69,21 @@ app.use(
   verifyResourceExists(Group),
   verifyInGroup(),
   markRouter
+);
+
+app.use(
+  "/api/groups/:groupId/posts/:postId/submissions",
+  init,
+  verifyAccessToken,
+  verifyResourceExists(Group),
+  verifyInGroup(),
+  verifyResourceExists(Post, {
+    resolveAttrs: (context) => ({
+      "associations.group._id": context.ids!.groupId,
+      "assignmentInfo.isAssignment": true,
+    }),
+  }),
+  submissionRouter
 );
 
 app.use("/api/groups/", init, verifyAccessToken, groupRouter);

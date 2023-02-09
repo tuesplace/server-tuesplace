@@ -7,6 +7,7 @@ import {
   IProfile,
   IRefreshTokenGroup,
   IRoom,
+  ISubmission,
   Named,
   Resource,
 } from "../../@types/tuesplace";
@@ -20,6 +21,7 @@ import {
   RefreshTokenGroup as RefreshTokenGroupModel,
   Activity as ActivityModel,
   Room as RoomModel,
+  Submission as SubmissionModel,
 } from "../../models/";
 
 export const Token: Named = {
@@ -121,4 +123,15 @@ export const Room: Resource<IRoom> = {
   documentLocation: "resources.room",
   by: "_id",
   model: RoomModel,
+};
+
+export const Submission: Resource<ISubmission> = {
+  name: {
+    eng: "Submission",
+    bg: "Домашна Работа",
+  },
+  lookupFieldLocation: "params.submissionId",
+  documentLocation: "resourdes.submission",
+  by: "_id",
+  model: SubmissionModel,
 };

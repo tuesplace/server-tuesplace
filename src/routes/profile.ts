@@ -5,10 +5,11 @@ import {
   deleteResource,
   editResource,
   editResourceAssets,
+  getAllSortedByCreateDatePaginated,
   getResource,
 } from "../controllers";
 const router = express.Router({ mergeParams: true });
-import { Admin, Profile } from "../definitions";
+import { Admin, Profile, Teacher } from "../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
@@ -16,6 +17,16 @@ import {
   verifyYoungToken,
 } from "../middleware";
 import { editProfileSchema } from "../requestSchema";
+
+router.get(
+  "/",
+  verifyRole(Teacher),
+  getAllSortedByCreateDatePaginated(Profile, {
+    resolveAttrs: () => ({
+      role: { $not: { $eq: "admin" } },
+    }),
+  })
+);
 
 router.get("/me", getResource(Profile));
 
@@ -36,7 +47,7 @@ router.put(
 );
 
 router.put(
-  "/me",
+  "/me/assets",
   createAssets(
     {
       resolveAttrs: (context) => ({

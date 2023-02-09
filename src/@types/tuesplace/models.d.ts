@@ -7,6 +7,8 @@ import {
   Assignment,
   Body,
   Reaction,
+  DeviceToken,
+  Verifications,
 } from ".";
 
 export interface IMongoSchema {
@@ -67,6 +69,7 @@ export interface IProfile extends IMongoSchema, Assets {
   verifications: Verifications;
   class: string;
   role: string;
+  deviceTokens: [DeviceToken];
 }
 
 export interface IMark extends IMongoSchema, Owned, Associations {

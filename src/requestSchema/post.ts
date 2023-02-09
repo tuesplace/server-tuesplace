@@ -11,5 +11,7 @@ export const createPostSchema = zod
 export const editPostSchema = zod
   .object({
     body: PostBody,
+    assignmentInfo: AssignmentInfo,
   })
+  .partial()
   .strict();

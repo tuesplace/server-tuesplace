@@ -10,10 +10,8 @@ export type Assets = {
 };
 
 export type Verifications = {
-  [key]: {
-    email: boolean;
-    byAdmin: boolean;
-  };
+  email: boolean;
+  byAdmin: boolean;
 };
 
 export type Translation = {
@@ -124,6 +122,7 @@ export interface Role extends Named {
 
 export type CreateResourceOptions = {
   resolveAttrs?: (context: Request) => object;
+  afterCreate?: (context: Request) => Promise<void>;
 };
 
 export type FindResourceOptions = {
@@ -152,3 +151,25 @@ export type EditAssetsOptions = {
   toCreate?: boolean;
   ignoreMode: boolean;
 };
+
+export type EmailNotification = {
+  html?: string;
+  subject: string;
+  text?: string;
+  from?: string;
+};
+
+export type CloudNotification = {
+  payload: object;
+};
+
+export type Notification = {
+  email: EmailNotification;
+  cloudMessage: CloudNotification;
+};
+
+export interface DeviceToken {
+  address: string;
+  binding: string;
+  type: string;
+}

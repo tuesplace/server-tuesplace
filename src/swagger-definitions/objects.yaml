@@ -100,6 +100,34 @@ components:
           properties:
             response:
               $ref: "#/components/objects/PostComment"
+
+    Submission:
+      type: object
+      properties:
+        _id:
+          type: string
+        owner:
+          $ref: "#/components/objects/Owner"
+        assets:
+          type: object
+          properties:
+            assets:
+              type: array
+              items:
+                $ref: "#/components/objects/Asset"
+        associations:
+          type: object
+          properties:
+            group:
+              $ref: "#/components/objects/Association"
+            post:
+              $ref: "#/components/objects/Association"
+            student:
+              $ref: "#/components/objects/Association"
+    Submissions:
+      type: array
+      items:
+        $ref: "#/components/objects/Submission"
     Group:
       type: object
       properties:

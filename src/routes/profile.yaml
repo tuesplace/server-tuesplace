@@ -9,8 +9,6 @@ paths:
       summary: Return Current Profile
       produces:
         - application/json
-      consumes:
-        - multipart/form-data
       responses:
         200:
           content:

@@ -7,8 +7,6 @@ import {
   Resource,
   CreateResourceOptions,
   Assets,
-  IAsset,
-  Association,
   FindResourceOptions,
   SecondaryAssociationResolverInfo,
   EditAssetsOptions,
@@ -131,6 +129,7 @@ export const createResource =
           break;
       }
       res.sendRes(response, 201);
+      await options?.afterCreate?.(req);
     } catch (err) {
       next(err);
     }
@@ -165,23 +164,12 @@ export const editResourceAssets =
         resource.documentLocation
       ) as IDocument<Assets>;
       const mode = options.ignoreMode ? "replace" : req.query.mode || "replace";
-      const resolvedAssets = reduceArrayOfObject(
-        Object.keys(req.assets).map((key) => ({
-          [key]: req.assets[key].map(
-            (asset: IAsset): Association => ({
-              _id: asset._doc._id,
-              collectionName: "assets",
-              shouldResolve: true,
-            })
-          ),
-        }))
-      );
 
-      if (Object.keys(resolvedAssets || {}).length) {
+      if (Object.keys(req.resolvedAssets || {}).length) {
         document.assets =
           mode === "replace"
-            ? resolvedAssets
-            : lo.merge(document.assets, resolvedAssets);
+            ? req.resolvedAssets
+            : lo.merge(document.assets, req.resolvedAssets);
       }
 
       if (!!options.toCreate) {

@@ -11,6 +11,7 @@ import {
   NotFoundError,
   ActivityRoomCollisionError,
   ActivityGroupCollisionError,
+  InvalidValueError,
 } from "../../errors";
 import { EmailName } from "../names";
 import { Activity } from "../resources";
@@ -187,3 +188,16 @@ export const assertInDB = async <T>(
   }
   return null;
 };
+
+export const assertDeviceTokenType = (val: string) =>
+  val !== "apn" &&
+  val !== "gcm" &&
+  val !== "sms" &&
+  val !== "fcm" &&
+  val !== "facebook-messenger" &&
+  val !== "alexa"
+    ? InvalidValueError("'apn'|'gcm'|'sms'|'fcm'|'facebook-messenger'|'alexa'")
+    : null;
+
+export const assertMoreThan = (val: number, moreThan: number) =>
+  val < moreThan ? InvalidRangeError(moreThan) : null;

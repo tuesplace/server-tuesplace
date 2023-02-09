@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { Profile } from "../models";
-import { generateTokenPair, rotateTokenPair } from "../util";
+import { bindDeviceToken, generateTokenPair, rotateTokenPair } from "../util";
 import { CriticalError, RESTError, WrongPasswordError } from "../errors";
+import { DeviceToken, IDocument, IProfile } from "../@types/tuesplace";
 
 export const signUp = async (req: Request, res: Response, next: any) => {
   try {
@@ -42,6 +43,37 @@ export const signIn = async (req: Request, res: Response, next: any) => {
 
     if (!(await bcrypt.compare(password, profile.password))) {
       throw new RESTError(WrongPasswordError, 401);
+    }
+
+    res.sendRes({
+      ...(await generateTokenPair(profile._id.toString())),
+      userId: profile._id.toString(),
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signInMobile = async (req: Request, res: Response, next: any) => {
+  try {
+    const { password, deviceToken } = req.body;
+
+    const { profile } = req as { profile: IDocument<IProfile> };
+
+    if (!(await bcrypt.compare(password, profile.password))) {
+      throw new RESTError(WrongPasswordError, 401);
+    }
+    if (
+      !profile.deviceTokens.filter(
+        (token: DeviceToken) => token.address == deviceToken.address
+      ).length
+    ) {
+      profile.deviceTokens.push({
+        ...deviceToken,
+        binding: await bindDeviceToken(deviceToken, profile._id.toString()),
+      });
+
+      await profile.save();
     }
 
     res.sendRes({

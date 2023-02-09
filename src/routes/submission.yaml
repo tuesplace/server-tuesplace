@@ -1,0 +1,192 @@
+paths:
+  /groups/{groupId}/post/{postId}/submissions:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Submission
+      name: Get All Submissions
+      summary: Get All Submissions for a Post
+      produces:
+        - application/json
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        200:
+          $ref: "#/components/responses/Submissions"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Submission
+      name: Add Submission
+      produces:
+        - application/json
+      consumes:
+        - multipart/form-data
+      summary: Adds a Submission for a specific Post
+      parameters:
+        - name: responseBehavior
+          in: query
+          schema:
+            type: string
+            enum: ["id", "doc", "none"]
+          nullable: true
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: file
+
+      responses:
+        201:
+          description: Created Mark
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: "#/components/objects/Mark"
+                  - $ref: "#/components/objects/IdResponse"
+                  - $ref: "#/components/objects/EmptyResponse"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /groups/{groupId}/post/{postId}/submissions/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Submission
+      name: Get All Submissions
+      summary: Get All Submissions for a Post
+      produces:
+        - application/json
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+        200:
+          $ref: "#/components/responses/Submissions"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /groups/{groupId}/post/{postId}/submissions/marks:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Submission
+      name: Add Mark
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Adds a mark for a specific submission
+      parameters:
+        - name: responseBehavior
+          in: query
+          schema:
+            type: string
+            enum: ["id", "doc", "none"]
+          nullable: true
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: submissionId
+          in: path
+          description: Submission ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: body
+          in: body
+          description: Body
+          required: true
+          schema:
+            type: object
+            properties:
+              mark:
+                type: number
+                format: mark
+            required:
+              - mark
+      responses:
+        201:
+          description: Created Mark
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: "#/components/objects/Mark"
+                  - $ref: "#/components/objects/IdResponse"
+                  - $ref: "#/components/objects/EmptyResponse"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"

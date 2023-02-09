@@ -33,6 +33,9 @@ const profileSchema = new Schema<IProfile>(
       type: Object,
       default: {},
     },
+    deviceTokens: {
+      type: [],
+    },
   },
   { timestamps: true }
 );

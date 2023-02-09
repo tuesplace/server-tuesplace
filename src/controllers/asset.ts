@@ -4,11 +4,13 @@ import { Request, Response } from "express";
 import { get } from "lodash";
 import { Asset } from "../models";
 
-import { s3Client } from "../util";
+import { reduceArrayOfObject, s3Client } from "../util";
 import { s3BucketName } from "../config";
 import {
+  Association,
   CreateResourceOptions,
   FileFormField,
+  IAsset,
   IDocument,
   Resource,
 } from "../@types/tuesplace";
@@ -75,6 +77,18 @@ export const createAssets = <AssociatedResourceT>(
         }
         req.assets[fields[i]] = assets;
       }
+
+      req.resolvedAssets = reduceArrayOfObject(
+        Object.keys(req.assets).map((key) => ({
+          [key]: req.assets[key].map(
+            (asset: IAsset): Association => ({
+              _id: asset._doc._id,
+              collectionName: "assets",
+              shouldResolve: true,
+            })
+          ),
+        }))
+      );
       next();
     } catch (err) {
       next(err);

@@ -101,6 +101,17 @@ components:
                     type: array
                     items:
                       $ref: "#/components/objects/Activity"
+    Submissions:
+      description: Submission Object
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/objects/SuccessfulResponse"
+              - type: object
+                properties:
+                  response:
+                    $ref: "#/components/objects/Submissions"
     Groups:
       description: Group Object
       content:

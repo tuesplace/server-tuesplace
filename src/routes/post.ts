@@ -16,6 +16,7 @@ import {
 } from "../middleware";
 import { createPostSchema, editPostSchema } from "../requestSchema";
 import { createAssets } from "../controllers";
+import { notifyAllGroupMembersCreatedPost } from "../util";
 
 const router = express.Router({ mergeParams: true, strict: true });
 
@@ -56,6 +57,7 @@ router.post(
         shouldResolve: true,
       },
     }),
+    afterCreate: notifyAllGroupMembersCreatedPost,
   })
 );
 

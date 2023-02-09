@@ -1,6 +1,6 @@
 {
   "name": "tuesplace",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Server for tuesplace",
   "main": "./src/index.ts",
   "engines": {
@@ -47,6 +47,7 @@
     "nodemailer": "^6.9.0",
     "swagger-jsdoc": "^6.2.7",
     "swagger-ui-express": "^4.6.0",
+    "twilio": "^4.7.2",
     "zod": "^3.20.2"
   },
   "devDependencies": {

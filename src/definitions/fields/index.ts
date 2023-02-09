@@ -1,9 +1,11 @@
 import zod from "zod";
 import {
   assertConformsToArray,
+  assertDeviceTokenType,
   assertEmailLike,
   assertInDB,
   assertLengthInRange,
+  assertMoreThan,
   assertNumberInRange,
   assertPasswordLike,
 } from "../rules";
@@ -72,6 +74,13 @@ export const GroupClasses = zod
 export const AssignmentInfo = zod
   .object({
     isAssignment: zod.boolean(),
-    deadline: zod.date().optional(),
+    deadline: zod
+      .number()
+      .superRefine(customZodRefinement((val) => assertMoreThan(val, 0))),
   })
   .optional();
+
+export const DeviceToken = zod.object({
+  address: zod.string(),
+  type: zod.string().superRefine(customZodRefinement(assertDeviceTokenType)),
+});
