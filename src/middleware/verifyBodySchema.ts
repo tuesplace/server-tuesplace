@@ -1,6 +1,4 @@
-// import { NotConformToSchemaError, RESTError } from "../errors";
 import { Request, Response } from "express";
-// import { RequestBody } from "../definitions";
 import { z } from "zod";
 import lo from "lodash";
 import { NotConformToSchemaError, RESTError } from "../errors";

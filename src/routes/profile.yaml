@@ -62,6 +62,92 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
+  /profiles/me/marks:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Get My Marks
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get My Marks
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+      responses:
+        200:
+          $ref: "#/components/responses/MarksArray"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /profiles/{profileId}/marks:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Get All Marks for a child
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get All Marks for a child
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+      responses:
+        200:
+          $ref: "#/components/responses/MarksArray"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
   /profiles/me/assets:
     put:
       security:

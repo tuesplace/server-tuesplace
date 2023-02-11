@@ -9,7 +9,7 @@ import {
   getResource,
 } from "../controllers";
 const router = express.Router({ mergeParams: true });
-import { Admin, Profile, Teacher } from "../definitions";
+import { Admin, Mark, Parent, Profile, Student, Teacher } from "../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
@@ -43,6 +43,38 @@ router.put(
         doc.password = await bcrypt.hash(doc.password, 13);
       },
     },
+  })
+);
+
+router.get(
+  "/me/marks",
+  verifyRole(Student),
+  getAllSortedByCreateDatePaginated(Mark, {
+    resolveAttrs: (context) => ({
+      "associations.student._id": context.profile!._id,
+    }),
+  })
+);
+
+router.get(
+  "/:profileId/marks",
+  verifyRole(Parent),
+  verifyResourceExists(
+    {
+      ...Profile,
+      lookupFieldLocation: "params.profileId",
+      documentLocation: "resources.profile",
+    },
+    {
+      resolveAttrs: (context) => ({
+        "associations.parent._id": context.profile!._id,
+      }),
+    }
+  ),
+  getAllSortedByCreateDatePaginated(Mark, {
+    resolveAttrs: (context) => ({
+      "associations.student._id": context.resources.profile._id,
+    }),
   })
 );
 
