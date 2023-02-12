@@ -1,4 +1,4 @@
-import { Teacher, Admin, Group, Profile, Student } from "../definitions";
+import { Teacher, Admin, Group, Student } from "../definitions";
 import { CriticalError, RESTError, NoAccessError } from "../errors";
 import { Request } from "express";
 import {
@@ -10,7 +10,7 @@ import {
 import { get } from "lodash";
 
 export const verifyInGroup =
-  <T>(resource: Resource<T> = Profile) =>
+  <T>(resource: Resource<T>) =>
   async (req: Request, _: any, next: any) => {
     try {
       const { group } = req.resources;

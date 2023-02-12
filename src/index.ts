@@ -24,7 +24,7 @@ import {
   verifyInGroup,
 } from "./middleware";
 import swaggerDoc from "./swaggerDoc";
-import { Admin, Group, Post, Teacher } from "./definitions";
+import { Admin, Group, Post, Profile, Teacher } from "./definitions";
 import { mongoDBConnectionString, port } from "./config";
 
 const app = express();
@@ -43,7 +43,7 @@ app.use(
   init,
   verifyAccessToken,
   verifyResourceExists(Group),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   verifyResourceExists(Post, {
     resolveAttrs: (context: Request) => ({
       "associations.group._id": context.ids!.groupId,
@@ -57,7 +57,7 @@ app.use(
   init,
   verifyAccessToken,
   verifyResourceExists(Group),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   postRouter
 );
 
@@ -67,7 +67,7 @@ app.use(
   verifyAccessToken,
   verifyRole(Teacher),
   verifyResourceExists(Group),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   markRouter
 );
 
@@ -76,7 +76,7 @@ app.use(
   init,
   verifyAccessToken,
   verifyResourceExists(Group),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   verifyResourceExists(Post, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,

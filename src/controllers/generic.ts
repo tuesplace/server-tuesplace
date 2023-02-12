@@ -3,7 +3,6 @@ import lo, { get } from "lodash";
 import {
   EditResourceOptions,
   IDocument,
-  ITimestamped,
   Resource,
   CreateResourceOptions,
   Assets,
@@ -31,7 +30,7 @@ export const getAllResource =
   };
 
 export const getAllSortedByCreateDatePaginated =
-  (resource: Resource<ITimestamped>, options?: FindResourceOptions) =>
+  <T>(resource: Resource<T>, options?: FindResourceOptions) =>
   async (req: Request, res: Response, next: any) => {
     try {
       const { page, limit } = req.query;
@@ -153,8 +152,8 @@ export const editResource =
   };
 
 export const editResourceAssets =
-  (
-    resource: Resource<Assets>,
+  <T>(
+    resource: Resource<T>,
     options: EditAssetsOptions = { ignoreMode: true }
   ) =>
   async (req: Request, res: Response, next: any) => {
@@ -185,7 +184,7 @@ export const editResourceAssets =
   };
 
 export const reactToSendableResource =
-  (resource: Resource<unknown>) =>
+  <T>(resource: Resource<T>) =>
   async (req: Request, res: Response, next: any) => {
     try {
       const document = get(

@@ -10,9 +10,33 @@ import {
   Activity,
   Room,
 } from ".";
-import { IModel } from "../@types/tuesplace";
+import {
+  IActivity,
+  IAsset,
+  IComment,
+  IGroup,
+  IMark,
+  IModel,
+  IPost,
+  IProfile,
+  IRefreshTokenGroup,
+  IRoom,
+  ISubmission,
+} from "../@types/tuesplace";
 
-export const collectionToModels: { [key: string]: IModel<unknown> } = {
+export const collectionToModels: {
+  [key: string]: any;
+  comments: IModel<IComment>;
+  groups: IModel<IGroup>;
+  marks: IModel<IMark>;
+  posts: IModel<IPost>;
+  profiles: IModel<IProfile>;
+  refreshTokenGroups: IModel<IRefreshTokenGroup>;
+  submissions: IModel<ISubmission>;
+  assets: IModel<IAsset>;
+  activities: IModel<IActivity>;
+  rooms: IModel<IRoom>;
+} = {
   comments: Comment,
   groups: Group,
   marks: Mark,

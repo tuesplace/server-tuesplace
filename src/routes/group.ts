@@ -37,7 +37,7 @@ router.get(
 router.get(
   "/:groupId",
   verifyResourceExists(Group),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   getResource(Group)
 );
 
@@ -63,7 +63,7 @@ router.put(
   verifyRole(Admin),
   verifyBodySchema(editGroupSchema),
   verifyResourceExists(Group),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   editResource(Group)
 );
 
@@ -71,7 +71,7 @@ router.delete(
   "/:groupId",
   verifyResourceExists(Group),
   verifyRole(Admin),
-  verifyInGroup(),
+  verifyInGroup(Profile),
   deleteResource(Group)
 );
 

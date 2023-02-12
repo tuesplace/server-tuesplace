@@ -17,7 +17,7 @@ export const verifyResourceExists =
       const document = await resource.model.findOne({
         ...resolvedQuery,
         ...(options?.resolveAttrs?.(req) || {}),
-      });
+      } as object);
       if (!document) {
         throw new RESTError(NotFoundError(resource), 404);
       }
