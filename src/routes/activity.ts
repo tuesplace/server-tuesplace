@@ -4,9 +4,8 @@ import {
   createResource,
   deleteResource,
   getAllSortedByCreateDatePaginated,
-  getSecondaryResourceInformation,
 } from "../controllers";
-import { Profile, Activity, Student, Admin } from "../definitions";
+import { Activity, Student, Admin, Teacher } from "../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
@@ -17,30 +16,32 @@ import { createActivitySchema } from "../requestSchema/activity";
 
 const router = express.Router({ mergeParams: true });
 
+router.get("/", verifyRole(Admin), getAllSortedByCreateDatePaginated(Activity));
+
 router.get(
   "/me",
-  verifyRole(Student),
-  getSecondaryResourceInformation(Profile, [
-    {
-      resource: Activity,
-      lookupName: "myActivities",
-      query: "itself",
-      resolveAttrs: async (context) => ({
-        "associations.group._id": {
-          $in: (
-            await Group.find({
-              classes: {
-                $in: context.profile!.class,
-              },
-            })
-          ).map((doc) => doc._id),
-        },
-      }),
-    },
-  ])
+  verifyRole(Student, Teacher),
+  getAllSortedByCreateDatePaginated(Activity, {
+    resolveAttrs: async (context) => ({
+      "associations.group._id": {
+        $in:
+          context.profile.role === Student.value
+            ? (
+                await Group.find({
+                  classes: {
+                    $in: context.profile!.class,
+                  },
+                })
+              ).map((doc) => doc._id)
+            : (
+                await Group.find({
+                  "owners._id": context.profile._id,
+                })
+              ).map((doc) => doc._id),
+      },
+    }),
+  })
 );
-
-router.get("/", verifyRole(Admin), getAllSortedByCreateDatePaginated(Activity));
 
 router.post(
   "/",

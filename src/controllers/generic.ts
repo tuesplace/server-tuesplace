@@ -39,7 +39,7 @@ export const getAllSortedByCreateDatePaginated =
 
       if (pageNum > 0) pageNum -= 1;
       const documents = await resource.model
-        .find(options?.resolveAttrs?.(req) || {})
+        .find((await options?.resolveAttrs?.(req)) || {})
         .sort({ createdAt: -1 })
         .skip(pageNum * limitNum)
         .limit(limitNum);

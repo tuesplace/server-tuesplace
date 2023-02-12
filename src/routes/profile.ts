@@ -9,7 +9,15 @@ import {
   getResource,
 } from "../controllers";
 const router = express.Router({ mergeParams: true });
-import { Admin, Mark, Parent, Profile, Student, Teacher } from "../definitions";
+import {
+  Activity,
+  Admin,
+  Mark,
+  Parent,
+  Profile,
+  Student,
+  Teacher,
+} from "../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
@@ -17,6 +25,7 @@ import {
   verifyYoungToken,
 } from "../middleware";
 import { editProfileSchema } from "../requestSchema";
+import { Group } from "../models";
 
 router.get(
   "/",
@@ -74,6 +83,36 @@ router.get(
   getAllSortedByCreateDatePaginated(Mark, {
     resolveAttrs: (context) => ({
       "associations.student._id": context.resources.profile._id,
+    }),
+  })
+);
+
+router.get(
+  "/:profileId/activities",
+  verifyRole(Parent),
+  verifyResourceExists(
+    {
+      ...Profile,
+      lookupFieldLocation: "params.profileId",
+      documentLocation: "resources.profile",
+    },
+    {
+      resolveAttrs: (context) => ({
+        "associations.parent._id": context.profile!._id,
+      }),
+    }
+  ),
+  getAllSortedByCreateDatePaginated(Activity, {
+    resolveAttrs: async (context) => ({
+      "associations.group._id": {
+        $in: (
+          await Group.find({
+            classes: {
+              $in: context.profile!.class,
+            },
+          })
+        ).map((doc) => doc._id),
+      },
     }),
   })
 );

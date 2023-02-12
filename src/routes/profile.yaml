@@ -148,6 +148,38 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
+  /profiles/{profileId}/activities:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      name: Get All Activities for a child
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Get All Activities for a child
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+      responses:
+        200:
+          $ref: "#/components/responses/Activities"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
   /profiles/me/assets:
     put:
       security:
