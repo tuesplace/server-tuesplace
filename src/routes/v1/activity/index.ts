@@ -4,15 +4,15 @@ import {
   createResource,
   deleteResource,
   getAllSortedByCreateDatePaginated,
-} from "../controllers";
-import { Activity, Student, Admin, Teacher } from "../definitions";
+} from "../../../controllers";
+import { Activity, Student, Admin, Teacher } from "../../../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
   verifyRole,
-} from "../middleware";
-import { Group } from "../models";
-import { createActivitySchema } from "../requestSchema/activity";
+} from "../../../middleware";
+import { Group } from "../../../models";
+import { createActivitySchema } from "../../../requestSchema";
 
 const router = express.Router({ mergeParams: true });
 

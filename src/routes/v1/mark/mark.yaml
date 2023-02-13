@@ -1,16 +1,16 @@
 paths:
-  /groups/{groupId}/posts:
+  /v1/groups/{groupId}/marks:
     get:
       security:
         - bearerAuth: []
       tags:
-        - Post
-      name: Get All Posts
+        - Mark
+      name: Get All Marks
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Returns all posts of a group
+      summary: Returns all marks of a group
       parameters:
         - name: groupId
           in: path
@@ -33,9 +33,52 @@ paths:
           nullable: true
       responses:
         200:
-          $ref: "#/components/responses/PostsArray"
+          $ref: "#/components/responses/MarksArray"
         400:
-          $ref: "#/components/responses/ResourcePropInvalid"
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /v1/groups/{groupId}/marks/students/{studentId}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Mark
+      name: Get All Marks of a student
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Returns all marks of a student in a group
+      parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page Number of Results
+          nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of Results per Page
+          nullable: true
+      responses:
+        200:
+          $ref: "#/components/responses/MarksArray"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
@@ -46,80 +89,70 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Post
-      name: Create Post
+        - Mark
+      name: Add Mark
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Creates a post in a group
+      summary: Adds a mark for a specific student
       parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
         - name: responseBehavior
           in: query
           schema:
             type: string
             enum: ["id", "doc", "none"]
           nullable: true
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                body:
-                  type: string
-                  example: What a nice post!
-                assignmentInfo:
-                  type: object
-                  properties:
-                    isAssignment:
-                      type: boolean
-                    deadline:
-                      type: string
-                      format: date-time
-                  required:
-                    - isAssignment
-                    - deadline
+                mark:
+                  type: number
+                  format: mark
               required:
-                - body
+                - mark
       responses:
         201:
-          description: Created Post
+          description: Created Mark
           content:
             application/json:
               schema:
                 type: object
                 oneOf:
-                  - $ref: "#/components/objects/PostComment"
+                  - $ref: "#/components/objects/Mark"
                   - $ref: "#/components/objects/IdResponse"
                   - $ref: "#/components/objects/EmptyResponse"
         400:
-          $ref: "#/components/responses/ResourcePropInvalid"
+          $ref: "#/components/responses/ResourceNotProvided"
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/posts/{postId}:
+
+  /v1/groups/{groupId}/marks/students/{studentId}/{markId}:
     put:
       security:
         - bearerAuth: []
       tags:
-        - Post
-      name: Edit Post
+        - Mark
+      name: Edit Mark
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Edits a Post
+      summary: Edits a Mark
       parameters:
         - name: groupId
           in: path
@@ -128,25 +161,16 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: postId
+        - name: markId
           in: path
-          description: Post ID
+          description: Mark ID
           required: true
           schema:
             type: string
             format: ObjectId
-      requestBody:
-        schema:
-          type: object
-          properties:
-            body:
-              type: string
-          required:
-            - body
-
       responses:
         204:
-          description: "Edited Post Successfully"
+          description: "Edited Mark Successfully"
         400:
           $ref: "#/components/responses/ResourceNotProvided"
         401:
@@ -161,13 +185,13 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Post
-      name: Delete Post
+        - Mark
+      name: Delete Mark
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Deletes a Post
+      summary: Deletes a Mark
       parameters:
         - name: groupId
           in: path
@@ -176,60 +200,22 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: postId
+        - name: markId
           in: path
-          description: Post ID
+          description: Mark ID
           required: true
           schema:
             type: string
             format: ObjectId
       responses:
         204:
-          description: "Deleted Post Successfully"
+          description: "Deleted Mark Successfully"
         400:
           $ref: "#/components/responses/ResourceNotProvided"
         401:
           $ref: "#/components/responses/GroupPermission"
         403:
           $ref: "#/components/responses/NotResourceAuthor"
-        404:
-          $ref: "#/components/responses/ResourceNotFound"
-        500:
-          $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/posts/{postId}/assets:
-    put:
-      security:
-        - bearerAuth: []
-      tags:
-        - Post
-      name: Edit Post Assets
-      summary: Changes a Post's Assets
-      produces:
-        - application/json
-      consumes:
-        - multipart/form-data
-      parameters:
-        - name: mode
-          in: query
-          description: Asset Replacement Mode
-          required: false
-          schema:
-            type: string
-
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                assets:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-      responses:
-        204:
-          $ref: "#/components/responses/EmptyResponse"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:

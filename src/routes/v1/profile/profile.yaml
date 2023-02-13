@@ -1,5 +1,5 @@
 paths:
-  /profiles/me:
+  /v1/profiles/me:
     get:
       security:
         - bearerAuth: []
@@ -30,25 +30,24 @@ paths:
       consumes:
         - application/json
       summary: Edits a Profile
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              fullName:
-                type: string
-              email:
-                type: string
-                format: email
-              password:
-                type: string
-                format: password
-            required:
-              - fullName
-              - email
-              - password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - fullName
+                - email
+                - password
       responses:
         204:
           description: "Edited Profile Successfully"
@@ -62,7 +61,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /profiles/me/marks:
+  /v1/profiles/me/marks:
     get:
       security:
         - bearerAuth: []
@@ -105,7 +104,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /profiles/{profileId}/marks:
+  /v1/profiles/{profileId}/marks:
     get:
       security:
         - bearerAuth: []
@@ -148,7 +147,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /profiles/{profileId}/activities:
+  /v1/profiles/{profileId}/activities:
     get:
       security:
         - bearerAuth: []
@@ -180,7 +179,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /profiles/me/assets:
+  /v1/profiles/me/assets:
     put:
       security:
         - bearerAuth: []
@@ -218,7 +217,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /profiles/{profileId}:
+  /v1/profiles/{profileId}:
     delete:
       security:
         - bearerAuth: []

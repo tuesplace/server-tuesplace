@@ -1,5 +1,5 @@
 paths:
-  /auth/sign-in:
+  /v1/auth/sign-in:
     post:
       tags:
         - Auth
@@ -9,22 +9,22 @@ paths:
         - application/json
       consumes:
         - application/json
-      parameters:
-        - name: body
-          in: body
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-              password:
-                type: string
-                format: password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
             required:
-              - email
-              - password
-          required:
-            - body
+              - body
       responses:
         200:
           $ref: "#/components/responses/Auth"
@@ -44,7 +44,7 @@ paths:
 
         500:
           $ref: "#/components/responses/ServerError"
-  /auth/generate-token-pair:
+  /v1/auth/generate-token-pair:
     post:
       tags:
         - Auth

@@ -7,15 +7,18 @@ import {
   editResourceAssets,
   getAllSortedByCreateDatePaginated,
   reactToSendableResource,
-} from "../controllers";
-import { Comment, Profile } from "../definitions";
+} from "../../../controllers";
+import { Comment, Profile } from "../../../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
   verifyResourceOwner,
-} from "../middleware";
-import { createComment, editCommentSchema } from "../requestSchema/comment";
-import { reactToSendableSchema } from "../requestSchema/generic";
+} from "../../../middleware";
+import {
+  createComment,
+  editCommentSchema,
+} from "../../../requestSchema/comment";
+import { reactToSendableSchema } from "../../../requestSchema/generic";
 
 const router = express.Router({ mergeParams: true, strict: true });
 

@@ -1,12 +1,12 @@
 import swaggerJsdoc from "swagger-jsdoc";
-import { port, serverUrl } from "./config";
+import { environment, port, serverUrl } from "./config";
 
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "tuesplace API",
-      version: "0.7.0",
+      version: "1.0.0",
       description: "tuesplace API Documentation",
       license: {
         name: "MIT",
@@ -20,11 +20,11 @@ const options = {
     },
     servers: [
       {
-        url: `${serverUrl}:${port}/api`,
+        url: `${environment == "DEV" ? `${serverUrl}:${port}` : serverUrl}/api`,
       },
     ],
   },
-  apis: ["./src/swagger-definitions/*.yaml", "./src/routes/*.yaml"],
+  apis: ["./src/swagger-definitions/*.yaml", "./src/routes/v1/**/*.yaml"],
 };
 
 export default swaggerJsdoc(options);

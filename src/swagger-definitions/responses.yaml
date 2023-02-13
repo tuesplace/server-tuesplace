@@ -147,4 +147,4 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/componennts/objects/EmptyResponse"
+            $ref: "#/components/objects/EmptyResponse"

@@ -1,6 +1,6 @@
 {
   "name": "tuesplace",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "Server for tuesplace",
   "main": "./src/index.ts",
   "engines": {
@@ -16,7 +16,7 @@
     "prebuild": "npm run lint",
     "build": "tsc",
     "start": "node ./dist/index.js",
-    "postbuild": "copyfiles -u 1 src/**/*.yaml dist/",
+    "postbuild": "copyfiles -u 1 src/routes/v1/**/*.yaml dist/",
     "clean": "npx rimraf dist"
   },
   "repository": {

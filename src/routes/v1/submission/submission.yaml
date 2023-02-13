@@ -1,5 +1,5 @@
 paths:
-  /groups/{groupId}/post/{postId}/submissions:
+  /v1/groups/{groupId}/post/{postId}/submissions:
     get:
       security:
         - bearerAuth: []
@@ -94,7 +94,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/post/{postId}/submissions/me:
+  /v1/groups/{groupId}/post/{postId}/submissions/me:
     get:
       security:
         - bearerAuth: []
@@ -126,7 +126,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/post/{postId}/submissions/marks:
+  /v1/groups/{groupId}/post/{postId}/submissions/marks:
     post:
       security:
         - bearerAuth: []
@@ -159,18 +159,17 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: body
-          in: body
-          description: Body
-          required: true
-          schema:
-            type: object
-            properties:
-              mark:
-                type: number
-                format: mark
-            required:
-              - mark
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mark:
+                  type: number
+                  format: mark
+              required:
+                - mark
       responses:
         201:
           description: Created Mark

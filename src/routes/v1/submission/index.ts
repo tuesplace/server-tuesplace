@@ -3,14 +3,17 @@ import {
   createAssets,
   createResource,
   getAllSortedByCreateDatePaginated,
-} from "../controllers";
-import { Mark, Post, Student, Submission, Teacher } from "../definitions";
+} from "../../../controllers";
+import { Mark, Post, Student, Submission, Teacher } from "../../../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
   verifyRole,
-} from "../middleware";
-import { createMarkSchema, createSubmissionSchema } from "../requestSchema";
+} from "../../../middleware";
+import {
+  createMarkSchema,
+  createSubmissionSchema,
+} from "../../../requestSchema";
 
 const router = express.Router({ mergeParams: true });
 

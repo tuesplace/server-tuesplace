@@ -1,5 +1,5 @@
 paths:
-  /activities:
+  /v1/activities:
     get:
       security:
         - bearerAuth: []
@@ -96,7 +96,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /activities/me:
+  /v1/activities/me:
     get:
       security:
         - bearerAuth: []
@@ -128,7 +128,7 @@ paths:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /activities/{activityId}:
+  /v1/activities/{activityId}:
     delete:
       security:
         - bearerAuth: []

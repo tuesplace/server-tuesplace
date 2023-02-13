@@ -4,10 +4,10 @@ import {
   deleteResource,
   editResource,
   getAllSortedByCreateDatePaginated,
-} from "../controllers";
-import { Room } from "../definitions";
-import { verifyBodySchema, verifyResourceExists } from "../middleware";
-import { roomSchema } from "../requestSchema";
+} from "../../../controllers";
+import { Room } from "../../../definitions";
+import { verifyBodySchema, verifyResourceExists } from "../../../middleware";
+import { roomSchema } from "../../../requestSchema";
 
 const router = express.Router({ mergeParams: true });
 

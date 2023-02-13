@@ -7,7 +7,7 @@ import {
   editResourceAssets,
   getAllSortedByCreateDatePaginated,
   getResource,
-} from "../controllers";
+} from "../../../controllers";
 const router = express.Router({ mergeParams: true });
 import {
   Activity,
@@ -17,15 +17,15 @@ import {
   Profile,
   Student,
   Teacher,
-} from "../definitions";
+} from "../../../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
   verifyRole,
   verifyYoungToken,
-} from "../middleware";
-import { editProfileSchema } from "../requestSchema";
-import { Group } from "../models";
+} from "../../../middleware";
+import { editProfileSchema } from "../../../requestSchema";
+import { Group } from "../../../models";
 
 router.get(
   "/",

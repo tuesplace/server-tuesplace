@@ -1,17 +1,24 @@
 paths:
-  /groups/:
+  /v1/groups/{groupId}/posts:
     get:
       security:
         - bearerAuth: []
       tags:
-        - Group
-      name: Get All Groups
+        - Post
+      name: Get All Posts
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Get All Groups
+      summary: Returns all posts of a group
       parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
         - name: page
           in: query
           schema:
@@ -26,17 +33,9 @@ paths:
           nullable: true
       responses:
         200:
-          $ref: "#/components/responses/Groups"
+          $ref: "#/components/responses/PostsArray"
         400:
-          description: Group Validation Error
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/errors/ResourcePropInvalid"
-                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
-                discriminator: errors
-
+          $ref: "#/components/responses/ResourcePropInvalid"
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
@@ -47,109 +46,80 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Group
-      name: Create Group
+        - Post
+      name: Create Post
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Create a Group
+      summary: Creates a post in a group
       parameters:
+        - name: groupId
+          in: path
+          description: Group ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
         - name: responseBehavior
           in: query
           schema:
             type: string
             enum: ["id", "doc", "none"]
           nullable: true
-        - name: body
-          in: body
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                example: 9В - Руски
-              type:
-                type: string
-                enum: ["chat", "subject"]
-              classes:
-                type: array
-                items:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
                   type: string
-                  format: class
-            required:
-              - name
-              - teachers
-              - classes
+                  example: What a nice post!
+                assignmentInfo:
+                  type: object
+                  properties:
+                    isAssignment:
+                      type: boolean
+                    deadline:
+                      type: string
+                      format: date-time
+                  required:
+                    - isAssignment
+                    - deadline
+              required:
+                - body
       responses:
         201:
-          description: Created Group
+          description: Created Post
           content:
             application/json:
               schema:
                 type: object
                 oneOf:
-                  - $ref: "#/components/objects/Group"
+                  - $ref: "#/components/objects/PostComment"
                   - $ref: "#/components/objects/IdResponse"
                   - $ref: "#/components/objects/EmptyResponse"
         400:
-          description: Group Validation Error
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/errors/ResourcePropInvalid"
-                  - $ref: "#/components/errors/ResourceNotProvided"
-                discriminator: errors
+          $ref: "#/components/responses/ResourcePropInvalid"
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-
-  /groups/{groupId}:
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Group
-      name: Get Group
-      produces:
-        - application/json
-      consumes:
-        - application/json
-      summary: Get Group Information
-      parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-      responses:
-        200:
-          $ref: "#/components/responses/Group"
-        400:
-          $ref: "#/components/responses/ResourceNotProvided"
-        401:
-          $ref: "#/components/responses/GroupPermission"
-        404:
-          $ref: "#/components/responses/ResourceNotFound"
-        500:
-          $ref: "#/components/responses/ServerError"
+  /v1/groups/{groupId}/posts/{postId}:
     put:
       security:
         - bearerAuth: []
       tags:
-        - Group
-      name: Edit Group
+        - Post
+      name: Edit Post
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Edits an already existing Group
+      summary: Edits a Post
       parameters:
         - name: groupId
           in: path
@@ -158,36 +128,31 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: body
-          in: body
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-                example: 9В - Руски
-              type:
-                type: string
-                enum: ["chat", "subject"]
-              classes:
-                type: array
-                items:
-                  type: string
-                  format: class
+            type: string
+            format: ObjectId
+      requestBody:
+        schema:
+          type: object
+          properties:
+            body:
+              type: string
+          required:
+            - body
+
       responses:
         204:
-          $ref: "#/components/responses/EmptyResponse"
+          description: "Edited Post Successfully"
         400:
-          description: Group Validation Error
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/errors/ResourcePropInvalid"
-                  - $ref: "#/components/errors/ResourceNotProvided"
-                discriminator: errors
+          $ref: "#/components/responses/ResourceNotProvided"
         401:
           $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
@@ -196,13 +161,13 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Group
-      name: Delete Group
+        - Post
+      name: Delete Post
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Permanently deletes an already existing Group
+      summary: Deletes a Post
       parameters:
         - name: groupId
           in: path
@@ -211,32 +176,34 @@ paths:
           schema:
             type: string
             format: ObjectId
+        - name: postId
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: string
+            format: ObjectId
       responses:
         204:
-          description: Group Deleted Successfully
+          description: "Deleted Post Successfully"
         400:
-          description: Group Validation Error
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/errors/ResourcePropInvalid"
-                  - $ref: "#/components/errors/ResourceNotProvided"
-                discriminator: errors
+          $ref: "#/components/responses/ResourceNotProvided"
         401:
           $ref: "#/components/responses/GroupPermission"
+        403:
+          $ref: "#/components/responses/NotResourceAuthor"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/assets:
+  /v1/groups/{groupId}/posts/{postId}/assets:
     put:
       security:
         - bearerAuth: []
       tags:
-        - Group
-      name: Edit Group Assets
-      summary: Changes a Group's Assets
+        - Post
+      name: Edit Post Assets
+      summary: Changes a Post's Assets
       produces:
         - application/json
       consumes:
@@ -255,7 +222,7 @@ paths:
             schema:
               type: object
               properties:
-                coverPhoto:
+                assets:
                   type: array
                   items:
                     type: string

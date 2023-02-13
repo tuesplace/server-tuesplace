@@ -4,16 +4,16 @@ import {
   deleteResource,
   editResource,
   getAllSortedByCreateDatePaginated,
-} from "../controllers";
+} from "../../../controllers";
 const router = express.Router({ mergeParams: true });
-import { Mark, Profile, StudentResource } from "../definitions";
+import { Mark, Profile, StudentResource } from "../../../definitions";
 import {
   verifyResourceExists,
   verifyInGroup,
   verifyBodySchema,
   verifyResourceOwner,
-} from "../middleware";
-import { editMarkSchema, createMarkSchema } from "../requestSchema";
+} from "../../../middleware";
+import { editMarkSchema, createMarkSchema } from "../../../requestSchema";
 
 router.get(
   "/",

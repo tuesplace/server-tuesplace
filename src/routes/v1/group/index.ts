@@ -6,16 +6,19 @@ import {
   getAllSortedByCreateDatePaginated,
   getResource,
   getSecondaryResourceInformation,
-} from "../controllers";
-import { Admin, Profile, Student } from "../definitions";
+} from "../../../controllers";
+import { Admin, Profile, Student } from "../../../definitions";
 import {
   verifyRole,
   verifyInGroup,
   verifyResourceExists,
   verifyBodySchema,
-} from "../middleware";
-import { Group } from "../definitions";
-import { createGroupSchema, editGroupSchema } from "../requestSchema/group";
+} from "../../../middleware";
+import { Group } from "../../../definitions";
+import {
+  createGroupSchema,
+  editGroupSchema,
+} from "../../../requestSchema/group";
 
 const router = express.Router({ mergeParams: true });
 

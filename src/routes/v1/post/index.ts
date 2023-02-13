@@ -1,5 +1,5 @@
 import express from "express";
-import { Profile, Post } from "../definitions";
+import { Profile, Post } from "../../../definitions";
 import {
   createResource,
   deleteResource,
@@ -8,15 +8,15 @@ import {
   getAllSortedByCreateDatePaginated,
   getResource,
   reactToSendableResource,
-} from "../controllers";
+} from "../../../controllers";
 import {
   verifyBodySchema,
   verifyResourceExists,
   verifyResourceOwner,
-} from "../middleware";
-import { createPostSchema, editPostSchema } from "../requestSchema";
-import { createAssets } from "../controllers";
-import { notifyAllGroupMembersCreatedPost } from "../util";
+} from "../../../middleware";
+import { createPostSchema, editPostSchema } from "../../../requestSchema";
+import { createAssets } from "../../../controllers";
+import { notifyAllGroupMembersCreatedPost } from "../../../util";
 
 const router = express.Router({ mergeParams: true, strict: true });
 

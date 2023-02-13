@@ -1,9 +1,14 @@
 import express from "express";
-import { signIn, refreshTokenPair, signUp, signInMobile } from "../controllers";
-import { verifyBodySchema, verifyResourceExists } from "../middleware";
-import { Profile } from "../definitions";
-import { signInSchema, signInMobileSchema } from "../requestSchema";
-import { environment } from "../config";
+import {
+  signIn,
+  refreshTokenPair,
+  signUp,
+  signInMobile,
+} from "../../../controllers";
+import { verifyBodySchema, verifyResourceExists } from "../../../middleware";
+import { Profile } from "../../../definitions";
+import { signInSchema, signInMobileSchema } from "../../../requestSchema";
+import { environment } from "../../../config";
 
 const router = express.Router({ mergeParams: true });
 

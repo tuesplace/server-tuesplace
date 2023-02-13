@@ -1,31 +1,17 @@
 paths:
-  /groups/{groupId}/posts/{postId}/comments:
+  /v1/groups/:
     get:
       security:
         - bearerAuth: []
       tags:
-        - Comment
-      name: Get Comments
+        - Group
+      name: Get All Groups
       produces:
         - application/json
       consumes:
         - application/json
-      summary: Get All Comments of a Post
+      summary: Get All Groups
       parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-        - name: postId
-          in: path
-          description: Post ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
         - name: page
           in: query
           schema:
@@ -40,9 +26,17 @@ paths:
           nullable: true
       responses:
         200:
-          $ref: "#/components/responses/PostComments"
+          $ref: "#/components/responses/Groups"
         400:
-          $ref: "#/components/responses/ResourceNotProvided"
+          description: Group Validation Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/errors/ResourcePropInvalid"
+                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
+                discriminator: errors
+
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
@@ -53,84 +47,80 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Comment
-      name: Create Comment
-      summary: Create a Comment of a Post
+        - Group
+      name: Create Group
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Create a Group
       parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-        - name: postId
-          in: path
-          description: Post ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
         - name: responseBehavior
           in: query
           schema:
             type: string
             enum: ["id", "doc", "none"]
           nullable: true
-
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                body:
+                name:
                   type: string
-                  example: What a nice post!
-                isPrivate:
-                  type: boolean
+                  example: 9В - Руски
+                type:
+                  type: string
+                  enum: ["chat", "subject"]
+                classes:
+                  type: array
+                  items:
+                    type: string
+                    format: class
               required:
-                - body
-
+                - name
+                - teachers
+                - classes
       responses:
         201:
-          description: Created Comment
+          description: Created Group
           content:
             application/json:
               schema:
                 type: object
                 oneOf:
-                  - $ref: "#/components/objects/PostCommentResponse"
+                  - $ref: "#/components/objects/Group"
                   - $ref: "#/components/objects/IdResponse"
                   - $ref: "#/components/objects/EmptyResponse"
         400:
-          description: Comment Validation Error
+          description: Group Validation Error
           content:
             application/json:
               schema:
                 oneOf:
                   - $ref: "#/components/errors/ResourcePropInvalid"
-                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
+                  - $ref: "#/components/errors/ResourceNotProvided"
                 discriminator: errors
-
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/posts/{postId}/comments/{commentId}:
-    put:
+
+  /v1/groups/{groupId}:
+    get:
       security:
         - bearerAuth: []
       tags:
-        - Comment
-      name: Edit Comment
-      summary: Changes a Comment`s Body
+        - Group
+      name: Get Group
       produces:
         - application/json
       consumes:
         - application/json
+      summary: Get Group Information
       parameters:
         - name: groupId
           in: path
@@ -139,90 +129,65 @@ paths:
           schema:
             type: string
             format: ObjectId
-        - name: postId
+      responses:
+        200:
+          $ref: "#/components/responses/Group"
+        400:
+          $ref: "#/components/responses/ResourceNotProvided"
+        401:
+          $ref: "#/components/responses/GroupPermission"
+        404:
+          $ref: "#/components/responses/ResourceNotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Group
+      name: Edit Group
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      summary: Edits an already existing Group
+      parameters:
+        - name: groupId
           in: path
-          description: Post ID
+          description: Group ID
           required: true
           schema:
             type: string
             format: ObjectId
-
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                body:
+                name:
                   type: string
-              required:
-                - body
+                  example: 9В - Руски
+                type:
+                  type: string
+                  enum: ["chat", "subject"]
+                classes:
+                  type: array
+                  items:
+                    type: string
+                    format: class
       responses:
         204:
-          description: Edited Comment
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/objects/EmptyResponse"
+          $ref: "#/components/responses/EmptyResponse"
         400:
-          description: Comment Validation Error
+          description: Group Validation Error
           content:
             application/json:
               schema:
                 oneOf:
                   - $ref: "#/components/errors/ResourcePropInvalid"
-                  - $ref: "#/components/errors/ResourcePropSurpassMaxLength"
+                  - $ref: "#/components/errors/ResourceNotProvided"
                 discriminator: errors
-
-        401:
-          $ref: "#/components/responses/GroupPermission"
-        403:
-          $ref: "#/components/responses/NotResourceAuthor"
-        404:
-          $ref: "#/components/responses/ResourceNotFound"
-        500:
-          $ref: "#/components/responses/ServerError"
-    patch:
-      security:
-        - bearerAuth: []
-      tags:
-        - Comment
-      name: React to Comment
-      summary: Adds a Reaction to a Comment`s Reactions Property
-      produces:
-        - application/json
-      consumes:
-        - application/json
-      parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-        - name: postId
-          in: path
-          description: Post ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-        - name: body
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              reaction:
-                type: string
-                example: 🙂
-                format: emoji
-            required:
-              - emoji
-      responses:
-        204:
-          description: Reacted/Unreacted to Comment
         401:
           $ref: "#/components/responses/GroupPermission"
         404:
@@ -233,66 +198,52 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Comment
-      name: Delete Comment
-      summary: Delete
+        - Group
+      name: Delete Group
       produces:
         - application/json
       consumes:
         - application/json
+      summary: Permanently deletes an already existing Group
       parameters:
         - name: groupId
           in: path
           description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-        - name: postId
-          in: path
-          description: Post ID
           required: true
           schema:
             type: string
             format: ObjectId
       responses:
         204:
-          description: Deleted Comment
+          description: Group Deleted Successfully
+        400:
+          description: Group Validation Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/errors/ResourcePropInvalid"
+                  - $ref: "#/components/errors/ResourceNotProvided"
+                discriminator: errors
         401:
           $ref: "#/components/responses/GroupPermission"
-        403:
-          $ref: "#/components/responses/NotResourceAuthor"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /groups/{groupId}/posts/{postId}/comments/{commentId}/assets:
+  /v1/groups/{groupId}/assets:
     put:
       security:
         - bearerAuth: []
       tags:
-        - Comment
-      name: Edit Comment Assets
-      summary: Changes a Comment's Assets
+        - Group
+      name: Edit Group Assets
+      summary: Changes a Group's Assets
       produces:
         - application/json
       consumes:
         - multipart/form-data
       parameters:
-        - name: groupId
-          in: path
-          description: Group ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
-        - name: postId
-          in: path
-          description: Post ID
-          required: true
-          schema:
-            type: string
-            format: ObjectId
         - name: mode
           in: query
           description: Asset Replacement Mode
@@ -306,18 +257,14 @@ paths:
             schema:
               type: object
               properties:
-                assets:
+                coverPhoto:
                   type: array
                   items:
                     type: string
                     format: binary
       responses:
         204:
-          description: Edited Assets Comment
-        401:
-          $ref: "#/components/responses/GroupPermission"
-        403:
-          $ref: "#/components/responses/NotResourceAuthor"
+          $ref: "#/components/responses/EmptyResponse"
         404:
           $ref: "#/components/responses/ResourceNotFound"
         500:
