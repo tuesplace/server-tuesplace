@@ -12,7 +12,10 @@ export const verifyRole =
       }
 
       if (roles.findIndex((role) => role.value === profile.role) == -1) {
-        throw new RESTError(NotRoleError(roles), 403);
+        throw new RESTError(
+          NotRoleError(roles.length == 1 ? roles[0] : roles),
+          403
+        );
       }
 
       next();

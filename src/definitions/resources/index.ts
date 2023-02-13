@@ -2,6 +2,7 @@ export * from "./Activity";
 export * from "./Comment";
 export * from "./Group";
 export * from "./Mark";
+export * from "./Message";
 export * from "./Post";
 export * from "./Profile";
 export * from "./RefreshTokenGroup";

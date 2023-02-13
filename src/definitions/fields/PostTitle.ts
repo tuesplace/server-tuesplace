@@ -2,6 +2,6 @@ import zod from "zod";
 import { customZodRefinement } from "../../util/zod";
 import { assertLengthInRange } from "../rules";
 
-export const PostBody = zod
+export const PostTitle = zod
   .string()
-  .superRefine(customZodRefinement((val) => assertLengthInRange(500, val)));
+  .superRefine(customZodRefinement((val) => assertLengthInRange(150, val)));

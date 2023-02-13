@@ -194,7 +194,7 @@ export const reactToSendableResource =
 
       const { reaction } = req.body;
 
-      await reactToSendable(document, req.profile!.id, reaction);
+      await reactToSendable(document, req.profile!._id, reaction);
       res.sendRes(null, 204);
     } catch (err) {
       next(err);

@@ -1,5 +1,12 @@
 import express, { Request } from "express";
-import { Post, Group, Profile, Teacher, Admin } from "../../definitions";
+import {
+  Post,
+  Group,
+  Profile,
+  Teacher,
+  Admin,
+  Student,
+} from "../../definitions";
 import {
   init,
   verifyInGroup,
@@ -12,6 +19,7 @@ import { authRouter } from "./auth";
 import { commentRouter } from "./comment";
 import { groupRouter } from "./group";
 import { markRouter } from "./mark";
+import { messageRouter } from "./message";
 import { postRouter } from "./post";
 import { profileRouter } from "./profile";
 import { roomRouter } from "./room";
@@ -38,9 +46,27 @@ router.use(
   "/groups/:groupId/posts/",
   init,
   verifyAccessToken,
-  verifyResourceExists(Group),
+  verifyResourceExists(Group, {
+    resolveAttrs: () => ({
+      type: "subject",
+    }),
+  }),
   verifyInGroup(Profile),
   postRouter
+);
+
+router.use(
+  "/groups/:groupId/messages/",
+  init,
+  verifyAccessToken,
+  verifyRole(Student),
+  verifyResourceExists(Group, {
+    resolveAttrs: () => ({
+      type: "chat",
+    }),
+  }),
+  verifyInGroup(Profile),
+  messageRouter
 );
 
 router.use(

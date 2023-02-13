@@ -40,7 +40,7 @@ paths:
           nullable: true
       responses:
         200:
-          $ref: "#/components/responses/PostComments"
+          $ref: "#/components/responses/Comments"
         400:
           $ref: "#/components/responses/ResourceNotProvided"
         401:
@@ -100,7 +100,7 @@ paths:
               schema:
                 type: object
                 oneOf:
-                  - $ref: "#/components/objects/PostCommentResponse"
+                  - $ref: "#/components/objects/CommentResponse"
                   - $ref: "#/components/objects/IdResponse"
                   - $ref: "#/components/objects/EmptyResponse"
         400:

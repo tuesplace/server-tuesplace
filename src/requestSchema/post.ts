@@ -1,21 +1,26 @@
 import { Request } from "express";
 import zod from "zod";
-import { AssignmentInfo, CommentBody, PostBody, Teacher } from "../definitions";
+import { AssignmentInfo, PostBody, PostTitle, Teacher } from "../definitions";
 
 export const createPostSchema = (context: Request) =>
   zod
     .object(
       context.profile!.role == Teacher.value
         ? {
-            body: CommentBody,
+            title: PostTitle,
+            body: PostBody,
             assignmentInfo: AssignmentInfo,
           }
-        : { body: CommentBody }
+        : {
+            title: PostTitle,
+            body: PostBody,
+          }
     )
     .strict();
 
 export const editPostSchema = zod
   .object({
+    title: PostTitle,
     body: PostBody,
     assignmentInfo: AssignmentInfo,
   })

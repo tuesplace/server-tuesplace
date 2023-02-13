@@ -46,7 +46,47 @@ components:
       required:
         - success
         - response
-    PostComment:
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+        owner:
+          $ref: "#/components/objects/Owner"
+        title:
+          type: string
+        body:
+          type: string
+        isPrivate:
+          type: boolean
+        associations:
+          type: object
+          properties:
+            group:
+              allOf:
+                - $ref: "#/components/objects/Association"
+                - type: object
+                  properties:
+                    collectionName:
+                      example: "groups"
+        reactions:
+          type: array
+          items:
+            $ref: "#/components/objects/Reaction"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - title
+        - body
+        - reactions
+        - createdAt
+        - updatedAt
+
+    Comment:
       type: object
       properties:
         _id:
@@ -93,13 +133,20 @@ components:
         - reactions
         - createdAt
         - updatedAt
-    PostCommentResponse:
+    PostResponse:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
         - type: object
           properties:
             response:
-              $ref: "#/components/objects/PostComment"
+              $ref: "#/components/objects/Post"
+    CommentResponse:
+      allOf:
+        - $ref: "#/components/objects/SuccessfulResponse"
+        - type: object
+          properties:
+            response:
+              $ref: "#/components/objects/Comment"
 
     Submission:
       type: object
@@ -302,7 +349,16 @@ components:
         data:
           $ref: "#/components/objects/Profile"
 
-    PostComments:
+    Posts:
+      allOf:
+        - $ref: "#/components/objects/Comments"
+        - type: object
+          properties:
+            response:
+              type: array
+              items:
+                $ref: "#/components/objects/Post"
+    Comments:
       allOf:
         - $ref: "#/components/objects/SuccessfulResponse"
         - type: object
@@ -310,7 +366,7 @@ components:
             response:
               type: array
               items:
-                $ref: "#/components/objects/PostComment"
+                $ref: "#/components/objects/Comment"
     Mark:
       type: object
       properties:
@@ -354,7 +410,7 @@ components:
             response:
               type: array
               items:
-                $ref: "#/components/objects/PostComment"
+                $ref: "#/components/objects/Post"
 
     IdResponse:
       allOf:
@@ -371,3 +427,37 @@ components:
       properties:
         success:
           type: boolean
+    Message:
+      type: object
+      properties:
+        _id:
+          type: string
+        owner:
+          $ref: "#/components/objects/Owner"
+        body:
+          type: string
+        associations:
+          type: object
+          properties:
+            group:
+              allOf:
+                - $ref: "#/components/objects/Association"
+                - type: object
+                  properties:
+                    collectionName:
+                      example: "groups"
+        reactions:
+          type: array
+          items:
+            $ref: "#/components/objects/Reaction"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - body
+        - reactions
+        - createdAt
+        - updatedAt

@@ -77,7 +77,7 @@ paths:
               schema:
                 type: object
                 oneOf:
-                  - $ref: "#/components/objects/PostCommentResponse"
+                  - $ref: "#/components/objects/Activity"
                   - $ref: "#/components/objects/IdResponse"
                   - $ref: "#/components/objects/EmptyResponse"
         400:

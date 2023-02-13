@@ -7,6 +7,10 @@ const postSchema = new Schema<IPost>(
       type: Object,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     body: {
       type: String,
       default: "",

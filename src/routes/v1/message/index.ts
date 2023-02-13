@@ -1,6 +1,6 @@
 import express from "express";
-import { Profile, Post } from "../../../definitions";
 import {
+  createAssets,
   createResource,
   deleteResource,
   editResource,
@@ -9,24 +9,24 @@ import {
   getResource,
   reactToSendableResource,
 } from "../../../controllers";
+import { Message, Profile } from "../../../definitions";
 import {
   verifyBodySchema,
   verifyResourceExists,
   verifyResourceOwner,
 } from "../../../middleware";
 import {
-  createPostSchema,
-  editPostSchema,
+  createMessageSchema,
+  editMessageSchema,
   reactToSendableResourceSchema,
 } from "../../../requestSchema";
-import { createAssets } from "../../../controllers";
 import { notifyAllGroupMembersCreatedPost } from "../../../util";
 
-const router = express.Router({ mergeParams: true, strict: true });
+const router = express.Router({ mergeParams: true });
 
 router.get(
   "/",
-  getAllSortedByCreateDatePaginated(Post, {
+  getAllSortedByCreateDatePaginated(Message, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,
     }),
@@ -34,19 +34,19 @@ router.get(
 );
 
 router.get(
-  "/:postId",
-  verifyResourceExists(Post, {
+  "/:messageId",
+  verifyResourceExists(Message, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,
     }),
   }),
-  getResource(Post)
+  getResource(Message)
 );
 
 router.post(
   "/",
-  verifyBodySchema(createPostSchema),
-  createResource(Post, {
+  verifyBodySchema(createMessageSchema),
+  createResource(Message, {
     resolveAttrs: (context) => ({
       associations: {
         group: {
@@ -66,25 +66,25 @@ router.post(
 );
 
 router.put(
-  "/:postId",
-  verifyResourceExists(Post, {
+  "/:messageId",
+  verifyResourceExists(Message, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,
     }),
   }),
-  verifyResourceOwner(Profile, Post),
-  verifyBodySchema(editPostSchema),
-  editResource(Post)
+  verifyResourceOwner(Profile, Message),
+  verifyBodySchema(editMessageSchema),
+  editResource(Message)
 );
 
 router.put(
-  "/:postId/assets",
-  verifyResourceExists(Post, {
+  "/:messageId/assets",
+  verifyResourceExists(Message, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,
     }),
   }),
-  verifyResourceOwner(Profile, Post),
+  verifyResourceOwner(Profile, Message),
   createAssets(
     {
       resolveAttrs: (context) => ({
@@ -95,7 +95,7 @@ router.put(
         },
       }),
     },
-    Post,
+    Message,
     [
       {
         name: "assets",
@@ -103,29 +103,29 @@ router.put(
       },
     ]
   ),
-  editResourceAssets(Post)
+  editResourceAssets(Message)
 );
 
 router.delete(
-  "/:postId",
-  verifyResourceExists(Post, {
+  "/:messageId",
+  verifyResourceExists(Message, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,
     }),
   }),
-  verifyResourceOwner(Profile, Post),
-  deleteResource(Post)
+  verifyResourceOwner(Profile, Message),
+  deleteResource(Message)
 );
 
 router.patch(
-  "/:postId",
+  "/:messageId",
   verifyBodySchema(reactToSendableResourceSchema),
-  verifyResourceExists(Post, {
+  verifyResourceExists(Message, {
     resolveAttrs: (context) => ({
       "associations.group._id": context.ids!.groupId,
     }),
   }),
-  reactToSendableResource(Post)
+  reactToSendableResource(Message)
 );
 
-export { router as postRouter };
+export { router as messageRouter };

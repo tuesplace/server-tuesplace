@@ -36,12 +36,18 @@ components:
         application/json:
           schema:
             $ref: "#/components/errors/GroupPermission"
-    PostComments:
+    Posts:
       description: All/Paginated Comments of a Post
       content:
         application/json:
           schema:
-            $ref: "#/components/objects/PostComments"
+            $ref: "#/components/objects/Posts"
+    Comments:
+      description: All/Paginated Comments of a Post
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/objects/Comments"
     ResourcePropInvalid:
       description: "{{prop}} of resource {{resource}} is not a {{type}}"
       content:
@@ -137,12 +143,6 @@ components:
         application/json:
           schema:
             $ref: "#/components/objects/PostsArray"
-    PostComment:
-      description: Posts array
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/objects/PostCommentResponse"
     EmptyResponse:
       content:
         application/json:

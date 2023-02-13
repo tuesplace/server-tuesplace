@@ -16,6 +16,7 @@ import {
   IComment,
   IGroup,
   IMark,
+  IMessage,
   IModel,
   IPost,
   IProfile,
@@ -23,6 +24,7 @@ import {
   IRoom,
   ISubmission,
 } from "../@types/tuesplace";
+import { Message } from "./Message";
 
 export const collectionToModels: {
   [key: string]: any;
@@ -36,6 +38,7 @@ export const collectionToModels: {
   assets: IModel<IAsset>;
   activities: IModel<IActivity>;
   rooms: IModel<IRoom>;
+  messages: IModel<IMessage>;
 } = {
   comments: Comment,
   groups: Group,
@@ -47,4 +50,5 @@ export const collectionToModels: {
   assets: Asset,
   activities: Activity,
   rooms: Room,
+  messages: Message,
 };

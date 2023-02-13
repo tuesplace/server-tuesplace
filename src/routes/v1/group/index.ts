@@ -5,7 +5,6 @@ import {
   editResource,
   getAllSortedByCreateDatePaginated,
   getResource,
-  getSecondaryResourceInformation,
 } from "../../../controllers";
 import { Admin, Profile, Student } from "../../../definitions";
 import {
@@ -22,19 +21,16 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/", getAllSortedByCreateDatePaginated(Group));
+router.get("/", verifyRole(Admin), getAllSortedByCreateDatePaginated(Group));
 
 router.get(
   "/me",
   verifyRole(Student),
-  getSecondaryResourceInformation(Profile, [
-    {
-      lookupName: "groups",
-      query: "itself",
-      resource: Group,
-      resolveAttrs: async (context) => ({ classes: context.profile!.class }),
-    },
-  ])
+  getAllSortedByCreateDatePaginated(Group, {
+    resolveAttrs: async (context) => ({
+      classes: context.profile!.class,
+    }),
+  })
 );
 
 router.get(
