@@ -1,9 +1,12 @@
 import { Types } from "mongoose";
+import { Server } from "socket.io";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { IAsset, IDocument, IProfile, ResolvedMulterFile } from "../tuesplace";
 
 declare global {
   namespace Express {
     interface Request {
+      io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
       [key: string]: any;
       id: string;
       resources: {

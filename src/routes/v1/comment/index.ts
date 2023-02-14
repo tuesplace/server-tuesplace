@@ -1,4 +1,5 @@
 import express, { Request } from "express";
+
 import {
   createAssets,
   createResource,
@@ -54,6 +55,12 @@ router.post(
         shouldResolve: true,
       },
     }),
+    afterCreate: async (req) => {
+      req.io.emit(
+        `resource/${req.resources.post?._id?.toString() || ""}/comments`,
+        "[update]"
+      );
+    },
   })
 );
 

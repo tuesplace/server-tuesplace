@@ -14,19 +14,20 @@ import mongoose from "mongoose";
 import { Token } from "../definitions";
 import { IDocument, IRefreshTokenGroup } from "../@types/tuesplace";
 
-const getToken = (req: Request, secret: string) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+const getToken = (authorizationHeader: string | undefined, secret: string) => {
+  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
     throw new RESTError(NotProvidedError(Token), 400);
   }
-  const token = authHeader.split("Bearer ")[1].trim();
+  const token = authorizationHeader.split("Bearer ")[1].trim();
   const tokenPayload = jwt.verify(token, secret) as JwtPayload;
   return tokenPayload;
 };
 
 const rotateTokenPair = async (req: Request) => {
-  const { userId, refreshTokenGroupId, id } = getToken(req, refreshTokenSecret);
+  const { userId, refreshTokenGroupId, id } = getToken(
+    req.headers.authorization,
+    refreshTokenSecret
+  );
   const refreshTokenGroup = await verifyRefreshToken(refreshTokenGroupId, id);
   const { token: refreshToken, id: refreshTokenId } = await rotateRefreshToken(
     refreshTokenGroup,
@@ -45,9 +46,9 @@ const rotateTokenPair = async (req: Request) => {
   };
 };
 
-const verifyAccessToken = async (req: Request) => {
+const verifyAccessToken = async (authorizationHeader: string | undefined) => {
   const { userId, refreshTokenGroupId, refreshTokenIssuerId } = getToken(
-    req,
+    authorizationHeader,
     accessTokenSecret
   );
 

@@ -45,6 +45,7 @@
     "multer-s3": "^3.0.1",
     "mustache": "^4.2.0",
     "nodemailer": "^6.9.0",
+    "socket.io": "^4.6.0",
     "swagger-jsdoc": "^6.2.7",
     "swagger-ui-express": "^4.6.0",
     "twilio": "^4.7.2",

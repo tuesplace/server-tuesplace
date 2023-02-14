@@ -2,13 +2,23 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import swaggerUI from "swagger-ui-express";
+import { Server } from "socket.io";
+import { createServer } from "http";
+
+const app = express();
+const server = createServer(app);
+const io = new Server(server, {});
 
 import { errorHandler } from "./middleware";
 import swaggerDoc from "./swaggerDoc";
 import { mongoDBConnectionString, port } from "./config";
 import { v1Router } from "./routes/v1";
+import { verifyAccessToken } from "./util";
 
-const app = express();
+app.use((req, _res, next) => {
+  req.io = io;
+  next();
+});
 
 app.use(
   cors({
@@ -33,10 +43,24 @@ app.use(errorHandler);
 
 mongoose.set("strictQuery", false);
 
+io.use(async (socket, next) => {
+  try {
+    if (await verifyAccessToken(socket.request.headers.authorization)) {
+      next();
+    }
+  } catch (err) {
+    io.emit("error", err);
+  }
+});
+
 mongoose
   .connect(mongoDBConnectionString)
   .then(() => {
-    app.listen(port, () => {
+    io.on("connection", (socket) => {
+      socket.emit("message", "[connected]");
+    });
+
+    server.listen(port, () => {
       console.log(`Server listening on port ${port}`);
     });
   })

@@ -61,7 +61,13 @@ router.post(
         shouldResolve: true,
       },
     }),
-    afterCreate: notifyAllGroupMembersCreatedPost,
+    afterCreate: async (req) => {
+      await notifyAllGroupMembersCreatedPost(req);
+      req.io.emit(
+        `resource/${req.resources.group?._id?.toString() || ""}/posts`,
+        "[update]"
+      );
+    },
   })
 );
 

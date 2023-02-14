@@ -5,7 +5,7 @@ import { getToken } from "../util";
 
 export const verifyYoungToken = async (req: Request, _: any, next: any) => {
   try {
-    const token = getToken(req, accessTokenSecret);
+    const token = getToken(req.headers.authorization, accessTokenSecret);
     const utcMilllisecondsSinceEpoch = Date.now();
     const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000);
 
