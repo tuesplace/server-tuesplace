@@ -11,7 +11,7 @@ import {
   EditAssetsOptions,
   IPublicSendable,
 } from "../@types/tuesplace";
-import { reactToSendable } from "../util";
+import { deleteResourceAssets, reactToSendable } from "../util";
 import { reduceArrayOfObject } from "../util/array";
 import { resolveDocuments } from "../util";
 
@@ -165,6 +165,18 @@ export const editResourceAssets =
       const mode = options.ignoreMode ? "replace" : req.query.mode || "replace";
 
       if (Object.keys(req.resolvedAssets || {}).length) {
+        if (mode === "replace") {
+          const resolvedAssetsKeys = Object.keys(req.resolvedAssets);
+          await deleteResourceAssets(
+            Object.keys(document.assets)
+              .filter((assetKey: string) =>
+                resolvedAssetsKeys.includes(assetKey)
+              )
+              .map((assetKey: string) => document.assets[assetKey])
+              .reduce((prev: any[], next: any[]) => prev.concat(next))
+          );
+        }
+
         document.assets =
           mode === "replace"
             ? req.resolvedAssets

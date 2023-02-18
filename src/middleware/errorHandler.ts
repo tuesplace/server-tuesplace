@@ -5,7 +5,7 @@ import { TransformedError, TypedError } from "../@types/tuesplace";
 import { environment } from "../config";
 import { JsonWebTokenError } from "jsonwebtoken";
 
-const transformError = (err: any, lang: string): TransformedError => ({
+export const transformError = (err: any, lang: string): TransformedError => ({
   success: false,
   name: !(err instanceof RESTError) ? err.name : undefined,
   code: err instanceof RESTError ? err.code : undefined,
@@ -38,7 +38,7 @@ export const errorHandler = async (
   ) {
     await sendAdminEmail(
       { ...transformedError, stacktrace: err.stack },
-      req.id
+      { reqId: req.id }
     );
   }
 

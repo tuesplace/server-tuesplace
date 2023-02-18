@@ -1,5 +1,25 @@
-import { RefinementCtx } from "zod";
+import { RefinementCtx, ZodIssue } from "zod";
 import { TypedError } from "../@types/tuesplace";
+import capitalizeString from "./capitalizeString";
+import { renderTranslation } from "./translation";
+
+export const parseZodError = (parseResult: any): TypedError[] =>
+  parseResult.error.issues
+    .filter((issue: ZodIssue) => issue.code === "custom")
+    .map((issue: any) => {
+      const typedError = issue.params;
+      return {
+        ...typedError,
+        message: issue.path[0]
+          ? renderTranslation(typedError.message, {
+              name: {
+                eng: capitalizeString(issue.path[0].toString()),
+                bg: capitalizeString(issue.path[0].toString()),
+              },
+            })
+          : typedError.message,
+      };
+    });
 
 export const customZodRefinement =
   (

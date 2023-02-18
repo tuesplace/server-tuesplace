@@ -15,6 +15,7 @@ import {
   cloudfrontKeypairID,
   cloudfrontDistributionId,
 } from "../config";
+import { Association } from "../@types/tuesplace";
 
 export const s3Client = new S3Client({
   credentials: { accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey },
@@ -77,6 +78,16 @@ export const deleteObject = async (key: string) => {
       Key: key,
     })
   );
+};
+
+export const deleteResourceAssets = async (assets: Association[]) => {
+  for (let i = 0; i < assets.length; i += 1) {
+    const asset = await Asset.findByIdAndDelete(assets[i]._id);
+
+    if (asset?.key) {
+      await deleteObject(asset?.key);
+    }
+  }
 };
 
 export const isSignedURLExpired = (date: Date) =>

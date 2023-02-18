@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "9В - Софтуерно инженерство",
+      "classes": ["9В", "11В", "12В"],
+      "type": "subject",
+      "teachers": ["Лъчезар Топалов"]
+    }
+  ],
+  "activities": [
+    {
+      "day": 1,
+      "start": 690,
+      "end": 750,
+      "group": "9В - Софтуерно инженерство",
+      "room": "TU-9223"
+    }
+  ],
+  "teachers": [
+    { "name": "Лъчезар Топалов", "email": "lacho.teacher@persware.com" }
+  ],
+  "parents": [
+    {
+      "name": "Филан Драганов",
+      "email": "filan.draganov@persware.com",
+      "child": "Дрананчо Филанков"
+    }
+  ],
+  "students": [
+    {
+      "name": "Дрананчо Филанков",
+      "email": "dragancho.filanchov@persware.com",
+      "class": "12В"
+    }
+  ],
+  "rooms": [{ "location": "TU-9223" }, { "location": "TU-5412" }]
+}

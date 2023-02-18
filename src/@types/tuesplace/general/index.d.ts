@@ -16,6 +16,7 @@ export * from "./Notification";
 export * from "./NotificationRenderer";
 export * from "./Owned";
 export * from "./OwnedByMany";
+export * from "./ParsedExcelTable";
 export * from "./Reaction";
 export * from "./ResolvedMulterFile";
 export * from "./Resource";

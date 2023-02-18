@@ -24,6 +24,7 @@ import { postRouter } from "./post";
 import { profileRouter } from "./profile";
 import { roomRouter } from "./room";
 import { submissionRouter } from "./submission";
+import { specificationRouter } from "./specification";
 
 const router = express.Router({ mergeParams: true });
 
@@ -101,5 +102,13 @@ router.use("/profiles", init, verifyAccessToken, profileRouter);
 router.use("/rooms", init, verifyAccessToken, verifyRole(Admin), roomRouter);
 
 router.use("/activities", init, verifyAccessToken, activityRouter);
+
+router.use(
+  "/specification/",
+  init,
+  verifyAccessToken,
+  verifyRole(Admin),
+  specificationRouter
+);
 
 export { router as v1Router };

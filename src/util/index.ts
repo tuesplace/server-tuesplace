@@ -1,4 +1,5 @@
 export * from "./email";
+export * from "./table";
 export * from "./options";
 export * from "./reactToSendable";
 export * from "./reactToSendable";

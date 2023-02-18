@@ -5,6 +5,7 @@ export * from "./ActivityRoomCollisionError";
 export * from "./ArrayElementsNotUniqueError";
 export * from "./BreaksRulesError";
 export * from "./EmailUsernameTakenError";
+export * from "./InvalidExcelTable";
 export * from "./InvalidRangeError";
 export * from "./InvalidTypeError";
 export * from "./InvalidValueError";

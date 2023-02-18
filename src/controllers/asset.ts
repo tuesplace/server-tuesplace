@@ -66,7 +66,7 @@ export const createAssets = <AssociatedResourceT>(
           assets.push(
             await Asset.create({
               key: fieldFiles[j].key,
-              ...options.resolveAttrs!(req),
+              ...options.resolveAttrs?.(req),
               mimetype: fieldFiles[j].mimetype,
               meta: {
                 originalName: fieldFiles[j].originalname,

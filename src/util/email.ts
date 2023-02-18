@@ -27,10 +27,10 @@ export const sendEmail = async (
 
 export const sendAdminEmail = async (
   err: TransformedError & { stacktrace: any },
-  reqId: string
+  { reqId, errorContext }: { reqId?: string; errorContext?: string }
 ) => {
   await sendEmail(adminEmail, {
-    subject: `Request: ${reqId}, Error ${err.name}`,
+    subject: `Request: ${reqId || errorContext}, Error ${err.name}`,
     text: JSON.stringify(err, null, 2),
   });
 };

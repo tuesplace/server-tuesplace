@@ -7,6 +7,7 @@ export * from "./Post";
 export * from "./Profile";
 export * from "./RefreshTokenGroup";
 export * from "./Room";
+export * from "./Specification";
 export * from "./Student";
 export * from "./Submission";
 export * from "./Token";

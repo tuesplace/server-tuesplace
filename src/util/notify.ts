@@ -1,17 +1,23 @@
-import { sendEmail } from "./email";
+import { sendAdminEmail, sendEmail } from "./email";
 import { sendNotification } from "./twilio";
 import { Notification } from "../@types/tuesplace";
 import { Profile } from "../models";
 import { Request } from "express";
 import { CreatedPost, Student } from "../definitions";
 import { subject } from "./options";
+import { transformError } from "../middleware";
+import { NewProfileCreated } from "../definitions/translations/NewProfileCreated";
 
 const notify = async (
-  profile: { email: string; id: string },
+  profile: { email?: string; id?: string },
   notificationData: Notification
 ) => {
-  await sendNotification(profile.id, notificationData.cloudMessage);
-  await sendEmail(profile.email, notificationData.email);
+  if (!!notificationData.cloudMessage) {
+    await sendNotification(profile.id!, notificationData.cloudMessage!);
+  }
+  if (!!notificationData.email) {
+    await sendEmail(profile.email!, notificationData.email);
+  }
 };
 
 export const notifyAllGroupMembersCreatedPost = async (context: Request) => {
@@ -49,5 +55,34 @@ export const notifyAllGroupMembersCreatedPost = async (context: Request) => {
     } catch (err) {
       console.log(err);
     }
+  }
+};
+
+export const notifyNewProfilesCreated = async (
+  profiles: {
+    email: string;
+    password: string;
+  }[],
+  { id, language }: Request
+) => {
+  try {
+    for (let i = 0; i < profiles.length; i += 1) {
+      const { email, password } = profiles[i];
+
+      await notify(
+        { email },
+        new NewProfileCreated().render(language, {
+          password,
+        })
+      );
+    }
+  } catch (err) {
+    sendAdminEmail(
+      {
+        ...transformError(err, language),
+        stacktrace: (err as Error).stack,
+      },
+      { reqId: id }
+    );
   }
 };

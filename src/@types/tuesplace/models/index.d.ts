@@ -9,4 +9,5 @@ export * from "./IMongoSchema";
 export * from "./IProfile";
 export * from "./IRefreshTokenGroup";
 export * from "./IRoom";
+export * from "./ISpecification";
 export * from "./ITimestamped";

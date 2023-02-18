@@ -1,4 +1,4 @@
-import mongoose, { ObjectId, Types } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { IDocument, ISendable, Reaction } from "../@types/tuesplace";
 
 export const reactToSendable = async (
@@ -17,32 +17,38 @@ export const reactToSendable = async (
             reaction.value == value
         ) != -1
       ) {
-        await sendable.updateOne({
-          $pull: {
-            reactions: {
-              "owner._id": {
-                $eq: new Types.ObjectId("637a5330ff6cf3593c351d1c"),
+        await sendable.updateOne(
+          {
+            $pull: {
+              reactions: {
+                "owner._id": {
+                  $eq: profileId,
+                },
+                value,
               },
-              value,
             },
           },
-        });
+          { session }
+        );
       } else {
-        await sendable.updateOne({
-          $push: {
-            reactions: {
-              owner: {
-                _id: profileId,
-                collectionName: "profiles",
-                shouldResolve: true,
+        await sendable.updateOne(
+          {
+            $push: {
+              reactions: {
+                owner: {
+                  _id: profileId,
+                  collectionName: "profiles",
+                  shouldResolve: true,
+                },
+                value,
               },
-              value,
             },
           },
-        });
+          { session }
+        );
       }
     });
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 };
