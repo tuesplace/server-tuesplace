@@ -16,7 +16,6 @@ import {
   Parent,
   Profile,
   Student,
-  Teacher,
 } from "../../../definitions";
 import {
   verifyBodySchema,
@@ -29,7 +28,7 @@ import { Group } from "../../../models";
 
 router.get(
   "/",
-  verifyRole(Teacher),
+  verifyRole(Admin),
   getAllSortedByCreateDatePaginated(Profile, {
     resolveAttrs: () => ({
       role: { $not: { $eq: "admin" } },
