@@ -9,7 +9,7 @@ import { getObjectSignedUrl, isSignedURLExpired } from "./s3";
 const resolvableAttrs = ["associations", "owners", "owner", "assets"];
 
 const mapToPublicDoc = <T>(document: IDocument<T>) =>
-  lo.omit(document._doc, [
+  lo.omit(document?._doc, [
     "password",
     "verifications",
     "email",
