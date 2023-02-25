@@ -132,7 +132,7 @@ router.put(
     [
       {
         name: "profilePic",
-        mimetype: "image",
+        allowedMimetypes: ["image"],
         maxCount: 1,
       },
     ]

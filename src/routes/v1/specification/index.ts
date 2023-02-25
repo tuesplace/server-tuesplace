@@ -39,8 +39,10 @@ router.put(
       {
         name: "specification",
         maxCount: 1,
-        mimetype:
+        allowedMimetypes: [
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/xls",
+        ],
       },
     ]
   ),

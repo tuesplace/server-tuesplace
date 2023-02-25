@@ -24,12 +24,18 @@ export const createAssets = <AssociatedResourceT>(
 ) => [
   multer({
     fileFilter: (_, file, cb) => {
-      console.log(file);
-      const mimetype = fields.find(
+      const allowedMimetypes = fields.find(
         (field) => field.name === file.fieldname
-      )!.mimetype;
+      )!.allowedMimetypes;
 
-      cb(null, mimetype ? file.mimetype.includes(mimetype) : true);
+      cb(
+        null,
+        allowedMimetypes
+          ? !!allowedMimetypes.filter((mimetype) =>
+              file.mimetype.includes(mimetype)
+            ).length
+          : true
+      );
     },
     storage: multerS3({
       s3: s3Client,

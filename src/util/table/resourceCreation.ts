@@ -202,6 +202,18 @@ const registerActivities = async (
       throw new RESTError(NotFoundError(!group ? Group : Room), 404);
     }
 
+    if (
+      await Activity.model.findOne({
+        "associations.group._id": group._id,
+        "associations.room._id": room._id,
+        day,
+        start,
+        end,
+      })
+    ) {
+      continue;
+    }
+
     const notUniqueByGroup = await assertActivityUniqueByGroup({
       group: group._id.toString(),
       day,
