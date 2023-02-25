@@ -24,6 +24,7 @@ export const createAssets = <AssociatedResourceT>(
 ) => [
   multer({
     fileFilter: (_, file, cb) => {
+      console.log(file);
       const mimetype = fields.find(
         (field) => field.name === file.fieldname
       )!.mimetype;

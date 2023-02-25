@@ -1,6 +1,6 @@
 # tuesplace Server
 
-[![wakatime](https://wakatime.com/badge/github/tuesplace/tuesplace.svg)](https://wakatime.com/badge/github/tuesplace/tuesplace)
+[![wakatime](https://wakatime.com/badge/github/tuesplace/server-tuesplace.svg)](https://wakatime.com/badge/github/tuesplace/server-tuesplace)
 
 ## Инсталиране на нужното
 
