@@ -6,7 +6,7 @@ import {
   getAllSortedByCreateDatePaginated,
   getResource,
 } from "../../../controllers";
-import { Admin, Profile, Student } from "../../../definitions";
+import { Admin, Profile, Student, Teacher } from "../../../definitions";
 import {
   verifyRole,
   verifyInGroup,
@@ -25,11 +25,14 @@ router.get("/", verifyRole(Admin), getAllSortedByCreateDatePaginated(Group));
 
 router.get(
   "/me",
-  verifyRole(Student),
+  verifyRole(Student, Teacher),
   getAllSortedByCreateDatePaginated(Group, {
-    resolveAttrs: async (context) => ({
-      classes: context.profile!.class,
-    }),
+    resolveAttrs: async (context) =>
+      context.profile!.role == Student.value
+        ? {
+            classes: context.profile!.class,
+          }
+        : { "owners._id": { $in: [context.profile!._id] } },
   })
 );
 

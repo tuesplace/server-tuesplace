@@ -6,7 +6,13 @@ import { reduceArrayOfObject } from "./array";
 import { isNumeric } from "./numbers";
 import { getObjectSignedUrl, isSignedURLExpired } from "./s3";
 
-const resolvableAttrs = ["associations", "owners", "owner", "assets"];
+const resolvableAttrs = [
+  "associations",
+  "owners",
+  "owner",
+  "assets",
+  "reactions",
+];
 
 const mapToPublicDoc = <T>(document: IDocument<T>) =>
   lo.omit(document?._doc, [
@@ -110,6 +116,8 @@ const refactorObject = async (
             )
           );
           association = data;
+        } else if (key == "reactions") {
+          association = await resolveDocuments(association);
         }
 
         return {

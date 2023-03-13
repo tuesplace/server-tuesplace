@@ -6,7 +6,13 @@ import {
   getAllSortedByCreateDatePaginated,
 } from "../../../controllers";
 const router = express.Router({ mergeParams: true });
-import { Mark, Profile, StudentResource } from "../../../definitions";
+import {
+  Mark,
+  Post,
+  Profile,
+  StudentResource,
+  Submission,
+} from "../../../definitions";
 import {
   verifyResourceExists,
   verifyInGroup,
@@ -37,6 +43,27 @@ router.get(
     resolveAttrs: (context) => ({
       "associations.student._id": context.ids!.studentId,
       "associations.group._id": context.ids!.groupId,
+    }),
+  })
+);
+
+router.get(
+  "/posts/:postId/submissions/:submissionId",
+  verifyResourceExists(Post, {
+    resolveAttrs: (context) => ({
+      "associations.group._id": context.ids!.groupId,
+    }),
+  }),
+  verifyResourceExists(Submission, {
+    resolveAttrs: (context) => ({
+      "associations.post._id": context.ids!.postId,
+    }),
+  }),
+  getAllSortedByCreateDatePaginated(Mark, {
+    resolveAttrs: (context) => ({
+      "associations.student._id": context.ids!.studentId,
+      "associations.group._id": context.ids!.groupId,
+      "associations.submission._id": context.ids!.submissionId,
     }),
   })
 );

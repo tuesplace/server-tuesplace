@@ -23,7 +23,11 @@ import {
   verifyRole,
   verifyYoungToken,
 } from "../../../middleware";
-import { editProfileSchema } from "../../../requestSchema";
+import {
+  blockProfileSchema,
+  editProfileByAdminSchema,
+  editProfileSchema,
+} from "../../../requestSchema";
 import { Group } from "../../../models";
 
 router.get(
@@ -37,22 +41,6 @@ router.get(
 );
 
 router.get("/me", getResource(Profile));
-
-router.put(
-  "/me",
-  verifyYoungToken,
-  verifyBodySchema(editProfileSchema),
-  editResource(Profile, {
-    afterEdit: {
-      email: async (doc) => {
-        doc.verifications.email = false;
-      },
-      password: async (doc) => {
-        doc.password = await bcrypt.hash(doc.password, 13);
-      },
-    },
-  })
-);
 
 router.get(
   "/me/marks",
@@ -117,6 +105,22 @@ router.get(
 );
 
 router.put(
+  "/me",
+  verifyYoungToken,
+  verifyBodySchema(editProfileSchema),
+  editResource(Profile, {
+    afterEdit: {
+      email: async (doc) => {
+        doc.verifications.email = false;
+      },
+      password: async (doc) => {
+        doc.password = await bcrypt.hash(doc.password, 13);
+      },
+    },
+  })
+);
+
+router.put(
   "/me/assets",
   createAssets(
     {
@@ -138,6 +142,80 @@ router.put(
     ]
   ),
   editResourceAssets(Profile)
+);
+
+router.put(
+  "/:profileId",
+  verifyRole(Admin),
+  verifyResourceExists(
+    {
+      ...Profile,
+      lookupFieldLocation: "params.profileId",
+      documentLocation: "resources.profile",
+    },
+    { resolveAttrs: () => ({ role: { $not: { $eq: "admin" } } }) }
+  ),
+  verifyBodySchema(editProfileByAdminSchema),
+  editResource({
+    ...Profile,
+    lookupFieldLocation: "params.profileId",
+    documentLocation: "resources.profile",
+  })
+);
+
+router.put(
+  "/:profileId/assets",
+  verifyResourceExists(
+    {
+      ...Profile,
+      lookupFieldLocation: "params.profileId",
+      documentLocation: "resources.profile",
+    },
+    { resolveAttrs: () => ({ role: { $not: { $eq: "admin" } } }) }
+  ),
+  createAssets(
+    {
+      resolveAttrs: (context) => ({
+        owner: {
+          _id: context.resources.profile._id,
+          collectionName: "profiles",
+          shouldResolve: false,
+        },
+      }),
+    },
+    Profile,
+    [
+      {
+        name: "profilePic",
+        allowedMimetypes: ["image"],
+        maxCount: 1,
+      },
+    ]
+  ),
+  editResourceAssets({
+    ...Profile,
+    lookupFieldLocation: "params.profileId",
+    documentLocation: "resources.profile",
+  })
+);
+
+router.patch(
+  "/:profileId",
+  verifyRole(Admin),
+  verifyResourceExists(
+    {
+      ...Profile,
+      lookupFieldLocation: "params.profileId",
+      documentLocation: "resources.profile",
+    },
+    { resolveAttrs: () => ({ role: { $not: { $eq: "admin" } } }) }
+  ),
+  verifyBodySchema(blockProfileSchema),
+  editResource({
+    ...Profile,
+    lookupFieldLocation: "params.profileId",
+    documentLocation: "resources.profile",
+  })
 );
 
 router.delete(

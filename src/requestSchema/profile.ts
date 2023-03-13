@@ -8,3 +8,11 @@ export const editProfileSchema = zod
     password: Password.optional(),
   })
   .strict();
+
+export const editProfileByAdminSchema = zod
+  .object({ fullName: FullName.optional(), email: UniqueEmail.optional() })
+  .strict();
+
+export const blockProfileSchema = zod
+  .object({ blocked: zod.boolean() })
+  .strict();
