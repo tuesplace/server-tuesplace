@@ -7,7 +7,7 @@ export const Submission: Resource<ISubmission> = {
     bg: "Домашна Работа",
   },
   lookupFieldLocation: "params.submissionId",
-  documentLocation: "resourdes.submission",
+  documentLocation: "resources.submission",
   by: "_id",
   model: SubmissionModel,
 };

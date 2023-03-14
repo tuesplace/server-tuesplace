@@ -1,8 +1,9 @@
 import express from "express";
+import { Types } from "mongoose";
 import {
   createAssets,
   createResource,
-  getAllSortedByCreateDatePaginated,
+  getAllSubmissionsWithMarksPaginated,
 } from "../../../controllers";
 import { Mark, Post, Student, Submission, Teacher } from "../../../definitions";
 import {
@@ -20,24 +21,13 @@ const router = express.Router({ mergeParams: true });
 router.get(
   "/",
   verifyRole(Teacher),
-  getAllSortedByCreateDatePaginated(Submission, {
-    resolveAttrs: (context) => ({
-      "associations.group._id": context.ids!.groupId,
-      "associations.post._id": context.ids!.postId,
-    }),
-  })
+  getAllSubmissionsWithMarksPaginated(false)
 );
 
 router.get(
   "/me",
   verifyRole(Student),
-  getAllSortedByCreateDatePaginated(Submission, {
-    resolveAttrs: (context) => ({
-      "associations.group._id": context.ids!.groupId,
-      "associations.post._id": context.ids!.postId,
-      "owner._id": context.profile!._id,
-    }),
-  })
+  getAllSubmissionsWithMarksPaginated(true)
 );
 
 router.post(
@@ -110,7 +100,7 @@ router.post(
           shouldResolve: false,
         },
         submission: {
-          _id: context.ids!.submissionId,
+          _id: new Types.ObjectId(context.params.submissionId),
           collectionName: "submissions",
           shouldResolve: true,
         },

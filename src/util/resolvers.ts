@@ -51,10 +51,10 @@ const refactorObject = async (
 ) => {
   const resolvedAttrsArr = await Promise.all(
     Object.keys(obj)
-      .filter(
-        (key) =>
-          (resolveAttrs && resolveAttrs.includes(key)) ||
-          resolvableAttrs.includes(key)
+      .filter((key) =>
+        !!resolveAttrs
+          ? resolveAttrs.includes(key)
+          : resolvableAttrs.includes(key)
       )
       .map(async (key: string): Promise<{ [key: string]: any }> => {
         let association = obj[key] as

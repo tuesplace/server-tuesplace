@@ -33,6 +33,10 @@ const profileSchema = new Schema<IProfile>(
       type: Object,
       default: {},
     },
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
     deviceTokens: {
       type: [],
     },

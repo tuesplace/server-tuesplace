@@ -8,5 +8,6 @@ export interface IProfile extends IMongoSchema, Assets {
   verifications: Verifications;
   class: string;
   role: string;
+  blocked: boolean;
   deviceTokens: [DeviceToken];
 }
