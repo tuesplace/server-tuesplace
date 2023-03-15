@@ -167,14 +167,17 @@ export const editResourceAssets =
       if (Object.keys(req.resolvedAssets || {}).length) {
         if (mode === "replace") {
           const resolvedAssetsKeys = Object.keys(req.resolvedAssets);
-          await deleteResourceAssets(
-            Object.keys(document.assets)
-              .filter((assetKey: string) =>
-                resolvedAssetsKeys.includes(assetKey)
-              )
-              .map((assetKey: string) => document.assets[assetKey])
-              .reduce((prev: any[], next: any[]) => prev.concat(next))
-          );
+          const objectAssetKeys = Object.keys(document.assets);
+          if (objectAssetKeys.length) {
+            await deleteResourceAssets(
+              objectAssetKeys
+                .filter((assetKey: string) =>
+                  resolvedAssetsKeys.includes(assetKey)
+                )
+                .map((assetKey: string) => document.assets[assetKey])
+                .reduce((prev: any[], next: any[]) => prev.concat(next))
+            );
+          }
         }
 
         document.assets =

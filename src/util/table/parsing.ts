@@ -34,10 +34,12 @@ const parseDay = (day: string) => {
 
 const parseTime = (data: string, key: "day" | "start" | "end") => {
   if (key != "day") {
-    return data
-      .split(":")
-      .map((time: string) => parseInt(time))
-      .reduce((prev, curr) => prev * 60 + curr);
+    return data.split(":").length
+      ? data
+          .split(":")
+          .map((time: string) => parseInt(time))
+          .reduce((prev, curr) => prev * 60 + curr)
+      : [];
   }
 
   return parseDay(data.toLowerCase().trim());
