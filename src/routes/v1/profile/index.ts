@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import {
   createAssets,
+  createProfile,
   deleteResource,
   editResource,
   editResourceAssets,
@@ -25,6 +26,7 @@ import {
 } from "../../../middleware";
 import {
   blockProfileSchema,
+  createProfileSchema,
   editProfileByAdminSchema,
   editProfileSchema,
 } from "../../../requestSchema";
@@ -49,6 +51,21 @@ router.get(
     resolveAttrs: (context) => ({
       "associations.student._id": context.profile!._id,
     }),
+  })
+);
+
+router.get(
+  "/:profileId",
+  verifyRole(Admin),
+  verifyResourceExists({
+    ...Profile,
+    lookupFieldLocation: "params.profileId",
+    documentLocation: "resources.profile",
+  }),
+  getResource({
+    ...Profile,
+    lookupFieldLocation: "params.profileId",
+    documentLocation: "resources.profile",
   })
 );
 
@@ -102,6 +119,13 @@ router.get(
       },
     }),
   })
+);
+
+router.post(
+  "/",
+  verifyRole(Admin),
+  verifyBodySchema(createProfileSchema),
+  createProfile
 );
 
 router.put(

@@ -4,7 +4,7 @@ import { assertConformsToArray } from "../rules";
 
 import { classes } from "../../util";
 
-export const GroupClasses = zod
+export const Classes = zod
   .array(zod.string())
   .superRefine(
     customZodRefinement((val) => assertConformsToArray(classes, val))

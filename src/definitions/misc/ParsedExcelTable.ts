@@ -2,20 +2,14 @@ import zod from "zod";
 import { classes } from "../../util";
 import { customZodRefinement } from "../../util/zod";
 
-import {
-  ActivityStart,
-  Email,
-  GroupClasses,
-  GroupName,
-  GroupType,
-} from "../fields";
+import { ActivityStart, Email, Classes, GroupName, GroupType } from "../fields";
 import { ActivityEnd } from "../fields/ActivityEnd";
 import { assertConformsToArray } from "../rules";
 
 const ParsedGroup = zod
   .object({
     name: GroupName,
-    classes: GroupClasses,
+    classes: Classes,
     type: GroupType,
     teachers: zod.array(zod.string()),
   })
