@@ -23,7 +23,8 @@ export const verifyInGroup =
       }
 
       if (
-        ((profile.role === Teacher.value || profile.role === Admin.value) &&
+        profile.role === Admin.value ||
+        (profile.role === Teacher.value &&
           group.owners.filter(
             (owner: Association) =>
               owner._id?.toString() === profile._id?.toString()
