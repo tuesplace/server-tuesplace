@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { CriticalError, RESTError } from "../errors";
 import { TransformedError, TypedError } from "../@types/tuesplace";
 import { environment } from "../config";
-import { JsonWebTokenError } from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 export const transformError = (err: any, lang: string): TransformedError => ({
   success: false,
@@ -43,6 +43,12 @@ export const errorHandler = async (
   }
 
   res
-    .status(err instanceof RESTError ? Number(err.code) : 500)
+    .status(
+      err instanceof RESTError
+        ? Number(err.code)
+        : err instanceof TokenExpiredError
+        ? 401
+        : 500
+    )
     .send(transformedError);
 };
