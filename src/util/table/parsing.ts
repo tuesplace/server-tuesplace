@@ -99,7 +99,7 @@ const parseSheetData = (obj: any) =>
     Object.keys(obj).map((key) => {
       const translatedKey = translateKey(key.toLowerCase());
       return {
-        [translatedKey]: parseObjectData(translatedKey, obj[key].trim()),
+        [translatedKey]: parseObjectData(translatedKey, obj[key]?.trim?.()),
       };
     })
   );
