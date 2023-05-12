@@ -14,14 +14,17 @@ const resolvableAttrs = [
   "reactions",
 ];
 
-const mapToPublicDoc = <T>(document: IDocument<T>) =>
-  lo.omit(document?._doc, [
+const mapToPublicObj = (obj: any) =>
+  lo.omit(obj, [
     "password",
     "verifications",
     "email",
     "createdAt",
     "deviceTokens",
-  ]);
+  ]) as any;
+
+const mapToPublicDoc = <T>(document: IDocument<T>) =>
+  mapToPublicObj(document._doc);
 
 const resolveAssociation = async (owner: Association) => {
   if (!Object.keys(owner).length) {
@@ -147,10 +150,16 @@ export const resolveDocuments = async (
   if (lo.isArray(objs)) {
     return await Promise.all(
       objs.map(async (obj: any) => {
-        return { ...obj, ...(await refactorObject(obj, resolveAttrs)) };
+        return mapToPublicObj({
+          ...obj,
+          ...(await refactorObject(obj, resolveAttrs)),
+        });
       })
     );
   }
 
-  return { ...objs, ...(await refactorObject(objs, resolveAttrs)) };
+  return mapToPublicObj({
+    ...objs,
+    ...(await refactorObject(objs, resolveAttrs)),
+  });
 };
