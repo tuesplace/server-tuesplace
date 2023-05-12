@@ -1,5 +1,5 @@
 import zod from "zod";
-import { FullName, Classes, Password, Role, UniqueEmail } from "../definitions";
+import { FullName, Password, Role, UniqueEmail, Class } from "../definitions";
 
 export const editProfileSchema = zod
   .object({
@@ -22,6 +22,6 @@ export const createProfileSchema = zod
     fullName: FullName,
     email: UniqueEmail,
     role: Role,
-    class: Classes.optional(),
+    class: Class.optional(),
   })
   .strict();

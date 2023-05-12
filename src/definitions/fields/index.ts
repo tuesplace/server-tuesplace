@@ -2,6 +2,7 @@ export * from "./ActivityDay";
 export * from "./ActivityEnd";
 export * from "./ActivityStart";
 export * from "./AssignmentInfo";
+export * from "./Class";
 export * from "./Classes";
 export * from "./CommentBody";
 export * from "./CommentIsPrivate";
