@@ -24,7 +24,7 @@ const mapToPublicObj = (obj: any) =>
   ]) as any;
 
 const mapToPublicDoc = <T>(document: IDocument<T>) =>
-  mapToPublicObj(document._doc);
+  mapToPublicObj(document?._doc);
 
 const resolveAssociation = async (owner: Association) => {
   if (!Object.keys(owner).length) {

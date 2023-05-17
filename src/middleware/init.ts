@@ -28,10 +28,14 @@ export const init = (req: Request, res: Response, next: any) => {
       code = 200,
       shouldResolve = true
     ) => {
-      res.status(code).send({
-        success: code >= 200 && code <= 206,
-        response: shouldResolve ? await resolveDocuments(response) : response,
-      });
+      try {
+        res.status(code).send({
+          success: code >= 200 && code <= 206,
+          response: shouldResolve ? await resolveDocuments(response) : response,
+        });
+      } catch (err) {
+        next(err);
+      }
     };
 
     next();
