@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { faker } from "@faker-js/faker";
 import { NextFunction, Request, Response } from "express";
 import { Profile } from "../models";
@@ -13,7 +14,7 @@ export const createProfile = async (
     const password = faker.internet.password(25);
     const result = await Profile.create({
       ...req.body,
-      password,
+      password: await bcrypt.hash(password, 12),
     });
     let response;
     switch (responseBehavior) {
@@ -25,7 +26,7 @@ export const createProfile = async (
         break;
     }
 
-    notifyNewProfilesCreated([{ email: req.body.email, password }], req);
+    await notifyNewProfilesCreated([{ email: req.body.email, password }], req);
 
     res.sendRes(response, 201);
   } catch (err) {
