@@ -15,12 +15,7 @@ const resolvableAttrs = [
 ];
 
 const mapToPublicObj = (obj: any) =>
-  lo.omit(obj, [
-    "password",
-    "verifications",
-    "createdAt",
-    "deviceTokens",
-  ]) as any;
+  lo.omit(obj, ["password", "verifications", "deviceTokens"]) as any;
 
 const mapToPublicDoc = <T>(document: IDocument<T>) =>
   mapToPublicObj(document?._doc);
