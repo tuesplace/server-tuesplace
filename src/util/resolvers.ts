@@ -18,7 +18,6 @@ const mapToPublicObj = (obj: any) =>
   lo.omit(obj, [
     "password",
     "verifications",
-    "email",
     "createdAt",
     "deviceTokens",
   ]) as any;
