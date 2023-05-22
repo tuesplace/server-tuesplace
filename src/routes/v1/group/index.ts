@@ -50,6 +50,7 @@ router.post(
   createResource(Group, {
     resolveAttrs: (context) => ({
       owners: [
+        ...(context.body.owners || []),
         {
           _id: context.profile?._id,
           collectionName: "profiles",

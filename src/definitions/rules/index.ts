@@ -12,6 +12,7 @@ import {
   ActivityRoomCollisionError,
   ActivityGroupCollisionError,
   InvalidValueError,
+  InArrayError,
 } from "../../errors";
 import { EmailName } from "../names";
 import { Activity } from "../resources";
@@ -201,3 +202,6 @@ export const assertDeviceTokenType = (val: string) =>
 
 export const assertMoreThan = (val: number, moreThan: number) =>
   val < moreThan ? InvalidRangeError(moreThan) : null;
+
+export const assertNotInArray = <T>(arr: T[], val: T) =>
+  !!arr.find((el) => el === val) ? InArrayError(val) : null;
