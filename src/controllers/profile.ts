@@ -11,7 +11,7 @@ export const createProfile = async (
 ) => {
   try {
     const responseBehavior = req.query.responseBehavior || "none";
-    const password = faker.internet.password(25);
+    const password = faker.internet.password(25, false, /[A-Z]|[a-z]|\W|[0-9]/);
     const result = await Profile.create({
       ...req.body,
       password: await bcrypt.hash(password, 12),

@@ -27,7 +27,7 @@ export const assertEmailLike = (value: string) => {
 };
 
 export const assertPasswordLike = (value: string) => {
-  const regExPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
+  const regExPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)/;
   return !value.match(regExPass) || value.length < 7
     ? PasswordPolicyError
     : null;
